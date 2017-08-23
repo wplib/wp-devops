@@ -1,0 +1,6 @@
+To be able to run remote-deploy.sh create a personal API token here 
+
+    https://circleci.com/account/api
+
+Then save it as a file named `circleci.token` in the .circleci directory.
+
