@@ -1,4 +1,4 @@
-# wp-devops
+# WP DevOps
 
 WP DevOps is a general purpose DevOps solutions for WordPress.  It allows for building, testing and deploying WordPress using [CircleCI v1.0](https://circleci.com/docs/1.0/) for continuous integration and either [Pantheon](https://pantheon.io/) or [WPEngine](https://wpengine.com/) as web hosts.  Of course we also support [GitHub](https://github.com/), [BitBucket](https://bitbucket.org/) and most any other Git provider.
 
