@@ -2,7 +2,8 @@
 #
 # devops/core/database.sh
 #
-# Generic prepare for database
+# Configure DB server, create database, add user and permissions then import provision.sql database.
+#
 
 declare=${SHARED_SCRIPTS:=}
 declare=${CIRCLE_ARTIFACTS:=}

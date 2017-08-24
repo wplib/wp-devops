@@ -2,7 +2,7 @@
 #
 # devops/core/compile.sh
 #
-#   Restructure from the GitHub repo to a form that WPEngine wants.
+#   Restructure from the GitHub repo to a form that webhost wants.
 #
 #   At the end of this script we should have a complete testable site
 #   running in /var/www/html/blog and it should have all code committed

@@ -2,6 +2,8 @@
 #
 # build/dependencies.sh
 #
+#   Configure Ubuntu, Fixup Git Source repo, Configure Web Server, Install WP CLI and run Composer.
+#
 
 declare=${ARTIFACTS_FILE:=}
 declare=${CIRCLE_ARTIFACTS:=}

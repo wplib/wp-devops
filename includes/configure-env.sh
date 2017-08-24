@@ -23,6 +23,12 @@ announce "Configuring environment"
 #
 # Ensure all devops scripts are executable
 #
+announce "..."
+
+
+#
+# Ensure all devops scripts are executable
+#
 announce "...Ensure all scripts in ${WORKFLOW_ROOT} are executable"
 find "${WORKFLOW_ROOT}" | grep "\.sh$" | xargs chmod +x
 
