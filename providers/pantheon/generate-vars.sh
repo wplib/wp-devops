@@ -28,7 +28,7 @@ FIX_MYSQL56_COMPATIBILITY="no"
 
 TARGET_BRANCH="${CIRCLE_BRANCH}"
 
-DEPLOY_METHOD="git-branch"  # vs. "git-repo"
+DEPLOY_METHOD="git-branch"
 BASH
 
 

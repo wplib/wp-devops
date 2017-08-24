@@ -49,7 +49,8 @@ trap onError ERR
 announce "...Creating artifact file ${ARTIFACTS_FILE}"
 echo . > $ARTIFACTS_FILE
 
-generate-vars.sh
+# Soon to be added...
+# generate-vars.sh
 
 #
 # Set the Git user and repo based on the branch

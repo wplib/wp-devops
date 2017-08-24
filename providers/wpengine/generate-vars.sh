@@ -27,7 +27,7 @@ FIX_MYSQL56_COMPATIBILITY="yes"
 
 TARGET_BRANCH="master"
 
-DEPLOY_METHOD="git-repo"  # vs. "git-branch"
+DEPLOY_METHOD="git-repo"
 BASH
 
 
