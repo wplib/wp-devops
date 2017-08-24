@@ -13,7 +13,7 @@ declare=${CIRCLE_ARTIFACTS:=}
 declare=${GIT_USER_EMAIL:=}
 declare=${CIRCLE_USERNAME:=}
 declare=${CIRCLE_BRANCH:=}
-declare=${WORKFLOW_ROOT:=}
+declare=${DEVOPS_ROOT:=}
 
 #
 # Configure environment
@@ -29,8 +29,8 @@ announce "..."
 #
 # Ensure all devops scripts are executable
 #
-announce "...Ensure all scripts in ${WORKFLOW_ROOT} are executable"
-find "${WORKFLOW_ROOT}" | grep "\.sh$" | xargs chmod +x
+announce "...Ensure all scripts in ${DEVOPS_ROOT} are executable"
+find "${DEVOPS_ROOT}" | grep "\.sh$" | xargs chmod +x
 
 #
 # Disabling this annoying SSH warning:
