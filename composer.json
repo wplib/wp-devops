@@ -1,0 +1,14 @@
+{
+    "name": "wplib/wp-devops",
+    "description": "Collection of scripts and continuous integration configuration files for building, testing and deploying WordPress websites.",
+    "type": "wp-devops",
+    "version": "0.1.0",
+    "license": "GPLv3",
+    "authors": [
+        {
+            "name": "The WPLib Team",
+            "email": "team@wplib.org"
+        }
+    ],
+    "require": {}
+}
