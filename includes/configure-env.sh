@@ -25,7 +25,6 @@ announce "Configuring environment"
 #
 announce "..."
 
-
 #
 # Ensure all devops scripts are executable
 #

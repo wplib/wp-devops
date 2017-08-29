@@ -11,9 +11,9 @@
 declare=${SHARED_SCRIPTS:=}
 declare=${REPO_ROOT:=}
 declare=${ARTIFACTS_FILE:=}
+declare=${DEVOPS_ROOT:=}
 
 announce "Composing project"
-
 
 #
 # Changing directory to repo root
@@ -26,5 +26,12 @@ cd "${REPO_ROOT}"
 #
 announce "...Running Composer to install plugins and extra themes."
 composer install --prefer-dist >> $ARTIFACTS_FILE
+
+#
+# Ensure all devops scripts are executable
+#
+announce "...Again, ensure all scripts in ${DEVOPS_ROOT} are executable"
+find "${DEVOPS_ROOT}" | grep "\.sh$" | xargs chmod +x
+
 
 announce "Project composed"
