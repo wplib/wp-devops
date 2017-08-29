@@ -174,7 +174,7 @@ sudo rsync -a -f"- */" -f"+ *" . "${TEST_CORE}"
 # If we had a core path in local, remove it then if there is a core path for deploy, add it
 #
 announce "...Modifying ${SOURCE_ROOT}/index.php to include core path ${DEPLOY_CORE_PATH}"
-SLASH="$([ ! -z "${DEPLOY_CORE_PATH}" ] && "/" || "" )"
+SLASH="$([ ! -z "${DEPLOY_CORE_PATH}" ] && echo "/" || echo "")"
 sudo sed -e "s|'.*/wp-blog-header|'${SLASH}${DEPLOY_CORE_PATH}/wp-blog-header|" "${DOCUMENT_ROOT}/index.php"
 
 #
