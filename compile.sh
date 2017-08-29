@@ -168,23 +168,14 @@ announce "...Rsyncing files in ${SOURCE_INDEX}/ to ${TEST_CORE}"
 cd "${SOURCE_INDEX}"
 sudo rsync -a -f"- */" -f"+ *" . "${TEST_CORE}"
 
-if [ "" != "${DEPLOY_CORE_PATH}" ] ; then
-    #
-    # We probably WP core in a subdirectory.
-    #
-    announce "...Modifying ${SOURCE_ROOT}/index.php to include core path ${DEPLOY_CORE_PATH}"
-
-    #
-    # If we have a core path for deployment, we need
-    #
-    SLASH="$([ ! -z "${DEPLOY_CORE_PATH}" ] && "/" || "" )"
-
-    #
-    # If we had a core path in local, remove it
-    # Then if there is a core path for deploy, add it
-    #
-    sudo sed -e "s|'.*/wp-blog-header|'${SLASH}${DEPLOY_CORE_PATH}/wp-blog-header|" "${DOCUMENT_ROOT}/index.php"
-fi
+#
+# We probably WP core in a subdirectory.
+# If we have a core path for deployment, we need a slash
+# If we had a core path in local, remove it then if there is a core path for deploy, add it
+#
+announce "...Modifying ${SOURCE_ROOT}/index.php to include core path ${DEPLOY_CORE_PATH}"
+SLASH="$([ ! -z "${DEPLOY_CORE_PATH}" ] && "/" || "" )"
+sudo sed -e "s|'.*/wp-blog-header|'${SLASH}${DEPLOY_CORE_PATH}/wp-blog-header|" "${DOCUMENT_ROOT}/index.php"
 
 #
 # Removing unnecessary test root files: license.txt and readme.html
