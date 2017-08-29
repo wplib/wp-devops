@@ -42,16 +42,25 @@ announce "...Disabling annoying SSH warnings"
 sudo sed -i '1s/^/LogLevel ERROR\n\n/' ~/.ssh/config
 
 #
-# Setting git user.email
+# Grab user name and email from `git log -1`
 #
-announce "...Setting global Git user.email to ${GIT_USER_EMAIL}"
-git config --global user.email "${GIT_USER_EMAIL}"
+announce "...Grabbing the author of the latest Disabling annoying SSH warnings"
+GIT_USER_NAME="$(git log -1 --format=format:"%an")"
+announce "...Author name:  {$GIT_USER_NAME}"
+GIT_USER_EMAIL="$(git log -1 --format=format:"%ae")"
+announce "...Author email: {$GIT_USER_EMAIL}"
 
 #
 # Setting git user.email
 #
-announce "...Setting global Git user.name to ${CIRCLE_USERNAME}"
-git config --global user.name "${CIRCLE_USERNAME}"
+announce "...Setting global Git user.name to ${GIT_USER_NAME}"
+git config --global user.name "${GIT_USER_NAME}"
+
+#
+# Setting git user.email
+#
+announce "...Setting global Git user.email to ${GIT_USER_EMAIL}"
+git config --global user.email "${GIT_USER_EMAIL}"
 
 #
 # Set merge rename limit to a large number
