@@ -14,6 +14,7 @@ declare=${GIT_USER_EMAIL:=}
 declare=${CIRCLE_USERNAME:=}
 declare=${CIRCLE_BRANCH:=}
 declare=${DEVOPS_ROOT:=}
+declare=${DEVOPS_ARTIFACTS:=}
 
 #
 # Configure environment
@@ -23,13 +24,15 @@ announce "Configuring environment"
 #
 # Ensure all devops scripts are executable
 #
-announce "..."
+announce "...Ensure all devops scripts in ${DEVOPS_ROOT} are executable"
+find "${DEVOPS_ROOT}" | grep "\.sh$" | xargs chmod +x
 
 #
-# Ensure all devops scripts are executable
+# Copying devops/core into artifacts
 #
-announce "...Ensure all scripts in ${DEVOPS_ROOT} are executable"
-find "${DEVOPS_ROOT}" | grep "\.sh$" | xargs chmod +x
+announce "...Copying devops into artifacts"
+mkdir -p "${DEVOPS_ARTIFACTS}"
+cp -R "${DEVOPS_ROOT}/." "${DEVOPS_ARTIFACTS}"
 
 #
 # Disabling this annoying SSH warning:
