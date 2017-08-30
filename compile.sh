@@ -242,7 +242,7 @@ sudo git rm -r --cached  --ignore-unmatch . >> $ARTIFACTS_FILE
 #
 # Remove .git sub-subdirectories from the test website
 #
-announce "......Removing .git subdirectories not in the test index"
+announce "...Removing .git subdirectories not in the test index"
 find "${TEST_INDEX}" -mindepth 2 -type d -name ".git" | sudo xargs rm -rf  >> $ARTIFACTS_FILE
 
 #
