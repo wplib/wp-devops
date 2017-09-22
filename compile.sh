@@ -38,6 +38,8 @@ declare=${DEPLOY_CONTENT_PATH:=}
 declare=${DEPLOY_PORT:=}
 declare=${DEPLOY_PROVIDER:=}
 declare=${PROVIDERS_ROOT:=}
+declare=${SOURCE_VENDOR:=}
+declare=${TEST_VENDOR:=}
 
 
 #
@@ -159,6 +161,13 @@ sudo rsync -a . "${TEST_CONTENT}"
 announce "...Rsyncing files in ${SOURCE_CORE} to ${TEST_CORE}"
 cd "${SOURCE_CORE}"
 sudo rsync -a . "${TEST_CORE}"
+
+#
+# Copy vendor files installed by Composer to test vendor dir.
+#
+announce "...Rsyncing files in ${SOURCE_VENDOR} to ${TEST_VENDOR}"
+cd "${SOURCE_VENDOR}"
+sudo rsync -a . "${TEST_VENDOR}"
 
 #
 # Copy *just* the files in www/blog/ and not subdirectories
