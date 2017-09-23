@@ -177,8 +177,7 @@ if [ "${SOURCE_CONTENT_PATH}" != "${TEST_CONTENT_PATH}" ] ; then
     # Appending a change directory to test root to .bash_profile
     #
     announce "...Fixing up Composer Autoloader files"
-    for file in ${COMPOSER_ROOT}/*.php; do
-        filepath="${COMPOSER_ROOT}/${file}"
+    for filepath in ${COMPOSER_ROOT}/*.php; do
         announce "......Fixing up ${filepath}"
         find="'${SOURCE_CONTENT_PATH}"
         replace="'${TEST_CONTENT_PATH}"
