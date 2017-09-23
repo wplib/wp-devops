@@ -25,7 +25,6 @@ composer install \
     --prefer-dist \
     --no-progress \
     --no-suggest \
-    --no-dev \
     --ansi \
     >> $ARTIFACTS_FILE
 
