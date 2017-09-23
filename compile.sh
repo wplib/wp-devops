@@ -181,7 +181,7 @@ if [ "${SOURCE_CONTENT_PATH}" != "${TEST_CONTENT_PATH}" ] ; then
         announce "......Fixing up ${filepath}"
         find="'${SOURCE_CONTENT_PATH}"
         replace="'${TEST_CONTENT_PATH}"
-        sed -i -e "s#${find}#${replace}#g" "${filepath}"
+        sudo sed -i -e "s#${find}#${replace}#g" "${filepath}"
         find="'/${SOURCE_CONTENT_PATH}"
         replace="'/${TEST_CONTENT_PATH}"
         sudo sed -i '' -e "s#${find}#${replace}#g" "${filepath}"
