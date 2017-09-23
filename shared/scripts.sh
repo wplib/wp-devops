@@ -16,10 +16,9 @@ declare=${CIRCLE_ARTIFACTS:=}
 #
 # Set default deployment options
 #
-DEPLOY_CORE_PATH=""
-DEPLOY_CONTENT_PATH="wp-content"
-DEPLOY_PORT="80"
-
+DEPLOY_CORE_PATH="${DEPLOY_CORE_PATH:=}"
+DEPLOY_CONTENT_PATH="${DEPLOY_CONTENT_PATH:=wp-content}"
+DEPLOY_PORT="${DEPLOY_PORT:=80}"
 
 #
 # Set artifacts file for this script
