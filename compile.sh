@@ -43,6 +43,8 @@ declare=${TEST_VENDOR:=}
 declare=${COMPOSER_ROOT:=}
 declare=${SOURCE_CONTENT_PATH:=}
 declare=${TEST_CONTENT_PATH:=}
+declare=${SOURCE_VENDOR_PATH:=}
+declare=${DEPLOY_VENDOR_PATH:=}
 
 #
 # Set artifacts file for this script
@@ -185,6 +187,12 @@ if [ "${SOURCE_CONTENT_PATH}" != "${DEPLOY_CONTENT_PATH}" ] ; then
         sed -i  "s#${find}#${replace}#g" "${filepath}"
         find="'/${SOURCE_CONTENT_PATH}"
         replace="'/${DEPLOY_CONTENT_PATH}"
+        sed -i "s#${find}#${replace}#g" "${filepath}"
+        find="'${SOURCE_VENDOR_PATH}"
+        replace="'${DEPLOY_VENDOR_PATH}"
+        sed -i  "s#${find}#${replace}#g" "${filepath}"
+        find="'/${SOURCE_VENDOR_PATH}"
+        replace="'/${DEPLOY_VENDOR_PATH}"
         sed -i "s#${find}#${replace}#g" "${filepath}"
     done
 
