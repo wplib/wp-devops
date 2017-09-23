@@ -19,9 +19,6 @@ announce "Composing project"
 # Running Composer to install plugins and extra themes
 #
 announce "...Running Composer in ${REPO_ROOT} to install plugins and extra themes."
-
-exit 1
-
 composer install \
     --working-dir="${REPO_ROOT}" \
     --classmap-authoritative \
