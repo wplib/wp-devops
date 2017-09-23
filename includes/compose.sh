@@ -25,6 +25,9 @@ cd "${REPO_ROOT}"
 # Running Composer to install plugins and extra themes
 #
 announce "...Running Composer to install plugins and extra themes."
+
+exit 1
+
 composer install --prefer-dist >> $ARTIFACTS_FILE
 
 #
