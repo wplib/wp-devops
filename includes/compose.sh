@@ -8,7 +8,6 @@
 #
 # "Declarations" of the variables this script assumes
 #
-declare=${SHARED_SCRIPTS:=}
 declare=${REPO_ROOT:=}
 declare=${ARTIFACTS_FILE:=}
 declare=${DEVOPS_ROOT:=}
