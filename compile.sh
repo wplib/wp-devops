@@ -171,7 +171,8 @@ announce "...Rsyncing files in ${SOURCE_VENDOR} to ${TEST_VENDOR}"
 cd "${SOURCE_VENDOR}"
 sudo rsync -a . "${TEST_VENDOR}"
 
-if [ "${SOURCE_CONTENT_PATH}" != "${TEST_CONTENT_PATH}" ] ; then
+
+if [ "${SOURCE_CONTENT_PATH}" != "${DEPLOY_CONTENT_PATH}" ] ; then
 
     #
     # Appending a change directory to test root to .bash_profile
@@ -180,10 +181,10 @@ if [ "${SOURCE_CONTENT_PATH}" != "${TEST_CONTENT_PATH}" ] ; then
     for filepath in ${COMPOSER_ROOT}/*.php; do
         announce "......Fixing up ${filepath}"
         find="'${SOURCE_CONTENT_PATH}"
-        replace="'${TEST_CONTENT_PATH}"
+        replace="'${DEPLOY_CONTENT_PATH}"
         sed -i  "s#${find}#${replace}#g" "${filepath}"
         find="'/${SOURCE_CONTENT_PATH}"
-        replace="'/${TEST_CONTENT_PATH}"
+        replace="'/${DEPLOY_CONTENT_PATH}"
         sed -i "s#${find}#${replace}#g" "${filepath}"
     done
 
