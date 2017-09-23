@@ -16,19 +16,22 @@ declare=${DEVOPS_ROOT:=}
 announce "Composing project"
 
 #
-# Changing directory to repo root
-#
-announce "...Changing directory to ${REPO_ROOT}"
-cd "${REPO_ROOT}"
-
-#
 # Running Composer to install plugins and extra themes
 #
-announce "...Running Composer to install plugins and extra themes."
+announce "...Running Composer in ${REPO_ROOT} to install plugins and extra themes."
 
 exit 1
 
-composer install --prefer-dist >> $ARTIFACTS_FILE
+composer install \
+    --working-dir="${REPO_ROOT}" \
+    --classmap-authoritative \
+    --no-interaction \
+    --prefer-dist \
+    --no-progress \
+    --no-sugest \
+    --no-dev \
+    --ansi \
+    >> $ARTIFACTS_FILE
 
 #
 # Ensure all devops scripts are executable
