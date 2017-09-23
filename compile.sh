@@ -40,7 +40,9 @@ declare=${DEPLOY_PROVIDER:=}
 declare=${PROVIDERS_ROOT:=}
 declare=${SOURCE_VENDOR:=}
 declare=${TEST_VENDOR:=}
-
+declare=${COMPOSER_ROOT:=}
+declare=${SOURCE_CONTENT_PATH:=}
+declare=${TEST_CONTENT_PATH:=}
 
 #
 # Set artifacts file for this script
@@ -168,6 +170,25 @@ sudo rsync -a . "${TEST_CORE}"
 announce "...Rsyncing files in ${SOURCE_VENDOR} to ${TEST_VENDOR}"
 cd "${SOURCE_VENDOR}"
 sudo rsync -a . "${TEST_VENDOR}"
+
+if [ "${SOURCE_CONTENT_PATH}" != "${TEST_CONTENT_PATH}" ] ; then
+
+    #
+    # Appending a change directory to test root to .bash_profile
+    #
+    announce "...Fixing up Composer Autoloader files"
+    for file in ${COMPOSER_ROOT}/*.php; do
+        filepath="${COMPOSER_ROOT}/${file}"
+        announce "......Fixing up ${filepath}"
+        find="'${SOURCE_CONTENT_PATH}"
+        replace="'${TEST_CONTENT_PATH}"
+        sed -i -e "s#${find}#${replace}#g" "${filepath}"
+        find="'/${SOURCE_CONTENT_PATH}"
+        replace="'/${TEST_CONTENT_PATH}"
+        sudo sed -i '' -e "s#${find}#${replace}#g" "${filepath}"
+    done
+
+fi
 
 #
 # Copy *just* the files in www/blog/ and not subdirectories
