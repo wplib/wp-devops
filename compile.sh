@@ -38,6 +38,7 @@ declare=${DEPLOY_CONTENT_PATH:=}
 declare=${DEPLOY_PORT:=}
 declare=${DEPLOY_PROVIDER:=}
 declare=${PROVIDERS_ROOT:=}
+declare=${DEVOPS_ROOT:=}
 declare=${SOURCE_VENDOR:=}
 declare=${TEST_VENDOR:=}
 declare=${COMPOSER_ROOT:=}
@@ -225,9 +226,17 @@ for file in $UNNECESSARY_FILES; do
 done
 
 #
-# Copy over the providers's wp-config.php file
+# Copy the project's wp-config.php file
 #
-SOURCE_CONFIG="${PROVIDERS_ROOT}/${DEPLOY_PROVIDER}/wp-config.php"
+SOURCE_CONFIG="${DEVOPS_ROOT}/wp-config.php"
+
+if ! [ -f "${SOURCE_CONFIG}" ] ; then
+    #
+    # Copy the providers's wp-config.php file
+    #
+    SOURCE_CONFIG="${PROVIDERS_ROOT}/${DEPLOY_PROVIDER}/wp-config.php"
+fi
+
 if [ -f "${SOURCE_CONFIG}" ] ; then
     CONFIG_FILEPATH="${TEST_INDEX}/wp-config.php"
     announce "...Copying ${SOURCE_CONFIG} to ${CONFIG_FILEPATH}"
