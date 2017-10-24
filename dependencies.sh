@@ -11,6 +11,8 @@ declare=${SHARED_SCRIPTS:=}
 declare=${INCLUDES_ROOT:=}
 declare=${SERVERS_ROOT:=}
 declare=${TEST_WEBSERVER:=}
+declare=${DEPLOY_PROVIDER:=}
+declare=${DEPLOY_PROVIDER_ROOT:=}
 
 
 #
@@ -60,3 +62,11 @@ source "${INCLUDES_ROOT}/install-wp-cli.sh"
 announce "Running ${INCLUDES_ROOT}/compose.sh"
 source "${INCLUDES_ROOT}/compose.sh"
 
+#
+# Run deploy provider's dependencies
+#
+DEPLOY_PROVIDER_DEPENDENCIES="${DEPLOY_PROVIDER_ROOT}/${DEPLOY_PROVIDER}-dependencies.sh"
+if [ -f "${DEPLOY_PROVIDER_DEPENDENCIES}" ] ; then
+    announce "Running deploy provider's dependencies: ${DEPLOY_PROVIDER_DEPENDENCIES}"
+    source "${DEPLOY_PROVIDER_DEPENDENCIES}"
+fi
