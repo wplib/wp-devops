@@ -17,9 +17,9 @@ declare=${TARGET_GIT_URL:=}
 declare=${CIRCLE_BUILD_NUM:=}
 declare=${CIRCLE_PROJECT_REPONAME:=}
 declare=${CIRCLE_ARTIFACTS:=}
+declare=${CIRCLE_BRANCH:=}
 declare=${DEPLOY_BRANCH:=}
-
-
+declare=${PANTHEON_SITE:=}
 #
 # Set artifacts file for this script
 #
@@ -29,6 +29,18 @@ ARTIFACTS_FILE="${CIRCLE_ARTIFACTS}/deploy.log"
 # Load the shared scripts
 #
 source "${SHARED_SCRIPTS}"
+
+#
+# Load the shared scripts
+#
+DEPLOY_PROVIDER_DO_DEPLOY="$(get_provider_specific_script "do-deploy.sh")"
+if [ -f "${DEPLOY_PROVIDER_DO_DEPLOY}" ] ; then
+    announce "Testing to see if environment ${CIRCLE_BRANCH} exists for Pantheon site ${PANTHEON_SITE}."
+    if ! [ "yes" = "$(source "${DEPLOY_PROVIDER_DO_DEPLOY}")" ] ; then
+        announce "Bypassing deployment for branch ${CIRCLE_BRANCH}"
+        exit
+    fi
+fi
 
 #
 # Preparing deployment

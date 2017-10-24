@@ -12,6 +12,9 @@ declare=${TARGET_GIT_REPO:=}
 declare=${TARGET_GIT_URL:=}
 declare=${ARTIFACTS_FILE:=}
 declare=${CIRCLE_ARTIFACTS:=}
+declare=${DEPLOY_PROVIDER:=}
+declare=${DEPLOY_PROVIDER_ROOT:=}
+
 
 #
 # Set default deployment options
@@ -42,6 +45,10 @@ onError() {
 }
 trap onError ERR
 
+get_provider_specific_script() {
+    echo "${DEPLOY_PROVIDER_ROOT}/${DEPLOY_PROVIDER}-$1"
+}
+
 #
 # Making artifact subdirectory
 #
@@ -52,6 +59,14 @@ echo . > $ARTIFACTS_FILE
 # generate-vars.sh
 
 #
+# Making artifact subdirectory
+#
+announce "...Ensure ~/cache directory"
+mkdir -p ~/cache
+
+#
 # Set the Git user and repo based on the branch
 #
 announce "...Git branch is ${CIRCLE_BRANCH}; URL is ${TARGET_GIT_URL}"
+
+

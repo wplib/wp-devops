@@ -65,7 +65,7 @@ source "${INCLUDES_ROOT}/compose.sh"
 #
 # Run deploy provider's dependencies
 #
-DEPLOY_PROVIDER_DEPENDENCIES="${DEPLOY_PROVIDER_ROOT}/${DEPLOY_PROVIDER}-dependencies.sh"
+DEPLOY_PROVIDER_DEPENDENCIES="$(get_provider_specific_script "dependencies.sh")"
 if [ -f "${DEPLOY_PROVIDER_DEPENDENCIES}" ] ; then
     announce "Running deploy provider's dependencies: ${DEPLOY_PROVIDER_DEPENDENCIES}"
     source "${DEPLOY_PROVIDER_DEPENDENCIES}"
