@@ -13,5 +13,5 @@ declare=${PANTHEON_SITE:=}
 # Check to see if environment exists.
 # Echo "yes" is so, "no" if not.
 #
-ENVIRONMENT_INFO="$(terminus env:list ${PANTHEON_SITE} | grep "${CIRCLE_BRANCH}-${PANTHEON_SITE}.pantheon")"
+ENVIRONMENT_INFO="$(terminus env:list ${PANTHEON_SITE} --field=domain | grep "${CIRCLE_BRANCH}-${PANTHEON_SITE}.pantheon")"
 [[ "" = "${ENVIRONMENT_INFO}" ]] && echo "no" || echo "yes"
