@@ -34,10 +34,12 @@ ARTIFACTS_FILE="${CIRCLE_ARTIFACTS}/deploy.log"
 #
 # Load the shared scripts
 #
-DEPLOY_PROVIDER_DO_DEPLOY="$(get_provider_specific_script "do-deploy.sh")"
-if [ -f "${DEPLOY_PROVIDER_DO_DEPLOY}" ] ; then
+DO_DEPLOY_SCRIPT="$(get_provider_specific_script "do-deploy.sh")"
+if [ -f "${DO_DEPLOY_SCRIPT}" ] ; then
     announce "Testing to see if environment ${CIRCLE_BRANCH} exists for Pantheon site ${PANTHEON_SITE}."
-    if [ "yes" != "$(source "${DEPLOY_PROVIDER_DO_DEPLOY}")" ] ; then
+    if [ "yes" == "$(source "${DO_DEPLOY_SCRIPT}")" ] ; then
+        announce "...Yes, deploy ${CIRCLE_BRANCH}.${PANTHEON_SITE}"
+    else
         announce "Bypassing deployment for branch ${CIRCLE_BRANCH}"
         exit
     fi
