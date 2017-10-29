@@ -37,7 +37,7 @@ ARTIFACTS_FILE="${CIRCLE_ARTIFACTS}/deploy.log"
 DEPLOY_PROVIDER_DO_DEPLOY="$(get_provider_specific_script "do-deploy.sh")"
 if [ -f "${DEPLOY_PROVIDER_DO_DEPLOY}" ] ; then
     announce "Testing to see if environment ${CIRCLE_BRANCH} exists for Pantheon site ${PANTHEON_SITE}."
-    if ! [ "yes" = "$(source "${DEPLOY_PROVIDER_DO_DEPLOY}")" ] ; then
+    if [ "yes" != "$(source "${DEPLOY_PROVIDER_DO_DEPLOY}")" ] ; then
         announce "Bypassing deployment for branch ${CIRCLE_BRANCH}"
         exit
     fi
