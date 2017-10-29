@@ -20,15 +20,16 @@ declare=${CIRCLE_ARTIFACTS:=}
 declare=${CIRCLE_BRANCH:=}
 declare=${DEPLOY_BRANCH:=}
 declare=${PANTHEON_SITE:=}
-#
-# Set artifacts file for this script
-#
-ARTIFACTS_FILE="${CIRCLE_ARTIFACTS}/deploy.log"
 
 #
 # Load the shared scripts
 #
 source "${SHARED_SCRIPTS}"
+
+#
+# Set artifacts file for this script
+#
+ARTIFACTS_FILE="${CIRCLE_ARTIFACTS}/deploy.log"
 
 #
 # Load the shared scripts
