@@ -37,11 +37,7 @@ ARTIFACTS_FILE="${CIRCLE_ARTIFACTS}/deploy.log"
 DO_DEPLOY_SCRIPT="$(get_provider_specific_script "do-deploy.sh")"
 if [ -f "${DO_DEPLOY_SCRIPT}" ] ; then
     announce "Testing to see if environment ${CIRCLE_BRANCH} exists for Pantheon site ${PANTHEON_SITE}."
-    terminus env:list "${PANTHEON_SITE}"
-    DO_DEPLOY="$(source "${DO_DEPLOY_SCRIPT}")"
-    echo "Do deploy? ${DO_DEPLOY}"
-    echo "Do deploy? ${DO_DEPLOY}" >> $ARTIFACTS_FILE
-    if [ "yes" == "${DO_DEPLOY}" ] ; then
+    if [ "yes" == "$(source "${DO_DEPLOY_SCRIPT}")" ] ; then
         announce "Yes! Let's deploy it."
     else
         announce "Bypassing deployment for branch ${CIRCLE_BRANCH}"
