@@ -37,7 +37,7 @@ sudo ln -s ~/cache/terminus/bin/terminus /usr/local/bin/terminus
 # Authenticating Terminus for Pantheon
 #
 announce "...Authenticating Terminus for Pantheon"
-terminus auth:login --machine-token="${PANTHEON_TOKEN}"
+sudo terminus auth:login --machine-token="${PANTHEON_TOKEN}"
 
 
 
