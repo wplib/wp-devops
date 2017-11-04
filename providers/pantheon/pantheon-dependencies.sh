@@ -20,11 +20,11 @@ if ! [ -f ~/cache/terminus/bin/terminus ]; then
     rm -rf terminus
 
     if [ "latest" == "${PANTHEON_TERMINUS_VERSION}" ]; then
-        announce "...Retrieving URL to version ${PANTHEON_TERMINUS_VERSION} of Terminus"
-        TERMINUS_TARBALL="https://github.com/pantheon-systems/terminus/archive/${PANTHEON_TERMINUS_VERSION}.tar.gz"
-    else
         announce "...Retrieving URL to latest Terminus version"
         TERMINUS_TARBALL="$(curl -s https://api.github.com/repos/pantheon-systems/terminus/releases/latest | jq -r ".tarball_url")"
+    else
+        announce "...Retrieving URL to version ${PANTHEON_TERMINUS_VERSION} of Terminus"
+        TERMINUS_TARBALL="https://github.com/pantheon-systems/terminus/archive/${PANTHEON_TERMINUS_VERSION}.tar.gz"
     fi
 
     announce "...Downloading Terminus tarball"
@@ -34,11 +34,11 @@ if ! [ -f ~/cache/terminus/bin/terminus ]; then
     tar -xzf terminus.tar.gz
     rm terminus.tar.gz
 
-    if [ "latest" == "${PANTHEON_TERMINUS_VERSION}" ]; then
-        TERMINUS_DIRECTORY="terminus-${PANTHEON_TERMINUS_VERSION}"
-    else
+    if [ "latest" = "${PANTHEON_TERMINUS_VERSION}" ]; then
         announce "...Locating extracted Terminus directory"
         TERMINUS_DIRECTORY="$(ls -d *terminus*/)"
+    else
+        TERMINUS_DIRECTORY="terminus-${PANTHEON_TERMINUS_VERSION}"
     fi
 
     mv "${TERMINUS_DIRECTORY}" terminus
