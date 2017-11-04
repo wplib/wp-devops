@@ -7,7 +7,7 @@
 # "Declarations" of the variables this script assumes
 #
 declare=${PANTHEON_TOKEN:=}
-declare=${PANTHEON_TERMINUS_VERSION:=latest}
+declare=${PANTHEON_TERMINUS_VERSION:=1.6.0}  # 1.6.0 is the most recent version we tested with.
 
 if ! [ -f ~/cache/terminus/bin/terminus ]; then
     #
