@@ -13,6 +13,10 @@ if ! [ -f ~/cache/terminus/bin/terminus ]; then
     #
     # Installing Terminus for Pantheon, latest version
     #
+    # @todo Save version # to a file in cache and if 'latest' requested then
+    #       check to see if there is a new version available instead of just
+    #       not checking the version if already installed.
+    #
     announce "...Installing Terminus for Pantheon"
     mkdir -p ~/cache
     cd ~/cache
