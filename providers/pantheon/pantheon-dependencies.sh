@@ -10,7 +10,7 @@ declare=${PANTHEON_TOKEN:=}
 
 if ! [ -f ~/cache/terminus/bin/terminus ]; then
     #
-    # Installing Terminus for Pantheon
+    # Installing Terminus for Pantheon, latest version
     #
     announce "...Installing Terminus for Pantheon"
     mkdir -p ~/cache
