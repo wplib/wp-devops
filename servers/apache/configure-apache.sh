@@ -31,9 +31,9 @@ source "${SHARED_SCRIPTS}"
 
 announce "Configuring Apache"
 
-PHP_MAJOR_MINOR_VER="${PHP_VERSION:0:3}"
+PHP_SHORT_VERSION="${PHP_VERSION:0:3}"
 
-case "${PHP_MAJOR_MINOR_VER}" in
+case "${PHP_SHORT_VERSION}" in
 5.6)
     #
     # CircleCI configures libphp5.so incorrectly when you specify PHP version
@@ -45,8 +45,7 @@ case "${PHP_MAJOR_MINOR_VER}" in
     sudo ln -sf "${actual_libphp_so}" "${libphp_so}"
     onError
     ;;
-7.0)
-7.1)
+7.0|7.1)
     announce "...Disable PHP5 on Apache"
     sudo a2dismod php5 >> $ARTIFACTS_FILE
     onError
@@ -63,12 +62,12 @@ case "${PHP_MAJOR_MINOR_VER}" in
     sudo apt-get update >> $ARTIFACTS_FILE
     onError
 
-    announce "...Installing Apache module for PHP ${PHP_MAJOR_MINOR_VER}"
-    sudo apt-get install libapache2-mod-php"${PHP_MAJOR_MINOR_VER}" >> $ARTIFACTS_FILE
+    announce "...Installing Apache module for PHP ${PHP_SHORT_VERSION}"
+    sudo apt-get install libapache2-mod-php"${PHP_SHORT_VERSION}" >> $ARTIFACTS_FILE
     onError
 
-    announce "...Enabling Apache module for PHP ${PHP_MAJOR_MINOR_VER}"
-    sudo a2enmod php"${PHP_MAJOR_MINOR_VER}" >> $ARTIFACTS_FILE
+    announce "...Enabling Apache module for PHP ${PHP_SHORT_VERSION}"
+    sudo a2enmod php"${PHP_SHORT_VERSION}" >> $ARTIFACTS_FILE
     onError
     ;;
 esac
