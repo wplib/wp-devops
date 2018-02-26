@@ -116,7 +116,7 @@ cloneDir="$(mktemp -d /tmp/gitclone-XXXX)"
 # Clone Creating a temp directory for WPEngine Git repo
 #
 announce "...Cloning ${TARGET_GIT_URL} into ${cloneDir}"
-git clone --quiet "${TARGET_GIT_URL}" "${cloneDir}" 2>&1 >> $ARTIFACTS_FILE
+git clone --quiet "${TARGET_GIT_URL}" "${cloneDir}" >> $ARTIFACTS_FILE 2>&1
 
 #
 # Clone Creating a temp directory for WPEngine Git repo
@@ -141,7 +141,7 @@ cd "${TEST_INDEX}"
 #
 announce "...Checking out ${CIRCLE_BRANCH}"
 cd "${SOURCE_INDEX}"
-git checkout --quiet ${CIRCLE_BRANCH} 2>&1 >> $ARTIFACTS_FILE
+git checkout --quiet ${CIRCLE_BRANCH} >> $ARTIFACTS_FILE 2>&1
 
 #
 # Now make other directories expected by WordPress
@@ -308,26 +308,26 @@ sudo cp "${GITIGNORE_SOURCE}" "${GITIGNORE_FILEPATH}"
 # Remove any files all files from the Git index
 #
 announce "...Removing all files from the Git index"
-sudo git rm -r --cached  --ignore-unmatch . >> $ARTIFACTS_FILE
+sudo git rm -r --cached  --ignore-unmatch . >> $ARTIFACTS_FILE 2>&1
 
 #
 # Remove .git sub-subdirectories from the test website
 #
 announce "...Removing .git subdirectories not in the test index"
-find "${TEST_INDEX}" -mindepth 2 -type d -name ".git" | sudo xargs rm -rf  >> $ARTIFACTS_FILE
+find "${TEST_INDEX}" -mindepth 2 -type d -name ".git" | sudo xargs rm -rf  >> $ARTIFACTS_FILE 2>&1
 
 #
 # Adding all files to Git stage
 #
 announce "...Staging all files except files excluded by .gitignore"
-sudo git add .  >> $ARTIFACTS_FILE
+sudo git add .  >> $ARTIFACTS_FILE 2>&1
 
 #
 # Committing files for this build
 #
 commitMsg="during build; build #${CIRCLE_BUILD_NUM}"
 announce "...Committing ${commitMsg}"
-sudo git commit -m "Commit ${commitMsg}" >> $ARTIFACTS_FILE
+sudo git commit -m "Commit ${commitMsg}" >> $ARTIFACTS_FILE 2>&1
 
 #
 # Removing git remotes
