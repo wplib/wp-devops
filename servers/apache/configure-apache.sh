@@ -24,11 +24,6 @@ declare=${TEST_WEBSERVER:=}
 #
 ARTIFACTS_FILE="${CIRCLE_ARTIFACTS}/configure-apache.log"
 
-#
-# Load the shared scripts
-#
-source "${SHARED_SCRIPTS}"
-
 announce "Configuring Apache"
 
 PHP_SHORT_VERSION="${PHP_VERSION:0:3}"
@@ -46,28 +41,31 @@ case "${PHP_SHORT_VERSION}" in
     onError
     ;;
 7.0|7.1)
+    #
+    # CircleCI does not configure Apache correctly when you use PHP 7.x
+    #
     announce "...Disable PHP5 on Apache"
-    sudo a2dismod php5 >> $ARTIFACTS_FILE
+    sudo a2dismod php5 2>&1 >> $ARTIFACTS_FILE
     onError
 
     announce "...Attaching Personal Package Archives (PPA) for PHP"
-    sudo add-apt-repository ppa:ondrej/php --yes  >> $ARTIFACTS_FILE
+    sudo add-apt-repository ppa:ondrej/php --yes  2>&1  >> $ARTIFACTS_FILE
     onError
 
     announce "...Attaching Personal Package Archives (PPA) for Apache"
-    sudo add-apt-repository ppa:ondrej/apache2 --yes >> $ARTIFACTS_FILE
+    sudo add-apt-repository ppa:ondrej/apache2 --yes  2>&1  >> $ARTIFACTS_FILE
     onError
 
     announce "...Updating apt-get after attaching PPAs"
-    sudo apt-get update >> $ARTIFACTS_FILE
+    sudo apt-get update  2>&1  >> $ARTIFACTS_FILE
     onError
 
     announce "...Installing Apache module for PHP ${PHP_SHORT_VERSION}"
-    sudo apt-get install libapache2-mod-php"${PHP_SHORT_VERSION}" >> $ARTIFACTS_FILE
+    sudo apt-get install libapache2-mod-php"${PHP_SHORT_VERSION}" 2>&1 >> $ARTIFACTS_FILE
     onError
 
     announce "...Enabling Apache module for PHP ${PHP_SHORT_VERSION}"
-    sudo a2enmod php"${PHP_SHORT_VERSION}" >> $ARTIFACTS_FILE
+    sudo a2enmod php"${PHP_SHORT_VERSION}" 2>&1 >> $ARTIFACTS_FILE
     onError
     ;;
 esac
