@@ -243,12 +243,38 @@ if [ -f "${SOURCE_CONFIG}" ] ; then
     sudo cp "${SOURCE_CONFIG}" "${CONFIG_FILEPATH}"
 fi
 
+rm /var/www/html/vendor/bin/phpunit
+
+#
+# Seems chattr does not work with symlinks exist in the path. Ugh!
+# PHPUnit uses a symlink, so going to delete it and then restore it.
+#
+# @todo need to find a way to do this for any symlink in /var/www/html
+#
+announce "...Searching for PHPUnit"
+PHPUNIT_EXEC_FILE="(sudo find /var/www/html | grep "/bin/phpunit")"
+if [ "" != "${PHPUNIT_EXEC_FILE}" ]; then
+    announce "...PHPUnit found: ${PHPUNIT_EXEC_FILE}"
+    PHPUNIT_DIR="${PHPUNIT_EXEC_FILE%%/bin/phpunit}/phpunit"
+
+    announce "...Temporarily deleting symlink to PHPUnit"
+    sudo rm "${PHPUNIT_EXEC_FILE}"
+fi
+
 #
 # Removing immutable flag from files and directories
 # See: https://askubuntu.com/a/675307/486620
 #
 announce "...Removing immutable flag from ${DOCUMENT_ROOT}"
 sudo chattr -R -i "${DOCUMENT_ROOT}"
+
+if [ "" != "${PHPUNIT_EXEC_FILE}" ]; then
+    #
+    # Now we need to set the symlink for PHPUnit back...
+    #
+    announce "...Restoring symlink for: ${PHPUNIT_EXEC_FILE}"
+    sudo ln -sf "${PHPUNIT_DIR}/phpunit/phpunit" "${PHPUNIT_EXEC_FILE}"
+fi
 
 #
 # Ensure document root has the right ownership for Apache
