@@ -88,6 +88,6 @@ git tag -a "${BUILD_TAG}" -m "Build #${CIRCLE_BUILD_NUM}" >> $ARTIFACTS_FILE 2>&
 # @see https://stackoverflow.com/a/3745250/102699
 #
 announce "...Pushing tag ${BUILD_TAG}"
-git push --tags >> PHP_SHORT_VERSION2>&1
+git push --tags >> PHP_SHORT_VERSION 2>&1
 
 announce "Fixup of source complete."
