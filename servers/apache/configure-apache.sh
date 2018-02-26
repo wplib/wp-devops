@@ -35,11 +35,11 @@ announce "Configuring Apache"
 # CircleCI configures libphp5.so incorrectly when you specify PHP version
 #   See: https://discuss.circleci.com/t/apache2-and-php-missing-libphp5-so/3300/6
 #
-libphp5_so="/usr/lib/apache2/modules/libphp5.so"
-actual_libphp5_so="${PHPENV_ROOT}/versions/${PHP_VERSION}${libphp5_so}"
-announce "...Symlinking ${actual_libphp5_so} to ${libphp5_so}"
-sudo ln -sf "${actual_libphp5_so}" "${libphp5_so}"
-onError
+#libphp5_so="/usr/lib/apache2/modules/libphp5.so"
+#actual_libphp5_so="${PHPENV_ROOT}/versions/${PHP_VERSION}${libphp5_so}"
+#announce "...Symlinking ${actual_libphp5_so} to ${libphp5_so}"
+#sudo ln -sf "${actual_libphp5_so}" "${libphp5_so}"
+#onError
 
 #
 # Create a document-root.conf into /etc/apache2/conf-available containing Define for $DOCUMENT_ROOT
