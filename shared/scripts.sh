@@ -67,6 +67,7 @@ mkdir -p ~/cache
 #
 # Set the Git user and repo based on the branch
 #
-announce "...Git branch is ${CIRCLE_BRANCH}; URL is ${TARGET_GIT_URL}"
+announce "...Git branch is ${CIRCLE_BRANCH}"
+announce "...Git URL is ${TARGET_GIT_URL}"
 
 

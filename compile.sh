@@ -109,13 +109,13 @@ sudo rm -rf "${TEST_INDEX}"
 #
 # Create a temp directory to clone into
 #
-announce "...Creating temp directory to clone ${TARGET_GIT_URL} into"
+announce "...Creating temp directory to clone ${TARGET_SITE}@${DEPLOY_PROVIDER} into"
 cloneDir="$(mktemp -d /tmp/gitclone-XXXX)"
 
 #
 # Clone Creating a temp directory for WPEngine Git repo
 #
-announce "...Cloning ${TARGET_GIT_URL} into ${cloneDir}"
+announce "...Cloning ${TARGET_SITE}@${DEPLOY_PROVIDER} into ${cloneDir}"
 git clone --quiet "${TARGET_GIT_URL}" "${cloneDir}" >> $ARTIFACTS_FILE 2>&1
 
 #
