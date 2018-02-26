@@ -252,7 +252,7 @@ rm /var/www/html/vendor/bin/phpunit
 # @todo need to find a way to do this for any symlink in /var/www/html
 #
 announce "...Searching for PHPUnit"
-PHPUNIT_EXEC_FILE="(sudo find /var/www/html | grep "/bin/phpunit")"
+PHPUNIT_EXEC_FILE="$(sudo find /var/www/html | grep "/bin/phpunit")"
 if [ "" != "${PHPUNIT_EXEC_FILE}" ]; then
     announce "...PHPUnit found: ${PHPUNIT_EXEC_FILE}"
     PHPUNIT_DIR="${PHPUNIT_EXEC_FILE%%/bin/phpunit}/phpunit"
