@@ -29,39 +29,49 @@ cd "${SOURCE_INDEX}"
 #
 announce "...Stash any cached files that would overwrite potential updates"
 STASH_MSG="$(git stash)"
-echo "${STASH_MSG}" >> $ARTIFACTS_FILE
+echo "${STASH_MSG}" 2>&1 >> $ARTIFACTS_FILE
 
 if [ "No local changes to save" != "${STASH_MSG}" ] ; then
     #
     # Since we do have local changes, drop them
     #
     announce "...Drop stashed cached files"
-    git stash drop  >> $ARTIFACTS_FILE
+    git stash drop  2>&1 >> $ARTIFACTS_FILE
 fi
 
 #
 # Discard any new files or directories not in the latest git commit
 #
 announce "...Discard any new files or directories not in the latest git commit"
-git clean -f >> $ARTIFACTS_FILE
+git clean -f  2>&1 >> $ARTIFACTS_FILE
 
-#
-# Checking out the expected branch
-#
-announce "...Checking out branch ${CIRCLE_BRANCH}"
-git checkout "${CIRCLE_BRANCH}" >> $ARTIFACTS_FILE
+announce "...Inspecting current branch"
+CURRENT_BRANCH="$(git symbolic-ref --short HEAD 2>&1)"
+onError
+
+announce "...Current branch is ${CURRENT_BRANCH}"
+if [ "${CURRENT_BRANCH}" != "${CIRCLE_BRANCH}" ]; then
+    #
+    # Checking out the expected branch
+    #
+    announce "...Checking out branch ${CIRCLE_BRANCH}"
+    git checkout "${CIRCLE_BRANCH}" 2>&1 >> $ARTIFACTS_FILE
+    onError
+fi
 
 #
 # Run a git status for the artifacts file
 #
 announce "...Run a git status for the artifacts file"
-git status >> $ARTIFACTS_FILE
+git status  2>&1 >> $ARTIFACTS_FILE
+onError
 
 #
 # Do a git pull to make sure we have the latest, just in case.
 #
 announce "...Pulling from origin/${CIRCLE_BRANCH} to get the latest before changes"
 git pull origin ${CIRCLE_BRANCH} --no-edit 2>&1 >> $ARTIFACTS_FILE
+onError
 
 #
 # Create a directory for uploads so Circle CI
@@ -69,12 +79,14 @@ git pull origin ${CIRCLE_BRANCH} --no-edit 2>&1 >> $ARTIFACTS_FILE
 #
 announce "...Create directory ${SOURCE_CONTENT}/uploads"
 mkdir -p "${SOURCE_CONTENT}/uploads"
+onError
 
 #
 # Adding build tag
 #
 announce "...Tagging build with '${BUILD_TAG}'"
 git tag -a "${BUILD_TAG}" -m "Build #${CIRCLE_BUILD_NUM}" 2>&1 >> $ARTIFACTS_FILE
+onError
 
 #
 # Pushing build commit and tag
@@ -83,5 +95,6 @@ git tag -a "${BUILD_TAG}" -m "Build #${CIRCLE_BUILD_NUM}" 2>&1 >> $ARTIFACTS_FIL
 #
 announce "...Pushing tag ${BUILD_TAG}"
 git push --tags 2>&1 >> $ARTIFACTS_FILE
+onError
 
 announce "Fixup of source complete."
