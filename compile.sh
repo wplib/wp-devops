@@ -243,8 +243,6 @@ if [ -f "${SOURCE_CONFIG}" ] ; then
     sudo cp "${SOURCE_CONFIG}" "${CONFIG_FILEPATH}"
 fi
 
-rm /var/www/html/vendor/bin/phpunit
-
 #
 # Seems chattr does not work with symlinks exist in the path. Ugh!
 # PHPUnit uses a symlink, so going to delete it and then restore it.
@@ -252,8 +250,6 @@ rm /var/www/html/vendor/bin/phpunit
 # @todo need to find a way to do this for any symlink in /var/www/html
 #
 announce "...Searching for PHPUnit"
-find "${DOCUMENT_ROOT}" | grep "/bin/phpunit"
-echo $?
 PHPUNIT_EXEC_FILE="$(find "${DOCUMENT_ROOT}" | grep "/bin/phpunit")"
 if [ "" != "${PHPUNIT_EXEC_FILE}" ]; then
     announce "...PHPUnit found: ${PHPUNIT_EXEC_FILE}"
