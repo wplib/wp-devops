@@ -31,15 +31,48 @@ source "${SHARED_SCRIPTS}"
 
 announce "Configuring Apache"
 
-#
-# CircleCI configures libphp5.so incorrectly when you specify PHP version
-#   See: https://discuss.circleci.com/t/apache2-and-php-missing-libphp5-so/3300/6
-#
-#libphp5_so="/usr/lib/apache2/modules/libphp5.so"
-#actual_libphp5_so="${PHPENV_ROOT}/versions/${PHP_VERSION}${libphp5_so}"
-#announce "...Symlinking ${actual_libphp5_so} to ${libphp5_so}"
-#sudo ln -sf "${actual_libphp5_so}" "${libphp5_so}"
-#onError
+PHP_MAJOR_MINOR_VER="${PHP_VERSION:0:3}"
+
+case "${PHP_MAJOR_MINOR_VER}" in
+5.6)
+    #
+    # CircleCI configures libphp5.so incorrectly when you specify PHP version
+    #   See: https://discuss.circleci.com/t/apache2-and-php-missing-libphp5-so/3300/6
+    #
+    libphp_so="/usr/lib/apache2/modules/libphp5.so"
+    actual_libphp_so="${PHPENV_ROOT}/versions/${PHP_VERSION}${libphp_so}"
+    announce "...Symlinking ${actual_libphp_so} to ${libphp_so}"
+    sudo ln -sf "${actual_libphp_so}" "${libphp_so}"
+    onError
+    ;;
+7.0)
+7.1)
+    announce "...Disable PHP5 on Apache"
+    sudo a2dismod php5 >> $ARTIFACTS_FILE
+    onError
+
+    announce "...Attaching Personal Package Archives (PPA) for PHP"
+    sudo add-apt-repository ppa:ondrej/php --yes  >> $ARTIFACTS_FILE
+    onError
+
+    announce "...Attaching Personal Package Archives (PPA) for Apache"
+    sudo add-apt-repository ppa:ondrej/apache2 --yes >> $ARTIFACTS_FILE
+    onError
+
+    announce "...Updating apt-get after attaching PPAs"
+    sudo apt-get update >> $ARTIFACTS_FILE
+    onError
+
+    announce "...Installing Apache module for PHP ${PHP_MAJOR_MINOR_VER}"
+    sudo apt-get install libapache2-mod-php"${PHP_MAJOR_MINOR_VER}" >> $ARTIFACTS_FILE
+    onError
+
+    announce "...Enabling Apache module for PHP ${PHP_MAJOR_MINOR_VER}"
+    sudo a2enmod php"${PHP_MAJOR_MINOR_VER}" >> $ARTIFACTS_FILE
+    onError
+    ;;
+esac
+
 
 #
 # Create a document-root.conf into /etc/apache2/conf-available containing Define for $DOCUMENT_ROOT
