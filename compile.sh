@@ -323,6 +323,12 @@ announce "...Staging all files except files excluded by .gitignore"
 sudo git add .  >> $ARTIFACTS_FILE 2>&1
 
 #
+# Running a file list for debugging
+#
+announce "...Running a file list for debugging"
+find "${TEST_INDEX}"  >> $ARTIFACTS_FILE 2>&1
+
+#
 # Committing files for this build
 #
 commitMsg="during build; build #${CIRCLE_BUILD_NUM}"
