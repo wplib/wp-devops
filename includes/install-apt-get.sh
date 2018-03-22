@@ -28,8 +28,6 @@ if [ "" != "${PACKAGES_TO_INSTALL}" ] ; then
     announce "...Updating apt-get"
     sudo apt-get update -y >> $ARTIFACTS_FILE 2>&1
 
-    announce "Installing apt-get packages"
-
     #
     # Install all the packages
     #
