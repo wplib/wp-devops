@@ -99,10 +99,17 @@ ___MYSQL___
 #
 # Import the `provision.sql` database
 #
-announce "...Import ${REPO_ROOT}/sql/provision.sql database"
+announce "...Import ${PROVISION_SQL} database"
+PROVISION_SQL="${REPO_ROOT}/sql/provision.sql"
+if [ -d "${PROVISION_SQL}" ] ; then
+    announce "...Unchunking ${PROVISION_SQL}/provision-??.sql.chunk"
+    mv "${PROVISION_SQL}" "${PROVISION_SQL}.bak"
+    cat "${PROVISION_SQL}".bak/provision-??.sql.chunk > $PROVISION_SQL
+fi
+
 mysql -u ubuntu <<___MYSQL___
 USE ${DB_NAME};
-SOURCE ${REPO_ROOT}/sql/provision.sql;
+SOURCE ${PROVISION_SQL};
 ___MYSQL___
 
 announce "Database complete."
