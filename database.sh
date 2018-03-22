@@ -99,8 +99,8 @@ ___MYSQL___
 #
 # Import the `provision.sql` database
 #
-announce "...Import ${PROVISION_SQL} database"
 PROVISION_SQL="${REPO_ROOT}/sql/provision.sql"
+announce "...Import ${PROVISION_SQL} database"
 if [ -d "${PROVISION_SQL}" ] ; then
     announce "...Unchunking ${PROVISION_SQL}/provision-??.sql.chunk"
     mv "${PROVISION_SQL}" "${PROVISION_SQL}.bak"
