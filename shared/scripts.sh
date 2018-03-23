@@ -40,8 +40,13 @@ announce () {
 onError() {
     if [ $? -ne 0 ] ; then
         printf "FAILED: ${ACTION}.\n"
-        echo "===========\n"
+        echo -e "\n"
+        echo -e "===========[ ARTIFACTS_FILE ]===========\n"
+        echo -e "\n"
         cat "${ARTIFACTS_FILE}"
+        echo -e "\n"
+        echo -e "========================================\n"
+        echo -e "\n"
         exit 1
     fi
 }
