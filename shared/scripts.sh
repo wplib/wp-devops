@@ -40,6 +40,13 @@ announce () {
 onError() {
     if [ $? -ne 0 ] ; then
         printf "FAILED: ${ACTION}.\n"
+        echo -e "\n"
+        echo -e "===========[ ARTIFACTS_FILE ]===========\n"
+        echo -e "\n"
+        cat "${ARTIFACTS_FILE}"
+        echo -e "\n"
+        echo -e "========================================\n"
+        echo -e "\n"
         exit 1
     fi
 }
@@ -67,6 +74,7 @@ mkdir -p ~/cache
 #
 # Set the Git user and repo based on the branch
 #
-announce "...Git branch is ${CIRCLE_BRANCH}; URL is ${TARGET_GIT_URL}"
+announce "...Git branch is ${CIRCLE_BRANCH}"
+announce "...Git URL is ${TARGET_GIT_URL}"
 
 

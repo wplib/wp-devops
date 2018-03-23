@@ -109,14 +109,14 @@ sudo rm -rf "${TEST_INDEX}"
 #
 # Create a temp directory to clone into
 #
-announce "...Creating temp directory to clone ${TARGET_GIT_URL} into"
+announce "...Creating temp directory to clone ${TARGET_SITE}@${DEPLOY_PROVIDER} into"
 cloneDir="$(mktemp -d /tmp/gitclone-XXXX)"
 
 #
 # Clone Creating a temp directory for WPEngine Git repo
 #
-announce "...Cloning ${TARGET_GIT_URL} into ${cloneDir}"
-git clone --quiet "${TARGET_GIT_URL}" "${cloneDir}" 2>&1 >> $ARTIFACTS_FILE
+announce "...Cloning ${TARGET_SITE}@${DEPLOY_PROVIDER} into ${cloneDir}"
+git clone --quiet "${TARGET_GIT_URL}" "${cloneDir}" >> $ARTIFACTS_FILE 2>&1
 
 #
 # Clone Creating a temp directory for WPEngine Git repo
@@ -141,7 +141,7 @@ cd "${TEST_INDEX}"
 #
 announce "...Checking out ${CIRCLE_BRANCH}"
 cd "${SOURCE_INDEX}"
-git checkout --quiet ${CIRCLE_BRANCH} 2>&1 >> $ARTIFACTS_FILE
+git checkout --quiet ${CIRCLE_BRANCH} >> $ARTIFACTS_FILE 2>&1
 
 #
 # Now make other directories expected by WordPress
@@ -244,11 +244,35 @@ if [ -f "${SOURCE_CONFIG}" ] ; then
 fi
 
 #
+# Seems chattr does not work with symlinks exist in the path. Ugh!
+# PHPUnit uses a symlink, so going to delete it and then restore it.
+#
+# @todo need to find a way to do this for any symlink in /var/www/html
+#
+announce "...Searching for PHPUnit"
+PHPUNIT_EXEC_FILE="$(find "${DOCUMENT_ROOT}" | grep "/bin/phpunit" || true)"
+if [ "" != "${PHPUNIT_EXEC_FILE}" ]; then
+    announce "...PHPUnit found: ${PHPUNIT_EXEC_FILE}"
+    PHPUNIT_DIR="${PHPUNIT_EXEC_FILE%%/bin/phpunit}/phpunit"
+
+    announce "...Temporarily deleting symlink to PHPUnit"
+    sudo rm "${PHPUNIT_EXEC_FILE}"
+fi
+
+#
 # Removing immutable flag from files and directories
 # See: https://askubuntu.com/a/675307/486620
 #
 announce "...Removing immutable flag from ${DOCUMENT_ROOT}"
 sudo chattr -R -i "${DOCUMENT_ROOT}"
+
+if [ "" != "${PHPUNIT_EXEC_FILE}" ]; then
+    #
+    # Now we need to set the symlink for PHPUnit back...
+    #
+    announce "...Restoring symlink for: ${PHPUNIT_EXEC_FILE}"
+    sudo ln -sf "${PHPUNIT_DIR}/phpunit/phpunit" "${PHPUNIT_EXEC_FILE}"
+fi
 
 #
 # Ensure document root has the right ownership for Apache
@@ -284,26 +308,32 @@ sudo cp "${GITIGNORE_SOURCE}" "${GITIGNORE_FILEPATH}"
 # Remove any files all files from the Git index
 #
 announce "...Removing all files from the Git index"
-sudo git rm -r --cached  --ignore-unmatch . >> $ARTIFACTS_FILE
+sudo git rm -r --cached  --ignore-unmatch . >> $ARTIFACTS_FILE 2>&1
 
 #
 # Remove .git sub-subdirectories from the test website
 #
 announce "...Removing .git subdirectories not in the test index"
-find "${TEST_INDEX}" -mindepth 2 -type d -name ".git" | sudo xargs rm -rf  >> $ARTIFACTS_FILE
+find "${TEST_INDEX}" -mindepth 2 -type d -name ".git" | sudo xargs rm -rf  >> $ARTIFACTS_FILE 2>&1
 
 #
 # Adding all files to Git stage
 #
 announce "...Staging all files except files excluded by .gitignore"
-sudo git add .  >> $ARTIFACTS_FILE
+sudo git add .  >> $ARTIFACTS_FILE 2>&1
+
+#
+# Running a file list for debugging
+#
+announce "...Running a file list for debugging"
+find "${TEST_INDEX}"  >> $ARTIFACTS_FILE 2>&1
 
 #
 # Committing files for this build
 #
 commitMsg="during build; build #${CIRCLE_BUILD_NUM}"
 announce "...Committing ${commitMsg}"
-sudo git commit -m "Commit ${commitMsg}" >> $ARTIFACTS_FILE
+sudo git commit -m "Commit ${commitMsg}" >> $ARTIFACTS_FILE 2>&1
 
 #
 # Removing git remotes

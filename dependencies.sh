@@ -14,7 +14,6 @@ declare=${TEST_WEBSERVER:=}
 declare=${DEPLOY_PROVIDER:=}
 declare=${DEPLOY_PROVIDER_ROOT:=}
 
-
 #
 # Set artifacts file for this script
 #
@@ -47,8 +46,14 @@ source "${INCLUDES_ROOT}/fixup-source.sh"
 #
 # Configure Apache & PHP to operate correctly
 #
-announce "Running ${INCLUDES_ROOT}/configure-apache.sh"
+announce "Running ${SERVERS_ROOT}/${TEST_WEBSERVER}/configure-apache.sh"
 source "${SERVERS_ROOT}/${TEST_WEBSERVER}/configure-apache.sh"
+
+#
+# Install any apt-get packages
+#
+announce "Running ${INCLUDES_ROOT}/install-apt-get.sh"
+source "${INCLUDES_ROOT}/install-apt-get.sh"
 
 #
 # Install WP-CLI

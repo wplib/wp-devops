@@ -26,7 +26,7 @@ composer install \
     --no-progress \
     --no-suggest \
     --ansi \
-    >> $ARTIFACTS_FILE
+    >> $ARTIFACTS_FILE 2>&1
 
 #
 # Ensure all devops scripts are executable

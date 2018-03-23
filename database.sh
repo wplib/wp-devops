@@ -99,10 +99,27 @@ ___MYSQL___
 #
 # Import the `provision.sql` database
 #
-announce "...Import ${REPO_ROOT}/sql/provision.sql database"
+PROVISION_SQL="${REPO_ROOT}/sql/provision.sql"
+if [ -d "${PROVISION_SQL}" ] ; then
+    announce "...Unchunking ${PROVISION_SQL}/provision-??.sql.chunk"
+    mv "${PROVISION_SQL}" "${PROVISION_SQL}.bak"
+    cat "${PROVISION_SQL}".bak/provision-??.sql.chunk > $PROVISION_SQL
+fi
+
+#
+# Check to see if we have a post-install-apt-get.sh "hook"
+#
+PRE_PROCESS_PROVISION_SQL="${DEVOPS_ROOT}/pre-process-provision.sql.sh"
+if [ -f "${PRE_PROCESS_PROVISION_SQL}" ] ; then
+    announce "...Running ${PRE_PROCESS_PROVISION_SQL}"
+    source "${PRE_PROCESS_PROVISION_SQL}"
+fi
+
+
+announce "...Import ${PROVISION_SQL} database"
 mysql -u ubuntu <<___MYSQL___
 USE ${DB_NAME};
-SOURCE ${REPO_ROOT}/sql/provision.sql;
+SOURCE ${PROVISION_SQL};
 ___MYSQL___
 
 announce "Database complete."

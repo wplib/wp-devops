@@ -36,7 +36,7 @@ ARTIFACTS_FILE="${CIRCLE_ARTIFACTS}/deploy.log"
 #
 DO_DEPLOY_SCRIPT="$(get_provider_specific_script "do-deploy.sh")"
 if [ -f "${DO_DEPLOY_SCRIPT}" ] ; then
-    announce "Testing to see if environment ${CIRCLE_BRANCH} exists for Pantheon site ${PANTHEON_SITE}."
+    announce "Testing to see if environment exists for ${CIRCLE_BRANCH} branch for Pantheon site ${PANTHEON_SITE}."
     if [ "yes" == "$(source "${DO_DEPLOY_SCRIPT}")" ] ; then
         announce "...Yes, deploy ${CIRCLE_BRANCH}.${PANTHEON_SITE}"
     else
@@ -68,61 +68,61 @@ cd "${DOCUMENT_ROOT}"
 # Add git remote origin
 #
 announce "...Adding git remote origin at ${TARGET_GIT_URL}"
-git remote add origin "${TARGET_GIT_URL}" 2>&1 >> $ARTIFACTS_FILE
+git remote add origin "${TARGET_GIT_URL}" >> $ARTIFACTS_FILE 2>&1
 
 #
 # Fetching git remote information
 #
 announce "...Fetching all git remote info"
-git fetch --all --quiet 2>&1 >> $ARTIFACTS_FILE
+git fetch --all --quiet >> $ARTIFACTS_FILE 2>&1
 
 #
 # Checking out branch master
 #
 announce "...Checking out the branch '${DEPLOY_BRANCH}'"
-git checkout -B "${DEPLOY_BRANCH}" --quiet 2>&1 >> $ARTIFACTS_FILE
+git checkout -B "${DEPLOY_BRANCH}" >> $ARTIFACTS_FILE 2>&1
 
 #
 # Set remote tracking information
 #
 announce "...Setting upstream to origin/${DEPLOY_BRANCH} for the branch '${DEPLOY_BRANCH}'"
-git branch --set-upstream-to=origin/$DEPLOY_BRANCH "${DEPLOY_BRANCH}" >> $ARTIFACTS_FILE
+git branch --set-upstream-to=origin/$DEPLOY_BRANCH "${DEPLOY_BRANCH}" >> $ARTIFACTS_FILE 2>&1
 
 #
 # Remove .git subdirectories
 #
 announce "...Removing .git subdirectories not in the test root"
-find "${TEST_INDEX}" -mindepth 2 -type d -name ".git" | xargs rm -rf  >> $ARTIFACTS_FILE
+find "${TEST_INDEX}" -mindepth 2 -type d -name ".git" | xargs rm -rf  >> $ARTIFACTS_FILE 2>&1
 
 #
 # Remove .gitignore files
 #
 announce "...Removing .gitignore files not in the test root"
-find "${TEST_INDEX}" -mindepth 2 -name ".gitignore"   | xargs rm -rf >> $ARTIFACTS_FILE
+find "${TEST_INDEX}" -mindepth 2 -name ".gitignore"   | xargs rm -rf >> $ARTIFACTS_FILE 2>&1
 
 #
 # Remove .gitmodules files
 #
 announce "...Removing .gitmodules files not in the test root"
-find "${TEST_INDEX}" -mindepth 2 -name ".gitmodules"  | xargs rm -rf >> $ARTIFACTS_FILE
+find "${TEST_INDEX}" -mindepth 2 -name ".gitmodules"  | xargs rm -rf >> $ARTIFACTS_FILE 2>&1
 
 #
 # Adding all newly exposed files to Git stage
 #
 announce "...Adding all newly exposed files to Git stage"
-git add . >> $ARTIFACTS_FILE
+git add . >> $ARTIFACTS_FILE 2>&1
 
 #
 # Committing files for this build
 #
 commitMsg="prior to deploy; build #${CIRCLE_BUILD_NUM}"
 announce "...Committing ${commitMsg}"
-git commit -m "Commit ${commitMsg}" >> $ARTIFACTS_FILE
+git commit -m "Commit ${commitMsg}" >> $ARTIFACTS_FILE 2>&1
 
 #
 # Pushing to origin
 #
 announce "...Pushing to origin/${DEPLOY_BRANCH} at ${TARGET_GIT_URL}"
-git push -f origin "${DEPLOY_BRANCH}" --quiet  2>&1 >> $ARTIFACTS_FILE
+git push -f origin "${DEPLOY_BRANCH}" --quiet >> $ARTIFACTS_FILE 2>&1
 
 announce "Deployment complete."
