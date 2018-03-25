@@ -113,28 +113,34 @@ announce "...Creating temp directory to clone ${TARGET_SITE}@${DEPLOY_PROVIDER} 
 cloneDir="$(mktemp -d /tmp/gitclone-XXXX)"
 
 #
-# Clone Creating a temp directory for WPEngine Git repo
+# Clone deployment Git repo into the temp directory
 #
 announce "...Cloning ${TARGET_SITE}@${DEPLOY_PROVIDER} into ${cloneDir}"
 git clone --quiet "${TARGET_GIT_URL}" "${cloneDir}" >> $ARTIFACTS_FILE 2>&1
 
 #
-# Clone Creating a temp directory for WPEngine Git repo
+# Move the deployment repo into /var/www/html
 #
 announce "...Moving ${cloneDir} into ${TEST_INDEX}"
 sudo mv "${cloneDir}" "${TEST_INDEX}"
-
-#
-# Adding a BUILD file containing CIRCLE_BUILD_NUM
-#
-announce "...Adding a BUILD file containing build# ${CIRCLE_BUILD_NUM}"
-echo "${CIRCLE_BUILD_NUM}" > ${TEST_INDEX}/BUILD
 
 #
 # Changing directory to test root
 #
 announce "...Changing to directory ${TEST_INDEX}"
 cd "${TEST_INDEX}"
+
+#
+# Remove any files all files from the Git index
+#
+announce "...Removing all files from the deployment Git index"
+sudo git rm -r -f  --ignore-unmatch . >> $ARTIFACTS_FILE 2>&1
+
+#
+# Adding a BUILD file containing CIRCLE_BUILD_NUM
+#
+announce "...Adding a BUILD file containing build# ${CIRCLE_BUILD_NUM}"
+echo "${CIRCLE_BUILD_NUM}" > ${TEST_INDEX}/BUILD
 
 #
 # Checking out current branch
@@ -303,12 +309,6 @@ cd "${TEST_INDEX}"
 #
 announce "...Copying ${GITIGNORE_SOURCE} to ${GITIGNORE_FILEPATH}"
 sudo cp "${GITIGNORE_SOURCE}" "${GITIGNORE_FILEPATH}"
-
-#
-# Remove any files all files from the Git index
-#
-announce "...Removing all files from the Git index"
-sudo git rm -r --cached  --ignore-unmatch . >> $ARTIFACTS_FILE 2>&1
 
 #
 # Remove .git sub-subdirectories from the test website
