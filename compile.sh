@@ -134,7 +134,7 @@ cd "${TEST_INDEX}"
 # Remove any files all files from the Git index
 #
 announce "...Removing all files from the deployment Git index"
-sudo git rm -r -f  --ignore-unmatch . >> $ARTIFACTS_FILE 2>&1
+sudo git rm -r -f --ignore-unmatch . >> $ARTIFACTS_FILE 2>&1
 
 #
 # Adding a BUILD file containing CIRCLE_BUILD_NUM
@@ -331,9 +331,9 @@ find "${TEST_INDEX}"  >> $ARTIFACTS_FILE 2>&1
 #
 # Committing files for this build
 #
-commitMsg="during build; build #${CIRCLE_BUILD_NUM}"
-announce "...Committing ${commitMsg}"
-sudo git commit -m "Commit ${commitMsg}" >> $ARTIFACTS_FILE 2>&1
+#commitMsg="during build; build #${CIRCLE_BUILD_NUM}"
+#announce "...Committing ${commitMsg}"
+#sudo git commit -m "Commit ${commitMsg}" >> $ARTIFACTS_FILE 2>&1
 
 #
 # Removing git remotes
@@ -342,7 +342,7 @@ remotes="$(git remote)"
 for remote in $remotes ; do
     announce "...Removing git remote ${remote}"
     sudo git remote remove "${remote}"
-    done
+done
 
 #
 # Appending a change directory to test root to .bash_profile
