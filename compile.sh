@@ -330,7 +330,7 @@ if [ "" != "${ROOT_FILES_TO_COPY}" ] ; then
     for file in $ROOT_FILES_TO_COPY; do
         [ '---' == "${file}" ] && continue
         announce "......Copying ${file}"
-        cp -r "${SOURCE_INDEX}/${file}" "${TEST_INDEX}/${file}"
+        sudo cp -r "${SOURCE_INDEX}/${file}" "${TEST_INDEX}/${file}"
     done
 fi
 
