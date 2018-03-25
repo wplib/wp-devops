@@ -113,17 +113,34 @@ announce "...Adding all newly exposed files to Git stage"
 git add . >> $ARTIFACTS_FILE 2>&1
 
 #
+# Find previous build number
+#
+announce "...Finding previous build number"
+PREVIOUS_BUILD_NUM="${CIRCLE_PREVIOUS_BUILD_NUM}"
+while true; do
+    if [ "${PREVIOUS_BUILD_NUM}" == "${CIRCLE_BUILD_NUM}" ]; then
+        break
+    fi
+    TAG="build-${PREVIOUS_BUILD_NUM}"
+    if [ "" != "$(cd "${SOURCE_INDEX}" && git tag | grep "${TAG}")" ]; then
+        break
+    fi
+    PREVIOUS_BUILD_NUM=$((PREVIOUS_BUILD_NUM+1))
+done
+
+#
 # Generating commit message
 #
 announce "...Generating commit message"
-COMMIT_MSG="$(cd "${SOURCE_INDEX}" && git log "build-${CIRCLE_PREVIOUS_BUILD_NUM}..HEAD" --oneline | cut -d' ' -f2-999)"
+
+COMMIT_MSG="$(cd "${SOURCE_INDEX}" && git log "build-${PREVIOUS_BUILD_NUM}..HEAD" --oneline | cut -d' ' -f2-999)"
 echo "${COMMIT_MSG}" >> $ARTIFACTS_FILE 2>&1
 
 #
 # Committing files for this build
 #
-announce "...Committing build #${CIRCLE_BUILD_NUM}"
-git commit -m "Build #${CIRCLE_BUILD_NUM}: ${COMMIT_MSG}" >> $ARTIFACTS_FILE 2>&1
+announce "...Committing builds #${PREVIOUS_BUILD_NUM}..${CIRCLE_BUILD_NUM}"
+git commit -m "Builds #${PREVIOUS_BUILD_NUM}..${CIRCLE_BUILD_NUM}: ${COMMIT_MSG}" >> $ARTIFACTS_FILE 2>&1
 
 #
 # Pushing to origin
