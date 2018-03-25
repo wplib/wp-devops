@@ -143,8 +143,8 @@ echo "${COMMIT_MSG}" >> $ARTIFACTS_FILE 2>&1
 #
 # Committing files for this build
 #
-announce "...Committing builds #${PREVIOUS_BUILD_NUM}..${CIRCLE_BUILD_NUM}"
-git commit -m "Builds #${CIRCLE_BUILD_NUM}: ${COMMIT_MSG}" >> $ARTIFACTS_FILE 2>&1
+announce "...Committing build #${CIRCLE_BUILD_NUM}"
+git commit -m "Build #${CIRCLE_BUILD_NUM}: ${COMMIT_MSG}" >> $ARTIFACTS_FILE 2>&1
 
 #
 # Pushing to origin
