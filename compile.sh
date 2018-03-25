@@ -322,6 +322,18 @@ find "${TEST_INDEX}" -mindepth 2 -type d -name ".git" | sudo xargs rm -rf  >> $A
 announce "...Staging all files except files excluded by .gitignore"
 sudo git add .  >> $ARTIFACTS_FILE 2>&1
 
+if [ "" != "${ROOT_FILES_TO_COPY}" ] ; then
+    #
+    # Copy specific root files
+    #
+    announce "...Copying root files"
+    for file in $ROOT_FILES_TO_COPY; do
+        [ '---' == "${file}" ] && continue
+        announce "......Copying ${file}"
+        cp -r "${SOURCE_INDEX}/${file}" "${TEST_INDEX}/${file}"
+    done
+fi
+
 #
 # Removing git remotes
 #
