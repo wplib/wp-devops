@@ -32,23 +32,23 @@ source "${SHARED_SCRIPTS}"
 ARTIFACTS_FILE="${CIRCLE_ARTIFACTS}/deploy.log"
 
 #
+# Preparing deployment
+#
+announce "Preparing deployment"
+
+#
 # Load the shared scripts
 #
 DO_DEPLOY_SCRIPT="$(get_provider_specific_script "do-deploy.sh")"
 if [ -f "${DO_DEPLOY_SCRIPT}" ] ; then
-    announce "Testing to see if environment exists for ${CIRCLE_BRANCH} branch for Pantheon site ${PANTHEON_SITE}."
+    announce "...Testing to see if environment exists for ${CIRCLE_BRANCH} branch for Pantheon site ${PANTHEON_SITE}."
     if [ "yes" == "$(source "${DO_DEPLOY_SCRIPT}")" ] ; then
         announce "...Yes, deploy ${CIRCLE_BRANCH}.${PANTHEON_SITE}"
     else
-        announce "Bypassing deployment for branch ${CIRCLE_BRANCH}"
+        announce "...Bypassing deployment for branch ${CIRCLE_BRANCH}"
         exit
     fi
 fi
-
-#
-# Preparing deployment
-#
-announce "...Preparing deployment"
 
 #
 # Ensure current user can use git w/o sudo
