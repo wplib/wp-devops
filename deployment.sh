@@ -113,11 +113,20 @@ announce "...Adding all newly exposed files to Git stage"
 git add . >> $ARTIFACTS_FILE 2>&1
 
 #
+# Generating commit message
+#
+announce "...Generating commit message"
+cd "${SOURCE_INDEX}" >> $ARTIFACTS_FILE 2>&1
+PRIOR_BUILD_NUM=$((CIRCLE_BUILD_NUM-1))
+COMMIT_MSG="$(git log "build-${PRIOR_BUILD_NUM}..HEAD" --oneline | cut -d' ' -f2-999)"
+echo "${COMMIT_MSG}" >> $ARTIFACTS_FILE 2>&1
+cd "${TEST_INDEX}" >> $ARTIFACTS_FILE 2>&1
+
+#
 # Committing files for this build
 #
-commitMsg="prior to deploy; build #${CIRCLE_BUILD_NUM}"
-announce "...Committing ${commitMsg}"
-git commit -m "Commit ${commitMsg}" >> $ARTIFACTS_FILE 2>&1
+announce "...Committing build #${CIRCLE_BUILD_NUM}"
+git commit -m "Commit ${COMMIT_MSG}" >> $ARTIFACTS_FILE 2>&1
 
 #
 # Pushing to origin
