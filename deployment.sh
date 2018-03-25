@@ -126,7 +126,7 @@ cd "${TEST_INDEX}" >> $ARTIFACTS_FILE 2>&1
 # Committing files for this build
 #
 announce "...Committing build #${CIRCLE_BUILD_NUM}"
-git commit -m "${COMMIT_MSG}" >> $ARTIFACTS_FILE 2>&1
+git commit -m "Build #${PRIOR_BUILD_NUM}: ${COMMIT_MSG}" >> $ARTIFACTS_FILE 2>&1
 
 #
 # Pushing to origin
