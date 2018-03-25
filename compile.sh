@@ -323,19 +323,6 @@ announce "...Staging all files except files excluded by .gitignore"
 sudo git add .  >> $ARTIFACTS_FILE 2>&1
 
 #
-# Running a file list for debugging
-#
-announce "...Running a file list for debugging"
-find "${TEST_INDEX}"  >> $ARTIFACTS_FILE 2>&1
-
-#
-# Committing files for this build
-#
-#commitMsg="during build; build #${CIRCLE_BUILD_NUM}"
-#announce "...Committing ${commitMsg}"
-#sudo git commit -m "Commit ${commitMsg}" >> $ARTIFACTS_FILE 2>&1
-
-#
 # Removing git remotes
 #
 remotes="$(git remote)"
@@ -349,6 +336,12 @@ done
 #
 announce "...Adding 'cd ${TEST_INDEX}' to ~/.bash_profile"
 sudo sed -i '$ a cd "${TEST_INDEX}"' ~/.bash_profile
+
+#
+# Running a file list for debugging
+#
+announce "...Running a file list for debugging"
+find "${TEST_INDEX}"  >> $ARTIFACTS_FILE 2>&1
 
 #
 # Announce completion
