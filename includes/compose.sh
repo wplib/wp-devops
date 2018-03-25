@@ -19,7 +19,7 @@ announce "Composing project"
 #
 announce "...Get rid of files that are ignored by .gitignore"
 cd ${REPO_ROOT} >> $ARTIFACTS_FILE 2>&1
-rm .gitignore.bak >> $ARTIFACTS_FILE 2>&1
+rm -f .gitignore.bak >> $ARTIFACTS_FILE 2>&1
 mv .gitignore .gitignore.bak >> $ARTIFACTS_FILE 2>&1
 GITIGNORED_FILES="$(git status | grep "www/" | sed -e 's/^[[:space:]]*//')"
 for file in $GITIGNORED_FILES; do
