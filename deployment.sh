@@ -119,10 +119,11 @@ announce "...Finding previous build number"
 PREVIOUS_BUILD_NUM="${CIRCLE_PREVIOUS_BUILD_NUM}"
 while true; do
     if [ "${PREVIOUS_BUILD_NUM}" == "${CIRCLE_BUILD_NUM}" ]; then
+        PREVIOUS_BUILD_TAG=""
         break
     fi
-    TAG="build-${PREVIOUS_BUILD_NUM}"
-    if [ "" != "$(cd "${SOURCE_INDEX}" && git tag | grep "${TAG}")" ]; then
+    PREVIOUS_BUILD_TAG="build-${PREVIOUS_BUILD_NUM}"
+    if [ "" != "$(cd "${SOURCE_INDEX}" && git tag | grep "${PREVIOUS_BUILD_TAG}")" ]; then
         break
     fi
     PREVIOUS_BUILD_NUM=$((PREVIOUS_BUILD_NUM+1))
@@ -132,8 +133,11 @@ done
 # Generating commit message
 #
 announce "...Generating commit message"
-
-COMMIT_MSG="$(cd "${SOURCE_INDEX}" && git log "build-${PREVIOUS_BUILD_NUM}..HEAD" --oneline | cut -d' ' -f2-999)"
+if [ "" != "${PREVIOUS_BUILD_TAG}" ] ; then
+    COMMIT_MSG="$(cd "${SOURCE_INDEX}" && git log "${PREVIOUS_BUILD_TAG}..HEAD" --oneline | cut -d' ' -f2-999)"
+else
+    COMMIT_MSG="..."
+fi
 echo "${COMMIT_MSG}" >> $ARTIFACTS_FILE 2>&1
 
 #
