@@ -116,17 +116,14 @@ git add . >> $ARTIFACTS_FILE 2>&1
 # Generating commit message
 #
 announce "...Generating commit message"
-cd "${SOURCE_INDEX}" >> $ARTIFACTS_FILE 2>&1
-PRIOR_BUILD_NUM=$((CIRCLE_BUILD_NUM-1))
-COMMIT_MSG="$(git log "build-${PRIOR_BUILD_NUM}..HEAD" --oneline | cut -d' ' -f2-999)"
+COMMIT_MSG="$(cd "${SOURCE_INDEX}" && git log "build-${CIRCLE_PREVIOUS_BUILD_NUM}..HEAD" --oneline | cut -d' ' -f2-999)"
 echo "${COMMIT_MSG}" >> $ARTIFACTS_FILE 2>&1
-cd "${TEST_INDEX}" >> $ARTIFACTS_FILE 2>&1
 
 #
 # Committing files for this build
 #
 announce "...Committing build #${CIRCLE_BUILD_NUM}"
-git commit -m "Build #${PRIOR_BUILD_NUM}: ${COMMIT_MSG}" >> $ARTIFACTS_FILE 2>&1
+git commit -m "Build #${CIRCLE_BUILD_NUM}: ${COMMIT_MSG}" >> $ARTIFACTS_FILE 2>&1
 
 #
 # Pushing to origin
