@@ -131,12 +131,6 @@ announce "...Adding a BUILD file containing build# ${CIRCLE_BUILD_NUM}"
 echo "${CIRCLE_BUILD_NUM}" > ${TEST_ROOT}/BUILD
 
 #
-# Changing directory to test root
-#
-announce "...Changing to directory ${TEST_ROOT}"
-cd "${TEST_ROOT}"
-
-#
 # Checking out current branch
 #
 announce "...Checking out ${CIRCLE_BRANCH}"
