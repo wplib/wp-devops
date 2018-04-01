@@ -12,7 +12,6 @@ declare=${TARGET_GIT_PATH:=}
 #
 # This should assign "R W production/<branch>" to $GIT_INFO.
 #
-announce "...Ensuring Git repo ${TARGET_GIT_REPO} exists"
 GIT_INFO="$(ssh git@git.wpengine.com info | grep "${TARGET_GIT_PATH}")"
 
 #
