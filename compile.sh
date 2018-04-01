@@ -97,8 +97,8 @@ sudo rm -rf "${SOURCE_CORE}/.gitignore"
 #
 # Get rid of the root file
 #
-announce "...Removing ${DOCUMENT_ROOT}/index.html"
-sudo rm -f "${DOCUMENT_ROOT}/index.html"
+announce "...Removing ${TEST_ROOT}/index.html"
+sudo rm -f "${TEST_ROOT}/index.html"
 
 #
 # Get rid of the root file, if exists
@@ -250,7 +250,7 @@ fi
 # @todo need to find a way to do this for any symlink in /var/www/html
 #
 announce "...Searching for PHPUnit"
-PHPUNIT_EXEC_FILE="$(find "${DOCUMENT_ROOT}" | grep "/bin/phpunit" || true)"
+PHPUNIT_EXEC_FILE="$(find "${TEST_ROOT}" | grep "/bin/phpunit" || true)"
 if [ "" != "${PHPUNIT_EXEC_FILE}" ]; then
     announce "...PHPUnit found: ${PHPUNIT_EXEC_FILE}"
     PHPUNIT_DIR="${PHPUNIT_EXEC_FILE%%/bin/phpunit}/phpunit"
@@ -263,8 +263,8 @@ fi
 # Removing immutable flag from files and directories
 # See: https://askubuntu.com/a/675307/486620
 #
-announce "...Removing immutable flag from ${DOCUMENT_ROOT}"
-sudo chattr -R -i "${DOCUMENT_ROOT}"
+announce "...Removing immutable flag from ${TEST_ROOT}"
+sudo chattr -R -i "${TEST_ROOT}"
 
 if [ "" != "${PHPUNIT_EXEC_FILE}" ]; then
     #
@@ -277,20 +277,20 @@ fi
 #
 # Ensure document root has the right ownership for Apache
 #
-announce "...Chowning ${DOCUMENT_ROOT} to 'www-data:www-data'"
-sudo chown -R www-data:www-data "${DOCUMENT_ROOT}"
+announce "...Chowning ${TEST_ROOT} to 'www-data:www-data'"
+sudo chown -R www-data:www-data "${TEST_ROOT}"
 
 #
 # Setting directory permissions to 755
 #
-announce "...Setting directory permissions in ${DOCUMENT_ROOT} to 755"
-sudo find "${DOCUMENT_ROOT}" -type d -exec chmod 755 {} \;
+announce "...Setting directory permissions in ${TEST_ROOT} to 755"
+sudo find "${TEST_ROOT}" -type d -exec chmod 755 {} \;
 
 #
 # Setting file permissions to 644
 #
-announce "...Setting file permissions in ${DOCUMENT_ROOT} to 644"
-sudo find "${DOCUMENT_ROOT}" -type f -exec chmod 644 {} \;
+announce "...Setting file permissions in ${TEST_ROOT} to 644"
+sudo find "${TEST_ROOT}" -type f -exec chmod 644 {} \;
 
 #
 # Changing directory to test root
