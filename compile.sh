@@ -214,7 +214,7 @@ sudo rsync -a -f"- */" -f"+ *" . "${TEST_CORE}"
 #
 announce "...Modifying ${SOURCE_ROOT}/index.php to include core path ${DEPLOY_CORE_PATH}"
 SLASH="$([ ! -z "${DEPLOY_CORE_PATH}" ] && echo "/" || echo "")"
-sudo sed -i -e "s|'.*/wp-blog-header|'${SLASH}${DEPLOY_CORE_PATH}/wp-blog-header|" "${DOCUMENT_ROOT}/index.php"
+sudo sed -i -e "s|'.*/wp-blog-header|'${SLASH}${DEPLOY_CORE_PATH}/wp-blog-header|" "${TEST_ROOT}/index.php"
 
 #
 # Removing unnecessary test root files: license.txt and readme.html
