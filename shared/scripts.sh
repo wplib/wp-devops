@@ -15,7 +15,6 @@ declare=${CIRCLE_ARTIFACTS:=}
 declare=${DEPLOY_PROVIDER:=}
 declare=${DEPLOY_PROVIDER_ROOT:=}
 
-
 #
 # Set default deployment options
 #
@@ -41,11 +40,11 @@ onError() {
     if [ $? -ne 0 ] ; then
         printf "FAILED: ${ACTION}.\n"
         echo -e "\n"
-        echo -e "===========[ ARTIFACTS_FILE ]===========\n"
+        echo -e "===========[ BEGIN OUTPUT LOG ]===========\n"
         echo -e "\n"
         cat "${ARTIFACTS_FILE}"
         echo -e "\n"
-        echo -e "========================================\n"
+        echo -e "============[ END OUTPUT LOG ]============\n"
         echo -e "\n"
         exit 1
     fi
