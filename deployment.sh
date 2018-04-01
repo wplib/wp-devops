@@ -62,8 +62,8 @@ sudo chown -R ubuntu:ubuntu "${TEST_ROOT}"
 #
 # Changing directory to document root
 #
-announce "...Changing to directory ${DOCUMENT_ROOT}"
-cd "${DOCUMENT_ROOT}"
+announce "...Changing to directory ${TEST_ROOT}"
+cd "${TEST_ROOT}"
 
 #
 # Add git remote origin
