@@ -216,8 +216,6 @@ announce "...Modifying ${SOURCE_ROOT}/index.php to include core path ${DEPLOY_CO
 SLASH="$([ ! -z "${DEPLOY_CORE_PATH}" ] && echo "/" || echo "")"
 sudo sed -i -e "s|'.*/wp-blog-header|'${SLASH}${DEPLOY_CORE_PATH}/wp-blog-header|" "${TEST_ROOT}/index.php"
 
-exit 2
-
 #
 # Removing unnecessary test root files: license.txt and readme.html
 #
