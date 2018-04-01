@@ -12,16 +12,16 @@ declare=${CIRCLE_ARTIFACTS:=}
 declare=${CIRCLE_BUILD_NUM:=}
 declare=${CIRCLE_BRANCH:=}
 declare=${SHARED_SCRIPTS:=}
-declare=${SOURCE_INDEX:=}
+declare=${SOURCE_ROOT:=}
 declare=${SOURCE_CONTENT:=}
 declare=${BUILD_TAG:=}
 declare=${ARTIFACTS_FILE:=}
 
 #
-# Changing directory to test root
+# Changing directory to source root
 #
-announce "...Changing to directory ${SOURCE_INDEX}"
-cd "${SOURCE_INDEX}"
+announce "...Changing to directory ${SOURCE_ROOT}"
+cd "${SOURCE_ROOT}"
 
 #
 # Stash any local changes, in case there are any, so we can drop them

@@ -12,7 +12,7 @@
 #
 declare=${DOCUMENT_ROOT:=}
 declare=${SHARED_SCRIPTS:=}
-declare=${TEST_INDEX:=}
+declare=${TEST_ROOT:=}
 declare=${TARGET_GIT_URL:=}
 declare=${CIRCLE_BUILD_NUM:=}
 declare=${CIRCLE_PROJECT_REPONAME:=}
@@ -55,8 +55,8 @@ announce "...Preparing deployment"
 #
 # @see: https://help.github.com/articles/error-permission-denied-publickey/
 #
-announce "...Chowning ${TEST_INDEX}/* to 'ubuntu:ubuntu', recursively"
-sudo chown -R ubuntu:ubuntu "${TEST_INDEX}"
+announce "...Chowning ${TEST_ROOT}/* to 'ubuntu:ubuntu', recursively"
+sudo chown -R ubuntu:ubuntu "${TEST_ROOT}"
 
 #
 # Changing directory to document root
@@ -92,19 +92,19 @@ git branch --set-upstream-to=origin/$DEPLOY_BRANCH "${DEPLOY_BRANCH}" >> $ARTIFA
 # Remove .git subdirectories
 #
 announce "...Removing .git subdirectories not in the test root"
-find "${TEST_INDEX}" -mindepth 2 -type d -name ".git" | xargs rm -rf  >> $ARTIFACTS_FILE 2>&1
+find "${TEST_ROOT}" -mindepth 2 -type d -name ".git" | xargs rm -rf  >> $ARTIFACTS_FILE 2>&1
 
 #
 # Remove .gitignore files
 #
 announce "...Removing .gitignore files not in the test root"
-find "${TEST_INDEX}" -mindepth 2 -name ".gitignore"   | xargs rm -rf >> $ARTIFACTS_FILE 2>&1
+find "${TEST_ROOT}" -mindepth 2 -name ".gitignore"   | xargs rm -rf >> $ARTIFACTS_FILE 2>&1
 
 #
 # Remove .gitmodules files
 #
 announce "...Removing .gitmodules files not in the test root"
-find "${TEST_INDEX}" -mindepth 2 -name ".gitmodules"  | xargs rm -rf >> $ARTIFACTS_FILE 2>&1
+find "${TEST_ROOT}" -mindepth 2 -name ".gitmodules"  | xargs rm -rf >> $ARTIFACTS_FILE 2>&1
 
 #
 # Adding all newly exposed files to Git stage

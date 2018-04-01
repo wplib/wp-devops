@@ -15,11 +15,11 @@
 declare=${SHARED_SCRIPTS:=}
 declare=${REPO_ROOT:=}
 declare=${SOURCE_ROOT:=}
-declare=${SOURCE_INDEX:=}
+declare=${SOURCE_ROOT:=}
 declare=${SOURCE_CONTENT:=}
 declare=${SOURCE_CORE:=}
 declare=${DOCUMENT_ROOT:=}
-declare=${TEST_INDEX:=}
+declare=${TEST_ROOT:=}
 declare=${TEST_CORE:=}
 declare=${TEST_CONTENT:=}
 declare=${TARGET_GIT_URL:=}
@@ -60,15 +60,15 @@ source "${SHARED_SCRIPTS}"
 #
 # "Compiling" general process
 #
-announce "Compiling deployable website into directory ${TEST_INDEX}"
+announce "Compiling deployable website into directory ${TEST_ROOT}"
 
 #
 # Get the .git directory from the source root
 #
 # So we don't overwrite the deploy repo.
 #
-announce "...Removing ${SOURCE_INDEX}/.git"
-sudo rm -rf "${SOURCE_INDEX}/.git"
+announce "...Removing ${SOURCE_ROOT}/.git"
+sudo rm -rf "${SOURCE_ROOT}/.git"
 
 #
 # Get the .git directory from the source core
@@ -83,8 +83,8 @@ sudo rm -rf "${SOURCE_CORE}/.git"
 #
 # So when we don't overwrite the deploy .gitignore.
 #
-announce "...Removing ${SOURCE_INDEX}/.gitignore"
-sudo rm -rf "${SOURCE_INDEX}/.gitignore"
+announce "...Removing ${SOURCE_ROOT}/.gitignore"
+sudo rm -rf "${SOURCE_ROOT}/.gitignore"
 
 #
 # Get the .gitignore file from the source core
@@ -103,8 +103,8 @@ sudo rm -f "${DOCUMENT_ROOT}/index.html"
 #
 # Get rid of the root file, if exists
 #
-announce "...Removing ${TEST_INDEX}"
-sudo rm -rf "${TEST_INDEX}"
+announce "...Removing ${TEST_ROOT}"
+sudo rm -rf "${TEST_ROOT}"
 
 #
 # Create a temp directory to clone into
@@ -121,26 +121,26 @@ git clone --quiet "${TARGET_GIT_URL}" "${cloneDir}" >> $ARTIFACTS_FILE 2>&1
 #
 # Clone Creating a temp directory for WPEngine Git repo
 #
-announce "...Moving ${cloneDir} into ${TEST_INDEX}"
-sudo mv "${cloneDir}" "${TEST_INDEX}"
+announce "...Moving ${cloneDir} into ${TEST_ROOT}"
+sudo mv "${cloneDir}" "${TEST_ROOT}"
 
 #
 # Adding a BUILD file containing CIRCLE_BUILD_NUM
 #
 announce "...Adding a BUILD file containing build# ${CIRCLE_BUILD_NUM}"
-echo "${CIRCLE_BUILD_NUM}" > ${TEST_INDEX}/BUILD
+echo "${CIRCLE_BUILD_NUM}" > ${TEST_ROOT}/BUILD
 
 #
 # Changing directory to test root
 #
-announce "...Changing to directory ${TEST_INDEX}"
-cd "${TEST_INDEX}"
+announce "...Changing to directory ${TEST_ROOT}"
+cd "${TEST_ROOT}"
 
 #
 # Checking out current branch
 #
 announce "...Checking out ${CIRCLE_BRANCH}"
-cd "${SOURCE_INDEX}"
+cd "${SOURCE_ROOT}"
 git checkout --quiet ${CIRCLE_BRANCH} >> $ARTIFACTS_FILE 2>&1
 
 #
@@ -203,8 +203,8 @@ fi
 # Copy *just* the files in www/blog/ and not subdirectories
 # See: https://askubuntu.com/a/632102/486620
 #
-announce "...Rsyncing files in ${SOURCE_INDEX}/ to ${TEST_CORE}"
-cd "${SOURCE_INDEX}"
+announce "...Rsyncing files in ${SOURCE_ROOT}/ to ${TEST_CORE}"
+cd "${SOURCE_ROOT}"
 sudo rsync -a -f"- */" -f"+ *" . "${TEST_CORE}"
 
 #
@@ -238,7 +238,7 @@ if ! [ -f "${SOURCE_CONFIG}" ] ; then
 fi
 
 if [ -f "${SOURCE_CONFIG}" ] ; then
-    CONFIG_FILEPATH="${TEST_INDEX}/wp-config.php"
+    CONFIG_FILEPATH="${TEST_ROOT}/wp-config.php"
     announce "...Copying ${SOURCE_CONFIG} to ${CONFIG_FILEPATH}"
     sudo cp "${SOURCE_CONFIG}" "${CONFIG_FILEPATH}"
 fi
@@ -295,8 +295,8 @@ sudo find "${DOCUMENT_ROOT}" -type f -exec chmod 644 {} \;
 #
 # Changing directory to test root
 #
-announce "...Changing to directory ${TEST_INDEX}"
-cd "${TEST_INDEX}"
+announce "...Changing to directory ${TEST_ROOT}"
+cd "${TEST_ROOT}"
 
 #
 # Downloading .gitignore
@@ -314,7 +314,7 @@ sudo git rm -r --cached  --ignore-unmatch . >> $ARTIFACTS_FILE 2>&1
 # Remove .git sub-subdirectories from the test website
 #
 announce "...Removing .git subdirectories not in the test index"
-find "${TEST_INDEX}" -mindepth 2 -type d -name ".git" | sudo xargs rm -rf  >> $ARTIFACTS_FILE 2>&1
+find "${TEST_ROOT}" -mindepth 2 -type d -name ".git" | sudo xargs rm -rf  >> $ARTIFACTS_FILE 2>&1
 
 #
 # Adding all files to Git stage
@@ -326,7 +326,7 @@ sudo git add .  >> $ARTIFACTS_FILE 2>&1
 # Running a file list for debugging
 #
 announce "...Running a file list for debugging"
-find "${TEST_INDEX}"  >> $ARTIFACTS_FILE 2>&1
+find "${TEST_ROOT}"  >> $ARTIFACTS_FILE 2>&1
 
 #
 # Committing files for this build
@@ -347,8 +347,8 @@ for remote in $remotes ; do
 #
 # Appending a change directory to test root to .bash_profile
 #
-announce "...Adding 'cd ${TEST_INDEX}' to ~/.bash_profile"
-sudo sed -i '$ a cd "${TEST_INDEX}"' ~/.bash_profile
+announce "...Adding 'cd ${TEST_ROOT}' to ~/.bash_profile"
+sudo sed -i '$ a cd "${TEST_ROOT}"' ~/.bash_profile
 
 #
 # Announce completion
