@@ -5,9 +5,6 @@
 #   Configure Ubuntu, Fixup Git Source repo, Configure Web Server, Install WP CLI and run Composer.
 #
 
-echo "Here is target site: ${TARGET_SITE}"
-exit
-
 declare=${ARTIFACTS_FILE:=}
 declare=${CIRCLE_ARTIFACTS:=}
 declare=${SHARED_SCRIPTS:=}
