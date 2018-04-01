@@ -62,7 +62,7 @@ exec_provider_script() {
     do_exec="$(get_provider_script "$1")"
     if [ -f "${do_exec}" ] ; then
         announce "$2"
-        source "${DO_DEPLOY_SCRIPT}"
+        source "${do_exec}"
     fi
 }
 
