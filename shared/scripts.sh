@@ -61,7 +61,6 @@ get_provider_script() {
 exec_provider_script() {
     do_exec="$(get_provider_script "$1")"
     if [ -f "${do_exec}" ] ; then
-        announce "$2"
         source "${do_exec}"
     fi
 }
