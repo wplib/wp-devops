@@ -52,7 +52,18 @@ onError() {
 trap onError ERR
 
 get_provider_specific_script() {
+    echo "DEPRECATED: get_provider_specific_script(); use get_provider_script() instead."
+    get_provider_script "$1"
+}
+get_provider_script() {
     echo "${DEPLOY_PROVIDER_ROOT}/${DEPLOY_PROVIDER}-$1"
+}
+exec_provide_script() {
+    do_exec="$(get_provider_specific_script "$1")"
+    if [ -f "${do_exec}" ] ; then
+        announce "$2"
+        source "${DO_DEPLOY_SCRIPT}")"
+    fi
 }
 
 #
