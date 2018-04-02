@@ -12,12 +12,10 @@ declare=${SOURCE_REPO_ROOT:=}
 declare=${ARTIFACTS_FILE:=}
 declare=${DEVOPS_ROOT:=}
 
-announce "Composing project"
-
 #
 # Running Composer to install plugins and extra themes
 #
-announce "...Running Composer in ${SOURCE_REPO_ROOT} to install plugins and extra themes."
+announce "......Running Composer in ${SOURCE_REPO_ROOT} to install plugins and extra themes."
 composer install \
     --working-dir="${SOURCE_REPO_ROOT}" \
     --classmap-authoritative \
@@ -31,8 +29,6 @@ composer install \
 #
 # Ensure all devops scripts are executable
 #
-announce "...Again, ensure all scripts in ${DEVOPS_ROOT} are executable"
+announce "......Again, ensure all scripts in ${DEVOPS_ROOT} are executable"
 find "${DEVOPS_ROOT}" | grep "\.sh$" | xargs chmod +x
 
-
-announce "Project composed"
