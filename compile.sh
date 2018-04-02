@@ -245,6 +245,23 @@ if [ "" != "${PHPUNIT_EXEC_FILE}" ]; then
 fi
 
 #
+# Replace ALL occurrances of {{content_path}} and {{vendor_path}}
+#
+FILES_TO_DELETE="${FILES_TO_DELETE//{{content_path}}/$DEPLOY_CONTENT_PATH}"
+FILES_TO_DELETE="${FILES_TO_DELETE//{{vendor_path}}/$DEPLOY_VENDOR_PATH}"
+
+#
+# Removing unnecessary test root files: license.txt and readme.html
+#
+for file in $FILES_TO_DELETE; do
+    [ "" == "${file}" ] && continue
+    [ "---" == "${file}" ] && continue
+    file="${DOCUMENT_ROOT}/${file}"
+    announce "...Removing ${file}"
+    sudo rm -rf "${file}"
+done
+
+#
 # Removing immutable flag from files and directories
 # See: https://askubuntu.com/a/675307/486620
 #
@@ -288,23 +305,6 @@ cd "${TEST_ROOT}"
 #
 announce "...Copying ${GITIGNORE_SOURCE} to ${GITIGNORE_FILEPATH}"
 sudo cp "${GITIGNORE_SOURCE}" "${GITIGNORE_FILEPATH}"
-
-#
-# Replace ALL occurrances of {{content_path}} and {{vendor_path}}
-#
-FILES_TO_DELETE="${FILES_TO_DELETE//{{content_path}}/$DEPLOY_CONTENT_PATH}"
-FILES_TO_DELETE="${FILES_TO_DELETE//{{vendor_path}}/$DEPLOY_VENDOR_PATH}"
-
-#
-# Removing unnecessary test root files: license.txt and readme.html
-#
-for file in $FILES_TO_DELETE; do
-    [ '---' == "${file}" ] && continue
-    [ '---' == "${file}" ] && continue
-    file="${DOCUMENT_ROOT}/${file}"
-    announce "...Removing ${file}"
-    sudo rm -rf "${file}"
-done
 
 #
 # Remove any files all files from the Git index
