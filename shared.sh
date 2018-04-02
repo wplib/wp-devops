@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# devops/core/shared/scripts.sh - Includes files for source
+# devops/core/shared.sh - Shared source for other scripts
 #
 
 declare=${SOURCE_REPO_ROOT:=}
@@ -16,6 +16,11 @@ declare=${DEPLOY_PROVIDER:=}
 declare=${DEPLOY_PROVIDER_ROOT:=}
 declare=${SITE_NAME:=}
 declare=${LONG_SITE_NAME:=$SITE_NAME}
+
+#
+# Declare var for path to THIS file
+#
+SHARED_SOURCE="${HOME}/${CIRCLE_PROJECT_REPONAME}/shared.sh"
 
 #
 # Set default deployment options

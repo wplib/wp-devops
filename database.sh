@@ -22,7 +22,7 @@ ARTIFACTS_FILE="${CIRCLE_ARTIFACTS}/database.log"
 #
 # Load the shared scripts
 #
-source includes/shared.sh
+source devops/core/shared.sh
 
 #
 # Drop and create DB, create user, import provision database

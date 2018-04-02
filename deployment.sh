@@ -24,7 +24,7 @@ declare=${PANTHEON_SITE:=}
 #
 # Load the shared scripts
 #
-source includes/shared.sh
+source devops/core/shared.sh
 
 #
 # Set artifacts file for this script

@@ -55,7 +55,7 @@ ARTIFACTS_FILE="${CIRCLE_ARTIFACTS}/compile.log"
 #
 # Load the shared scripts
 #
-source includes/shared.sh
+source devops/core/shared.sh
 
 #
 # "Compiling" general process
