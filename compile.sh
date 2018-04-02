@@ -245,10 +245,10 @@ if [ "" != "${PHPUNIT_EXEC_FILE}" ]; then
 fi
 
 #
-# Replace ALL occurrances of {{content_path}} and {{vendor_path}}
+# Replace ALL occurrances of <(content_path)> and <(vendor_path)>
 #
-FILES_TO_DELETE="${FILES_TO_DELETE//{{content_path}}/$DEPLOY_CONTENT_PATH}"
-FILES_TO_DELETE="${FILES_TO_DELETE//{{vendor_path}}/$DEPLOY_VENDOR_PATH}"
+FILES_TO_DELETE="${FILES_TO_DELETE//<(content_path)>/$DEPLOY_CONTENT_PATH}"
+FILES_TO_DELETE="${FILES_TO_DELETE//<(vendor_path)>/$DEPLOY_VENDOR_PATH}"
 
 #
 # Removing unnecessary test root files: license.txt and readme.html

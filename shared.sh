@@ -225,19 +225,19 @@ license.txt
 composer.json
 wp-config.php
 wp-config-sample.php
-{{content_path}}/plugins/index.php
-{{content_path}}/plugins/hello.php
-{{content_path}}/themes/twentysixteen
-$FILES_TO_DELETE
+<(content_path)>/plugins/index.php
+<(content_path)>/plugins/hello.php
+<(content_path)>/themes/twentysixteen
+${FILES_TO_DELETE}
 EOF
 
 #
 # Load set-vars provider script, if applicable
 #
-announce "Testing to see if a provider-specific set-vars exists."
+announce "...Testing to see if a provider-specific set-vars exists."
 SET_VARS_SCRIPT="$(get_provider_script "set-vars.sh")"
 if [ -f "${SET_VARS_SCRIPT}" ] ; then
-    announce "Setting vars specific to ${DEPLOY_PROVIDER}"
+    announce "...Setting vars specific to ${DEPLOY_PROVIDER}"
     source "${SET_VARS_SCRIPT}"
 fi
 

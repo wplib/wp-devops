@@ -10,11 +10,6 @@
 #
 declare=${CIRCLE_BRANCH:=}
 
-#
-# Preparing deployment
-#
-announce "Setting WPEngine's vars"
-
 DEPLOY_WEBSERVER="apache"
 DEPLOY_DBSERVER="mysql"
 DEPLOY_METHOD="site-per-repo"
@@ -59,8 +54,8 @@ wp-settings.php
 wp-signup.php
 wp-trackback.php
 xmlrpc.php
-{{content_path}}/index.php
-{{content_path}}/advanced-cache.php
-{{content_path}}/uploads
-$FILES_TO_DELETE
+<(content_path)>/index.php
+<(content_path)>/advanced-cache.php
+<(content_path)>/uploads
+${FILES_TO_DELETE}
 EOF
