@@ -12,8 +12,8 @@
 #
 # "Declarations" of the variables this script assumes
 #
-declare=${SHARED_SCRIPTS:=}
-declare=${REPO_ROOT:=}
+
+declare=${SOURCE_REPO_ROOT:=}
 declare=${SOURCE_ROOT:=}
 declare=${SOURCE_ROOT:=}
 declare=${SOURCE_CONTENT:=}
@@ -32,7 +32,7 @@ declare=${CIRCLE_USERNAME:=}
 declare=${CIRCLE_ARTIFACTS:=}
 declare=${GITIGNORE_SOURCE:=}
 declare=${GITIGNORE_FILEPATH:=}
-declare=${UNNECESSARY_FILES:=}
+declare=${FILES_TO_DELETE:=}
 declare=${DEPLOY_CORE_PATH:=}
 declare=${DEPLOY_CONTENT_PATH:=}
 declare=${DEPLOY_PORT:=}
@@ -55,7 +55,7 @@ ARTIFACTS_FILE="${CIRCLE_ARTIFACTS}/compile.log"
 #
 # Load the shared scripts
 #
-source "${SHARED_SCRIPTS}"
+source includes/shared.sh
 
 #
 # "Compiling" general process
@@ -211,15 +211,6 @@ SLASH="$([ ! -z "${DEPLOY_CORE_PATH}" ] && echo "/" || echo "")"
 sudo sed -i -e "s|'.*/wp-blog-header|'${SLASH}${DEPLOY_CORE_PATH}/wp-blog-header|" "${TEST_ROOT}/index.php"
 
 #
-# Removing unnecessary test root files: license.txt and readme.html
-#
-for file in $UNNECESSARY_FILES; do
-    [ '---' == "${file}" ] && continue
-    announce "...Removing ${file}"
-    sudo rm -rf "${file}"
-done
-
-#
 # Copy the project's wp-config.php file
 #
 SOURCE_CONFIG="${DEVOPS_ROOT}/wp-config.php"
@@ -297,6 +288,23 @@ cd "${TEST_ROOT}"
 #
 announce "...Copying ${GITIGNORE_SOURCE} to ${GITIGNORE_FILEPATH}"
 sudo cp "${GITIGNORE_SOURCE}" "${GITIGNORE_FILEPATH}"
+
+#
+# Replace ALL occurrances of {{content_path}} and {{vendor_path}}
+#
+FILES_TO_DELETE="${FILES_TO_DELETE//{{content_path}}/$DEPLOY_CONTENT_PATH}"
+FILES_TO_DELETE="${FILES_TO_DELETE//{{vendor_path}}/$DEPLOY_VENDOR_PATH}"
+
+#
+# Removing unnecessary test root files: license.txt and readme.html
+#
+for file in $FILES_TO_DELETE; do
+    [ '---' == "${file}" ] && continue
+    [ '---' == "${file}" ] && continue
+    file="${DOCUMENT_ROOT}/${file}"
+    announce "...Removing ${file}"
+    sudo rm -rf "${file}"
+done
 
 #
 # Remove any files all files from the Git index

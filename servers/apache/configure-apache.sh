@@ -15,7 +15,7 @@ declare=${SERVER_ALIAS:=}
 declare=${PHPENV_ROOT:=}
 declare=${PHP_VERSION:=}
 declare=${CIRCLE_ARTIFACTS:=}
-declare=${SHARED_SCRIPTS:=}
+
 declare=${SERVERS_ROOT:=}
 declare=${TEST_WEBSERVER:=}
 

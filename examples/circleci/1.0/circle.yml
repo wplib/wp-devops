@@ -67,12 +67,12 @@ machine:
     #
     # The root for this repo in CircleCI
     #
-    REPO_ROOT:   "${HOME}/${CIRCLE_PROJECT_REPONAME}"
+    SOURCE_REPO_ROOT:   "${HOME}/${CIRCLE_PROJECT_REPONAME}"
 
     #
     # The roots for the various WordPress source in Git repo
     #
-    SOURCE_ROOT:    "${REPO_ROOT}/www"
+    SOURCE_ROOT:    "${SOURCE_REPO_ROOT}/www"
     SOURCE_INDEX:   "${SOURCE_ROOT}"
     SOURCE_CONTENT: "${SOURCE_INDEX}/content"
     SOURCE_CORE:    "${SOURCE_INDEX}/wp"
@@ -80,10 +80,10 @@ machine:
     #
     # The roots for all the devops related files and code
     #
-    DEVOPS_ROOT:        "${REPO_ROOT}/devops"
+    DEVOPS_ROOT:        "${SOURCE_REPO_ROOT}/devops"
     DEVOPS_CORE_ROOT:   "${DEVOPS_ROOT}/core"
     SHARED_ROOT:        "${DEVOPS_CORE_ROOT}/shared"
-    SHARED_SCRIPTS:     "${SHARED_ROOT}/scripts.sh"
+    SHARED_SOURCE:     "${SHARED_ROOT}/scripts.sh"
     INCLUDES_ROOT:      "${DEVOPS_CORE_ROOT}/includes"
     FILES_ROOT:         "${DEVOPS_CORE_ROOT}/files"
     HOSTS_ROOT:         "${DEVOPS_CORE_ROOT}/hosts"
@@ -147,7 +147,7 @@ machine:
     #
     # @todo Deal with wp-config.php in a better way later
     #
-    UNNECESSARY_FILES: |
+    FILES_TO_DELETE: |
         ${TEST_INDEX}/readme.html
         ${TEST_INDEX}/license.txt
         ${TEST_INDEX}/composer.json

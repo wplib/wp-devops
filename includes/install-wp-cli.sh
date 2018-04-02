@@ -8,7 +8,7 @@
 #
 # "Declarations" of the variables this script assumes
 #
-declare=${SHARED_SCRIPTS:=}
+
 declare=${WP_CLI_SOURCE:=}
 declare=${WP_CLI_FILEPATH:=}
 

@@ -11,7 +11,7 @@
 # "Declarations" of the variables this script assumes
 #
 declare=${DOCUMENT_ROOT:=}
-declare=${SHARED_SCRIPTS:=}
+
 declare=${TEST_ROOT:=}
 declare=${TARGET_GIT_URL:=}
 declare=${CIRCLE_BUILD_NUM:=}
@@ -24,7 +24,7 @@ declare=${PANTHEON_SITE:=}
 #
 # Load the shared scripts
 #
-source "${SHARED_SCRIPTS}"
+source includes/shared.sh
 
 #
 # Set artifacts file for this script

@@ -8,7 +8,7 @@
 #
 # "Declarations" of the variables this script assumes
 #
-declare=${REPO_ROOT:=}
+declare=${SOURCE_REPO_ROOT:=}
 declare=${ARTIFACTS_FILE:=}
 declare=${DEVOPS_ROOT:=}
 
@@ -17,9 +17,9 @@ announce "Composing project"
 #
 # Running Composer to install plugins and extra themes
 #
-announce "...Running Composer in ${REPO_ROOT} to install plugins and extra themes."
+announce "...Running Composer in ${SOURCE_REPO_ROOT} to install plugins and extra themes."
 composer install \
-    --working-dir="${REPO_ROOT}" \
+    --working-dir="${SOURCE_REPO_ROOT}" \
     --classmap-authoritative \
     --no-interaction \
     --prefer-dist \

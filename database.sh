@@ -5,9 +5,9 @@
 # Configure DB server, create database, add user and permissions then import provision.sql database.
 #
 
-declare=${SHARED_SCRIPTS:=}
+
 declare=${CIRCLE_ARTIFACTS:=}
-declare=${REPO_ROOT:=}
+declare=${SOURCE_REPO_ROOT:=}
 declare=${DB_HOST:=}
 declare=${DB_NAME:=}
 declare=${DB_USER:=}
@@ -22,7 +22,7 @@ ARTIFACTS_FILE="${CIRCLE_ARTIFACTS}/database.log"
 #
 # Load the shared scripts
 #
-source "${SHARED_SCRIPTS}"
+source includes/shared.sh
 
 #
 # Drop and create DB, create user, import provision database
@@ -99,7 +99,7 @@ ___MYSQL___
 #
 # Import the `provision.sql` database
 #
-PROVISION_SQL="${REPO_ROOT}/sql/provision.sql"
+PROVISION_SQL="${SOURCE_REPO_ROOT}/sql/provision.sql"
 if [ -d "${PROVISION_SQL}" ] ; then
     announce "...Unchunking ${PROVISION_SQL}/provision-??.sql.chunk"
     mv "${PROVISION_SQL}" "${PROVISION_SQL}.bak"

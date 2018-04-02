@@ -8,7 +8,7 @@
 #
 # "Declarations" of the variables this script assumes
 #
-declare=${SHARED_SCRIPTS:=}
+
 declare=${CIRCLE_ARTIFACTS:=}
 declare=${GIT_USER_EMAIL:=}
 declare=${CIRCLE_USERNAME:=}

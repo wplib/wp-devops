@@ -11,7 +11,7 @@
 declare=${CIRCLE_ARTIFACTS:=}
 declare=${CIRCLE_BUILD_NUM:=}
 declare=${CIRCLE_BRANCH:=}
-declare=${SHARED_SCRIPTS:=}
+
 declare=${SOURCE_ROOT:=}
 declare=${SOURCE_CONTENT:=}
 declare=${BUILD_TAG:=}

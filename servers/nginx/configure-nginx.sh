@@ -15,7 +15,7 @@ declare=${SERVER_ALIAS:=}
 declare=${PHPENV_ROOT:=}
 declare=${PHP_VERSION:=}
 declare=${CIRCLE_ARTIFACTS:=}
-declare=${SHARED_SCRIPTS:=}
+
 declare=${SERVERS_ROOT:=}
 declare=${TEST_WEBSERVER:=}
 
@@ -23,11 +23,6 @@ declare=${TEST_WEBSERVER:=}
 # Set artifacts file for this script
 #
 ARTIFACTS_FILE="${CIRCLE_ARTIFACTS}/configure-apache.log"
-
-#
-# Load the shared scripts
-#
-source "${SHARED_SCRIPTS}"
 
 #
 # CircleCI configures libphp5.so incorrectly when you specify PHP version

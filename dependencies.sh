@@ -7,12 +7,12 @@
 
 declare=${ARTIFACTS_FILE:=}
 declare=${CIRCLE_ARTIFACTS:=}
-declare=${SHARED_SCRIPTS:=}
 declare=${INCLUDES_ROOT:=}
 declare=${SERVERS_ROOT:=}
 declare=${TEST_WEBSERVER:=}
 declare=${DEPLOY_PROVIDER:=}
 declare=${DEPLOY_PROVIDER_ROOT:=}
+
 
 #
 # Set artifacts file for this script
@@ -22,13 +22,13 @@ ARTIFACTS_FILE="${CIRCLE_ARTIFACTS}/dependencies.log"
 #
 # Ensure shared scripts are executable
 #
-echo "Make shared scripts ${SHARED_SCRIPTS} executable"
-sudo chmod +x "${SHARED_SCRIPTS}"
+echo "Make shared source executable"
+sudo chmod +x "${SHARED_SOURCE}"
 
 #
 # Load the shared scripts
 #
-source "${SHARED_SCRIPTS}"
+source includes/shared.sh
 
 #
 # Make changes to the Linux environment
