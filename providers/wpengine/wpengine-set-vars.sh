@@ -41,7 +41,7 @@ TARGET_GIT_URL="${TARGET_GIT_USER}@${TARGET_GIT_REPO}"
 #
 #   WPEngine does not include these files in their repo.
 #
-define FILES_TO_DELETE <<'EOF'
+FILES_TO_DELETE=$(cat <<END
 wp-activate.php
 wp-blog-header.php
 wp-comments-post.php
@@ -58,4 +58,5 @@ xmlrpc.php
 <(content_path)>/advanced-cache.php
 <(content_path)>/uploads
 ${FILES_TO_DELETE}
-EOF
+END
+

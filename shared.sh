@@ -73,12 +73,6 @@ exec_provider_script() {
 }
 
 #
-# A more elegant HEREDOC
-# See: https://stackoverflow.com/a/8088167/102699
-#
-define(){ IFS='\n' read -r -d '' ${1} || true; }
-
-#
 # Making artifact subdirectory
 #
 announce "...Creating artifact file ${ARTIFACTS_FILE}"
@@ -218,7 +212,7 @@ DEVOPS_ARTIFACTS="${CIRCLE_ARTIFACTS}/devops"
 #
 # @todo Deal with wp-config.php in a better way later
 #
-define FILES_TO_DELETE <<'EOF'
+FILES_TO_DELETE=$(cat <<END
 .idea
 readme.html
 license.txt
@@ -229,7 +223,7 @@ wp-config-sample.php
 <(content_path)>/plugins/hello.php
 <(content_path)>/themes/twentysixteen
 ${FILES_TO_DELETE}
-EOF
+END
 
 #
 # Load set-vars provider script, if applicable
