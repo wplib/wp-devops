@@ -27,19 +27,19 @@ DEPLOY_METHOD="site-per-repo"
 FIX_MYSQL56_COMPATIBILITY="yes"
 DEPLOY_BRANCH="master"
 
-DEPLOY_CORE_PATH:     ""
-DEPLOY_CONTENT_PATH:  "wp-content"
-DEPLOY_PORT:          ""
+DEPLOY_CORE_PATH=""
+DEPLOY_CONTENT_PATH="wp-content"
+DEPLOY_PORT=""
 
 #
 # Define the production user and repo for cloning
 #
-TARGET_SITE:      "${CIRCLE_BRANCH}"
-TARGET_GIT_USER:  "git"
-TARGET_GIT_PORT:  ""
-TARGET_GIT_PATH:  "production${TARGET_GIT_PORT}/${TARGET_SITE}"
-TARGET_GIT_REPO:  "git.wpengine.com:${TARGET_GIT_PATH}.git"
-TARGET_GIT_URL:   "${TARGET_GIT_USER}@${TARGET_GIT_REPO}"
+TARGET_SITE="${CIRCLE_BRANCH}"
+TARGET_GIT_USER="git"
+TARGET_GIT_PORT=""
+TARGET_GIT_PATH="production${TARGET_GIT_PORT}/${TARGET_SITE}"
+TARGET_GIT_REPO="git.wpengine.com:${TARGET_GIT_PATH}.git"
+TARGET_GIT_URL="${TARGET_GIT_USER}@${TARGET_GIT_REPO}"
 
 #
 # Define the files that are unncessary and will be deleted from deployment
