@@ -245,7 +245,6 @@ fi
 # Set the Git user and repo based on the branch
 #
 announce "...Git branch is ${CIRCLE_BRANCH}"
-if p
 announce "...Git URL is ${TARGET_GIT_URL}"
 
 
