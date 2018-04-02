@@ -21,7 +21,7 @@ chmod +x "${WP_CLI_SOURCE}"
 #
 # Add the executable flat
 #
-announce "......Copying WP-CLI from ${WP_CLI_SOURCE} to ${WP_CLI_FILEPATH}"
+announce "......Copying WP-CLI to ${WP_CLI_FILEPATH}"
 sudo cp "${WP_CLI_SOURCE}" "${WP_CLI_FILEPATH}"
 
 

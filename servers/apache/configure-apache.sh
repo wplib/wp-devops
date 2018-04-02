@@ -96,7 +96,7 @@ sites_available="/etc/apache2/sites-available"
 #
 # Copy our Apache conf to the default configuration
 #
-announce "......Copying ${SERVERS_ROOT}/${TEST_WEBSERVER}/apache-website.conf to ${sites_available}/000-default.conf"
+announce "......Copying apache-website.conf to ${sites_available}/000-default.conf"
 sudo cp "${SERVERS_ROOT}/${TEST_WEBSERVER}/apache-website.conf" "${sites_available}/000-default.conf"
 
 #

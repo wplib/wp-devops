@@ -49,7 +49,7 @@ announce "......Grabbing the author of the latest Disabling annoying SSH warning
 GIT_USER_NAME="$(git log -1 --format=format:"%an")"
 announce "......Author name:  ${GIT_USER_NAME}"
 GIT_USER_EMAIL="$(git log -1 --format=format:"%ae")"
-announce "...Author email: ${GIT_USER_EMAIL}"
+announce "......Author email: ${GIT_USER_EMAIL}"
 
 #
 # Setting git user.email
