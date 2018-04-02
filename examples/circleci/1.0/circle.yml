@@ -83,7 +83,7 @@ machine:
     DEVOPS_ROOT:        "${SOURCE_REPO_ROOT}/devops"
     DEVOPS_CORE_ROOT:   "${DEVOPS_ROOT}/core"
     SHARED_ROOT:        "${DEVOPS_CORE_ROOT}/shared"
-    SHARED_SOURCE:     "${SHARED_ROOT}/scripts.sh"
+    SHARED_SOURCE:      "${SHARED_ROOT}/scripts.sh"
     INCLUDES_ROOT:      "${DEVOPS_CORE_ROOT}/includes"
     FILES_ROOT:         "${DEVOPS_CORE_ROOT}/files"
     HOSTS_ROOT:         "${DEVOPS_CORE_ROOT}/hosts"
