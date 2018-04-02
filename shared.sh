@@ -129,16 +129,16 @@ DOCUMENT_ROOT="/var/www/html"
 #
 # The roots for the various WordPress source on CircleCI server
 #
-TEST_ROOT="${DOCUMENT_ROOT}"
-TEST_CORE="${TEST_ROOT}"
-TEST_CONTENT="${TEST_ROOT}/${TEST_CONTENT_PATH}"
-TEST_VENDOR="${TEST_ROOT}/${TEST_VENDOR_PATH}"
+TEST_CONTENT_PATH="wp-content"
+TEST_VENDOR_PATH="vendor"
 
 #
 # The roots for the various WordPress source on CircleCI server
 #
-TEST_CONTENT_PATH="wp-content"
-TEST_VENDOR_PATH="vendor"
+TEST_ROOT="${DOCUMENT_ROOT}"
+TEST_CORE="${TEST_ROOT}"
+TEST_CONTENT="${TEST_ROOT}/${TEST_CONTENT_PATH}"
+TEST_VENDOR="${TEST_ROOT}/${TEST_VENDOR_PATH}"
 
 #
 # Composer directory, for autoload files
