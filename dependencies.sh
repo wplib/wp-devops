@@ -13,11 +13,15 @@ declare=${TEST_WEBSERVER:=}
 declare=${DEPLOY_PROVIDER:=}
 declare=${DEPLOY_PROVIDER_ROOT:=}
 
-
 #
 # Set artifacts file for this script
 #
 ARTIFACTS_FILE="${CIRCLE_ARTIFACTS}/dependencies.log"
+
+echo "Current directory is: $(pwd)"
+exit 2
+
+SHARED_SOURCE="${HOME}/${CIRCLE_PROJECT_REPONAME}/includes/shared.sh"
 
 #
 # Ensure shared scripts are executable
@@ -28,7 +32,7 @@ sudo chmod +x "${SHARED_SOURCE}"
 #
 # Load the shared scripts
 #
-source includes/shared.sh
+source "${SHARED_SOURCE}"
 
 #
 # Make changes to the Linux environment
