@@ -231,15 +231,15 @@ wp-config-sample.php
 $FILES_TO_DELETE
 EOF
 
-
 #
 # Load set-vars provider script, if applicable
 #
 announce "Testing to see if a provider-specific set-vars exists."
-exec_provider_script "set-vars.sh"
-
-echo "Target site: $TARGET_SITE"
-exit 2
+SET_VARS_SCRIPT="$(get_provider_script "set-vars.sh")"
+if [ -f "${SET_VARS_SCRIPT}" ] ; then
+    announce "Setting vars specific to ${DEPLOY_PROVIDER}"
+    source "${SET_VARS_SCRIPT}"
+fi
 
 #
 # Set the Git user and repo based on the branch
