@@ -224,6 +224,7 @@ wp-config-sample.php
 <(content_path)>/themes/twentysixteen
 ${FILES_TO_DELETE}
 END
+)
 
 #
 # Load set-vars provider script, if applicable

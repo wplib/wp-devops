@@ -59,4 +59,4 @@ xmlrpc.php
 <(content_path)>/uploads
 ${FILES_TO_DELETE}
 END
-
+)
