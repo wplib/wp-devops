@@ -238,10 +238,14 @@ EOF
 announce "Testing to see if a provider-specific set-vars exists."
 exec_provider_script "set-vars.sh"
 
+echo "Target site: $TARGET_SITE"
+exit 2
+
 #
 # Set the Git user and repo based on the branch
 #
 announce "...Git branch is ${CIRCLE_BRANCH}"
+if p
 announce "...Git URL is ${TARGET_GIT_URL}"
 
 

@@ -18,10 +18,12 @@ declare=${DEPLOY_PROVIDER_ROOT:=}
 #
 ARTIFACTS_FILE="${CIRCLE_ARTIFACTS}/dependencies.log"
 
+announce "Configuring Dependencies"
+
 #
 # Ensure shared scripts are executable
 #
-echo "Make shared source executable"
+announce "...Make shared source executable"
 sudo chmod +x devops/core/shared.sh
 
 #
