@@ -12,6 +12,11 @@ declare=${SHARED_SCRIPTS:=}
 declare=${WP_CLI_SOURCE:=}
 declare=${WP_CLI_FILEPATH:=}
 
+#
+# Set artifacts file for this script
+#
+ARTIFACTS_FILE="${CIRCLE_ARTIFACTS}/install-wp-cli.log"
+
 announce "Installing WP-CLI"
 
 #

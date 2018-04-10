@@ -12,6 +12,11 @@ declare=${REPO_ROOT:=}
 declare=${ARTIFACTS_FILE:=}
 declare=${DEVOPS_ROOT:=}
 
+#
+# Set artifacts file for this script
+#
+ARTIFACTS_FILE="${CIRCLE_ARTIFACTS}/compose.log"
+
 announce "Composing project"
 
 #
@@ -46,7 +51,7 @@ composer install \
 # Ensure all devops scripts are executable
 #
 announce "...Again, ensure all scripts in ${DEVOPS_ROOT} are executable"
-find "${DEVOPS_ROOT}" | grep "\.sh$" | xargs chmod +x
+find "${DEVOPS_ROOT}" | grep "\.sh$" | xargs chmod +x >> $ARTIFACTS_FILE 2>&1
 
 
 announce "Project composed"

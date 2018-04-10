@@ -24,11 +24,6 @@ DEPLOY_CONTENT_PATH="${DEPLOY_CONTENT_PATH:=wp-content}"
 DEPLOY_PORT="${DEPLOY_PORT:=80}"
 
 #
-# Set artifacts file for this script
-#
-ARTIFACTS_FILE="${ARTIFACTS_FILE:="${CIRCLE_ARTIFACTS}/shared-scripts.log"}"
-
-#
 # Set an error trap. Uses an $ACTION variable.
 #
 ACTION=""
@@ -55,12 +50,6 @@ trap onError ERR
 get_provider_specific_script() {
     echo "${DEPLOY_PROVIDER_ROOT}/${DEPLOY_PROVIDER}-$1"
 }
-
-#
-# Making artifact subdirectory
-#
-announce "...Creating artifact file ${ARTIFACTS_FILE}"
-echo . > $ARTIFACTS_FILE
 
 # Soon to be added...
 # generate-vars.sh

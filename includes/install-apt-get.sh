@@ -11,6 +11,10 @@
 declare=${ARTIFACTS_FILE:=}
 declare=${PACKAGES_TO_INSTALL:=}
 
+#
+# Set artifacts file for this script
+#
+ARTIFACTS_FILE="${CIRCLE_ARTIFACTS}/install-apt-get.log"
 
 if [ "" != "${PACKAGES_TO_INSTALL}" ] ; then
 

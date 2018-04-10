@@ -17,6 +17,11 @@ declare=${DEVOPS_ROOT:=}
 declare=${DEVOPS_ARTIFACTS:=}
 
 #
+# Set artifacts file for this script
+#
+ARTIFACTS_FILE="${CIRCLE_ARTIFACTS}/configure-env.log"
+
+#
 # Configure environment
 #
 announce "Configuring environment"

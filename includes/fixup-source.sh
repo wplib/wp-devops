@@ -18,6 +18,11 @@ declare=${BUILD_TAG:=}
 declare=${ARTIFACTS_FILE:=}
 
 #
+# Set artifacts file for this script
+#
+ARTIFACTS_FILE="${CIRCLE_ARTIFACTS}/fixup-source.log"
+
+#
 # Changing directory to test root
 #
 announce "...Changing to directory ${SOURCE_INDEX}"
