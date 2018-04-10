@@ -22,14 +22,14 @@ declare=${DEPLOY_BRANCH:=}
 declare=${PANTHEON_SITE:=}
 
 #
+# Set artifacts file for this script
+#
+ARTIFACTS_FILE="${CIRCLE_ARTIFACTS}/deployment.log"
+
+#
 # Load the shared scripts
 #
 source "${SHARED_SCRIPTS}"
-
-#
-# Set artifacts file for this script
-#
-ARTIFACTS_FILE="${CIRCLE_ARTIFACTS}/deploy.log"
 
 #
 # Preparing deployment
