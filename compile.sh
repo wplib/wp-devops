@@ -114,7 +114,7 @@ cloneDir="$(mktemp -d /tmp/gitclone-XXXX)"
 #
 # Delete the temp dir so Git can clone into it.
 #
-rm "${cloneDir}"
+rm -rf "${cloneDir}"
 
 #
 # Clone Creating a temp directory for WPEngine Git repo
