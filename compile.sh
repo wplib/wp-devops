@@ -111,6 +111,10 @@ sudo rm -rf "${TEST_ROOT}"
 #
 announce "...Creating temp directory to clone ${TARGET_SITE}@${DEPLOY_PROVIDER} into"
 cloneDir="$(mktemp -d /tmp/gitclone-XXXX)"
+#
+# Delete the temp dir so Git can clone into it.
+#
+rm "${cloneDir}"
 
 #
 # Clone Creating a temp directory for WPEngine Git repo
