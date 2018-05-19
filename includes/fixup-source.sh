@@ -62,11 +62,11 @@ fi
 #
 announce "......Run a git add ../devops/core + commit so git status does not complain"
 cd ../devops/core
-git add .
-git commit -m "Add files"
+git add .  >> $ARTIFACTS_FILE 2>&1
+git commit -m "Add files"  >> $ARTIFACTS_FILE 2>&1
 cd ../..
-git add devops/core
-git commit -m "Committing devops/core"
+git add devops/core  >> $ARTIFACTS_FILE 2>&1
+git commit -m "Committing devops/core"  >> $ARTIFACTS_FILE 2>&1
 cd www
 
 #
