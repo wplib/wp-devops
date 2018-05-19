@@ -57,14 +57,17 @@ if [ "${CURRENT_BRANCH}" != "${CIRCLE_BRANCH}" ]; then
     git checkout "${CIRCLE_BRANCH}" >> $ARTIFACTS_FILE 2>&1
 fi
 
-exit 1
-
 #
 # Git add ../devops/core + commit so git status does not complain
 #
 announce "......Run a git add ../devops/core + commit so git status does not complain"
-git add ../devops/core
+cd ../devops/core
+git add .
+git commit -m "Add files"
+cd ../..
+git add devops/core
 git commit -m "Committing devops/core"
+cd www
 
 #
 # Run a git status for the artifacts file
