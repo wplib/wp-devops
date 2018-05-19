@@ -57,6 +57,7 @@ if [ "${CURRENT_BRANCH}" != "${CIRCLE_BRANCH}" ]; then
     git checkout "${CIRCLE_BRANCH}" >> $ARTIFACTS_FILE 2>&1
 fi
 
+exit 1
 
 #
 # Git add ../devops/core + commit so git status does not complain
