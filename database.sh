@@ -101,9 +101,9 @@ ___MYSQL___
 #
 PROVISION_SQL="${REPO_ROOT}/sql/provision.sql"
 if [ -d "${PROVISION_SQL}" ] ; then
-    announce "...Unchunking ${PROVISION_SQL}/provision-??.sql.chunk"
+    announce "...Unchunking ${PROVISION_SQL}/provision-???.sql.chunk"
     mv "${PROVISION_SQL}" "${PROVISION_SQL}.bak"
-    cat "${PROVISION_SQL}".bak/provision-??.sql.chunk > $PROVISION_SQL
+    cat "${PROVISION_SQL}".bak/provision-???.sql.chunk > $PROVISION_SQL
 fi
 
 #
