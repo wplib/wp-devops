@@ -67,7 +67,7 @@ jobs:
                           git checkout "${tag}"
                       fi
 
-            - run: .circleci/scripts/deploy.sh
+            - run: .circleci/deploy.sh
 
             - store_artifacts:
                   path: ~/log.txt
@@ -81,7 +81,7 @@ jobs:
             - run:
                   name: Unlock Deploy
                   when: always
-                  command: .circleci/scripts/unlock-deploy.sh
+                  command: .circleci/unlock-deploy.sh
 
             - store_artifacts:
                   path: ~/log.txt
