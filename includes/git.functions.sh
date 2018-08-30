@@ -264,7 +264,7 @@ function git_tag() {
     local tag="$2"
     local message="$(default "$3" "Tagged with ${tag}")"
     push_dir "${repo_dir}"
-    local _=$(try "Git push" "$(git tag -a "${tag}" -m "${message}" 2>&1)")
+    local _=$(try "Git tag with ${tag}" "$(git tag -a -f "${tag}" -m "${message}" 2>&1)")
     catch
     pop_dir
     return $(last_error)
@@ -273,7 +273,7 @@ function git_tag() {
 function git_push_tags() {
     local repo_dir="$1"
     push_dir "${repo_dir}"
-    local _=$(try "Git push" "$(git push --tags 2>&1)")
+    local _=$(try "Git push tags" "$(git push --tags 2>&1)")
     catch
     pop_dir
     return $(last_error)
