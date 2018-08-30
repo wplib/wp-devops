@@ -168,30 +168,26 @@ function push_dir {
     fi
     CI_PUSHD_COUNTER=$(( CI_PUSHD_COUNTER + 1 ))
     local filename="${CI_PUSHD_FILE}-${CI_PUSHD_COUNTER}.txt"
-    trace "Filename for push_dir: ${filename}"
-    trace "Pushing directory: ${dir}"
     #
     # CANNOT USE try-catch here because doing
     # so will result in no directory change
     #
     pushd "${dir}" > $filename 2>&1
     result=$?
-    trace "Directory pushed: : $(cat "${filename}")"
+    trace "Directory pushed: : ${dir}"
     return $result
 }
 
 function pop_dir {
     local filename="${CI_PUSHD_FILE}-${CI_PUSHD_COUNTER}.txt"
-    trace "Filename for pop_dir: ${filename}"
+    trace "Directory popped: $(cat "${filename}"|awk '{print $1}')"
     CI_PUSHD_COUNTER=$(( CI_PUSHD_COUNTER - 1 ))
-    trace "Popping directory $(cat "${filename}" 2>&1)"
     #
     # CANNOT USE try-catch here because doing
     # so will result in no directory change
     #
     popd > $filename 2>&1
     result=$?
-    trace "Directory popped: $(cat "${filename}")"
     sudo rm -rf "${filename}"
     return $result
 }

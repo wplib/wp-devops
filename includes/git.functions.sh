@@ -285,6 +285,7 @@ function git_is_repo() {
     set +e
     git branch > /dev/null 2>&1
     result=$?
+    trace "Git is repo ${repo_dir} result: $result"
     set -e
     pop_dir
     return $result
