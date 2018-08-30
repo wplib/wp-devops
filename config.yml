@@ -30,12 +30,12 @@ jobs:
             - restore_cache:
                   name: "Restoring source code cache"
                   keys:
-                      -source-repo
+                      - source-repo
 
             - restore_cache:
                   name: "Restoring deploy code cache"
                   keys:
-                      -deploy-repo
+                      - deploy-repo
 
             - checkout
 
@@ -67,7 +67,7 @@ jobs:
                           git checkout "${tag}"
                       fi
 
-            - run: .circleci/deploy.sh
+            - run: .circleci/wp-devops/deploy.sh
 
             - store_artifacts:
                   path: ~/log.txt
@@ -81,7 +81,7 @@ jobs:
             - run:
                   name: Unlock Deploy
                   when: always
-                  command: .circleci/unlock-deploy.sh
+                  command: .circleci/wp-devops/unlock-deploy.sh
 
             - store_artifacts:
                   path: ~/log.txt
