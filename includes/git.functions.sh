@@ -283,12 +283,13 @@ function git_is_repo() {
     local repo_dir="$1"
     push_dir "${repo_dir}"
     set +e
-    git branch > /dev/null 2>&1
-    result=$?
-    trace "Git is repo ${repo_dir} result: $result"
+    fatal=0
+    if [ "fatal:" == "$(git branch 2>&1)" ] ; then
+        fatal=1
+    fi
     set -e
     pop_dir
-    return $result
+    return $fatal
 }
 
 function git_branch_exists() {
