@@ -54,16 +54,17 @@ jobs:
             - run:
                   name: Bootstrapping WP DevOps
                   command: |
+                      wp_devops="$(cat project.json|jq -r '.deploy.frameworks.wp_devops')"
+                      ref_type=$(echo "${wp_devops}"|jq -r '.ref_type')
+                      cd .circleci
                       rm -rf wp-devops
-                      ref_type=$(cat project.json|jq -r '.deploy.frameworks.wp_devops.ref_type')
                       git clone git@github.com:wplib/wp-devops.git
+                      cd wp-devops
                       if [ 'branch' == "${ref_type}" ] ; then
-                          branch=$(cat project.json|jq -r '.deploy.frameworks.wp_devops.branch')
-                          cd wp-devops
+                          branch=$(echo "${wp_devops}"|jq -r '.branch')
                           git checkout -b "${branch}" "origin/${branch}"
                       else
-                          tag=$(cat project.json|jq -r '.deploy.frameworks.wp_devops.tag')
-                          cd wp-devops
+                          tag=$(echo "${wp_devops}"|jq -r '.tag')
                           git checkout "${tag}"
                       fi
 
