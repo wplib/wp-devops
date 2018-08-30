@@ -16,6 +16,8 @@
 #
 
 declare="${CI_DEPLOY_LOCKED:=}"
+declare="${CI_LOG:=}"
+declare="${CI_LOGS_DIR:=}"
 declare="${CI_SOURCED_FILE:=}"
 
 source "sourced.sh"
