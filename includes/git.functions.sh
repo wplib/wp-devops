@@ -282,14 +282,13 @@ function git_push_tags() {
 function git_is_repo() {
     local repo_dir="$1"
     push_dir "${repo_dir}"
-    set +e
-    fatal=0
-    if [ "fatal:" == "$(git branch 2>&1)" ] ; then
-        fatal=1
+    $output="$(set +e; git branch 2>&1; set -e)"
+    if [ "fatal:" == "$(echo $output|awk '{print $1}')" ] ; then
+        echo "yes"
+    else
+        echo "no"
     fi
-    set -e
     pop_dir
-    return $fatal
 }
 
 function git_branch_exists() {

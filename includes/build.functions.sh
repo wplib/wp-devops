@@ -25,12 +25,7 @@ function build_clone_repo() {
     local repo_url="$(project_get_deploy_repo_url "${CI_PROJECT_DIR}")"
     local clone_dir="${CI_DEPLOY_REPO_DIR}"
     local branch="${CI_BRANCH}"
-    if git_is_repo "${clone_dir}"; then
-        trace "Repo ${clone_dir} exists."
-        if [ -f "${clone_dir}/.git" ] ; then
-            trace "Repo .git/ directory exists too."
-        fi
-    else
+    if [ "no" == "$(git_is_repo "${clone_dir}")" ]; then
         trace "Clone does not yet exist: ${clone_dir}"
         git_clone_repo "${repo_url}" "${clone_dir}"
     fi
