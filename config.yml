@@ -71,7 +71,7 @@ jobs:
             - run: .circleci/wp-devops/deploy.sh
 
             - store_artifacts:
-                  path: ~/log.txt
+                  path: ~/.circleci/log.txt
                   destination: deploy.log
 
             - run:
@@ -85,7 +85,7 @@ jobs:
                   command: .circleci/wp-devops/unlock-deploy.sh
 
             - store_artifacts:
-                  path: ~/log.txt
+                  path: ~/.circleci/log.txt
                   destination: unlock-deploy.log
 
             - save_cache:
