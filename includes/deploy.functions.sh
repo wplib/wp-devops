@@ -84,6 +84,12 @@ function deploy_lock() {
 }
 
 function deploy_unlock() {
+    if [ 0 -eq $CI_DEPLOY_LOCKED ] ; then
+        #
+        # Don't unlock if we didn't lock it.
+        #
+        return 0
+    fi
     trace "Unlock deploy. Repo dir: ${CI_PROJECT_DIR}"
     push_dir "${CI_PROJECT_DIR}"
 
