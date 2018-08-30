@@ -57,23 +57,17 @@ function git_checkout_branch() {
     local branch="$1"
     local repo_dir="$2"
     push_dir "${repo_dir}"
-    local exists="$(git branch | grep "${branch}" 2>&1)"
     local output
-    trace "Current Dir: $(pwd)"
-    trace "Git Branches: $(git branch)"
-    #set +e
-    if [ "" == "${exists}" ] ; then
+    if ! git_branch_exists "${branch}" "${repo_dir}" ; then
         output="$(try "Checking out new branch '${branch}'" \
             "$(git checkout -b "${branch}" "origin/${branch}" 2>&1)")"
-    elif ! [[ "${exists}" == *"*"* ]]; then
+    elif [ "${branch}" != "$(git_get_current_branch)" ]; then
         output="$(try "Checking out existing branch '${branch}'" \
             "$(git checkout "${branch}" 2>&1)")"
     fi
     catch
     exit_if_contains "${output}" "fatal"
-    #set -e
     pop_dir
-    return 0
 }
 
 function git_pull_branch() {
@@ -296,4 +290,16 @@ function git_is_repo() {
     return $result
 }
 
-
+function git_branch_exists() {
+    local branch="$1"
+    local repo_dir="$2"
+    push_dir "${repo_dir}"
+    set +e
+    local exists="$(git branch | grep "${branch}" 2>&1)"
+    set -e
+    pop_dir
+    if [ "" == "${exists}" ]; then
+        return 1
+    fi
+    return 0
+}
