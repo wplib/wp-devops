@@ -18,9 +18,13 @@
 declare="${CI_DEPLOY_LOCKED:=}"
 declare="${CI_LOG:=}"
 declare="${CI_LOGS_DIR:=}"
+declare="${CI_CIRCLECI_DIR:=}"
 declare="${CI_SOURCED_FILE:=}"
 
 source "sourced.sh"
+
+export CI_LOGS_DIR="${CI_CIRCLECI_DIR}/logs"
+mkdir -p "${CI_LOGS_DIR}"
 
 function deploy_onexit() {
     if [ 0 -eq ${CI_DEPLOY_LOCKED} ] ; then

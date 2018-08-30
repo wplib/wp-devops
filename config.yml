@@ -71,13 +71,13 @@ jobs:
             - run: .circleci/wp-devops/deploy.sh
 
             - store_artifacts:
-                  path: .circleci/log.txt
+                  path: ~/tmp/log.txt
                   destination: deploy.log
 
             - run:
                   name: Generate Error Report
                   when: on_fail
-                  command: cat .circleci/log.txt
+                  command: cat ~/tmp/log.txt
 
             - run:
                   name: Unlock Deploy
@@ -85,7 +85,7 @@ jobs:
                   command: .circleci/wp-devops/unlock-deploy.sh
 
             - store_artifacts:
-                  path: .circleci/log.txt
+                  path: ~/tmp/log.txt
                   destination: unlock-deploy.log
 
             - save_cache:
