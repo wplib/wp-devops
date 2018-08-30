@@ -286,9 +286,9 @@ function git_is_repo() {
     output="$(git branch 2>&1)"
     set -e
     if [ "fatal:" == "$(echo $output|awk '{print $1}')" ] ; then
-        echo "yes"
-    else
         echo "no"
+    else
+        echo "yes"
     fi
     pop_dir
 }
