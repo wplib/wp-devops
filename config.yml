@@ -60,10 +60,7 @@ jobs:
                       if [ 'branch' == "${ref_type}" ] ; then
                           branch=$(cat project.json|jq -r '.deploy.frameworks.wp_devops.branch')
                           cd wp-devops
-                          git remote show origin
-                          git remote update
-                          git fetch --all
-                          git checkout "${branch}"
+                          git checkout -b "${branch}" "origin/${branch}"
                       else
                           tag=$(cat project.json|jq -r '.deploy.frameworks.wp_devops.tag')
                           cd wp-devops
