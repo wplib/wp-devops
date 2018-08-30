@@ -127,13 +127,12 @@ function git_clone_repo() {
     local clone_dir="$2"
     local parent_dir="$(dirname "${clone_dir}")"
     local repo_name="$(basename "${clone_dir}")"
-    local output="$(try "Ensuring directory ${parent_dir}" \
-        "$(mkdir -p "${parent_dir}")")"
-    catch
     push_dir "${parent_dir}"
+    set +e
     output=$(try "Cloning ${repo_url} to ${repo_name}" \
         "$(git clone "${repo_url}" "${repo_name}" 2>&1)")
     catch
+    set -e
     pop_dir
     exit_if_contains "${output}" "fatal"
 }
