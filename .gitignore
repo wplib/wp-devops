@@ -18,5 +18,5 @@
 .DS_Store
 /test.sh
 /remote/circleci.token
-/logs/
-!/logs/README.md
+/logs/**
+!/logs/...
