@@ -56,13 +56,14 @@ jobs:
                     command: |
                         rm -rf wp-devops
                         git clone git@github.com:wplib/wp-devops.git
-                        ref_type=$(cat project.json|jq -r '.deploy.frameworks.wp-devops.ref_type')
+                        project_json="$(cat ../project.json)"
+                        ref_type=$(echo "${project_json}"|jq -r '.deploy.frameworks.wp-devops.ref_type')
                         if [ 'branch' == "${ref_type}" ] ; then
-                            branch=$(cat project.json|jq -r '.deploy.frameworks.wp-devops.branch')
+                            branch=$(echo "${project_json}"|jq -r '.deploy.frameworks.wp-devops.branch')
                             cd wp-devops
                             git checkout -b "${branch}" "origin/${branch}"
                         else
-                            tag=$(cat project.json|jq -r '.deploy.frameworks.wp-devops.tag')
+                            tag=$(echo "${project_json}"|jq -r '.deploy.frameworks.wp-devops.tag')
                             cd wp-devops
                             git checkout "${tag}"
                         fi
