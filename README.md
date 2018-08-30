@@ -6,6 +6,17 @@ It allows for building, testing and deploying WordPress using [CircleCI 2.0](htt
 
 Of course WP DevOps supports [BitBucket](https://bitbucket.org/) and most any other Git provider.
 
+## How To Use
+
+1. Clone this repo into the root of your project into `.circleci`:
+
+```
+cd /your/project/directory
+git clone git@github.com:wplib/wp-devops.git .circleci
+```
+
+
+
 ## Our Vision
 Our vision is to make the best practices of setting up and running continuous integration, testing and deployment _**brain-dead easy**_. More to come on how we will make this happen in the near future...
 

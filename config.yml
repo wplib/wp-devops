@@ -28,67 +28,87 @@ jobs:
 
         steps:
             - restore_cache:
-                  name: "Restoring source code cache"
-                  keys:
-                      - source-repo
+                    name: "Restoring source code cache"
+                    keys:
+                        -source-repo
 
             - restore_cache:
-                  name: "Restoring deploy code cache"
-                  keys:
-                      - deploy-repo
+                    name: "Restoring deploy code cache"
+                    keys:
+                        -deploy-repo
 
             - checkout
 
             - store_artifacts:
-                  path: .circleci/
-                  destination: scripts
+                    path: .circleci/
+                    destination: scripts
 
             - store_artifacts:
-                  path: ./project.json
-                  destination: project.json
+                    path: ./project.json
+                    destination: project.json
 
             - store_artifacts:
-                  path: ./composer.json
-                  destination: composer.json
+                    path: ./composer.json
+                    destination: composer.json
+
+            - run:
+                    name: Bootstrapping WP DevOps
+                    command: |
+                        rm -rf .circleci
+                        git clone git@github.com:wplib/wp-devops.git .circleci
+                        ref_type=$(cat project.json|jq -r '.deploy.frameworks.wp-devops.ref_type')
+                        if [ 'branch' == "${ref_type}" ] ; then
+                            branch=$(cat project.json|jq -r '.deploy.frameworks.wp-devops.branch')
+                            cd .circleci
+                            git checkout -b "${branch}" "origin/${branch}"
+                        else
+                            tag=$(cat project.json|jq -r '.deploy.frameworks.wp-devops.tag')
+                            cd .circleci
+                            git checkout "${tag}"
+                        fi
+
+            - store_artifacts:
+                    path: ~/log.txt
+                    destination: bootstrap.log
 
             - run: .circleci/scripts/setup-environment.sh
             - store_artifacts:
-                path: ~/log.txt
-                destination: setup-environment.log
+                    path: ~/log.txt
+                    destination: setup-environment.log
 
             - run: .circleci/scripts/deploy.sh
             - store_artifacts:
-                  path: ~/log.txt
-                  destination: deploy.log
+                    path: ~/log.txt
+                    destination: deploy.log
 
             - run: .circleci/scripts/build.sh
             - store_artifacts:
-                  path: ~/log.txt
-                  destination: build.log
+                    path: ~/log.txt
+                    destination: build.log
 
             - run:
-                  name: Generate Error Report
-                  when: on_fail
-                  command: cat ~/log.txt
+                    name: Generate Error Report
+                    when: on_fail
+                    command: cat ~/log.txt
 
             - run:
-                name: Unlock Deploy
-                when: always
-                command: .circleci/scripts/unlock-deploy.sh
+                    name: Unlock Deploy
+                    when: always
+                    command: .circleci/scripts/unlock-deploy.sh
             - store_artifacts:
-                  path: ~/log.txt
-                  destination: unlock-deploy.log
+                    path: ~/log.txt
+                    destination: unlock-deploy.log
 
             - save_cache:
-                name: "Caching source code ~/repo directory"
-                key: source-repo
-                paths:
-                    - ~/source
+                    name: "Caching source code ~/source directory"
+                    key: source-repo
+                    paths:
+                        - ~/source
 
             - save_cache:
-                  name: "Caching deployment code ~/deploy directory"
-                  key: deploy-repo
-                  paths:
-                      - ~/deploy
+                    name: "Caching deployment code ~/deploy directory"
+                    key: deploy-repo
+                    paths:
+                        - ~/deploy
 
 

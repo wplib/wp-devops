@@ -33,8 +33,8 @@ if [ 0 -eq $CL_LOADED ]; then
     mkdir -p "${CI_TMP_DIR}"
 
     export CI_FUNCTIONS_DIR="${CI_CIRCLECI_DIR}/includes"
-    export CI_DEPLOY_REPO_DIR="${HOME}/deploy/repo"
-    # /tmp/deploy/repo is where .git will go
+    export CI_DEPLOY_REPO_DIR="${HOME}/deploy"
+    # /tmp/deploy is where .git will go
     # We have to make it's parent directory or clone will fail
     mkdir -p "$(dirname "${CI_DEPLOY_REPO_DIR}")"
 

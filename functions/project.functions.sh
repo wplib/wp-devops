@@ -99,7 +99,7 @@ function project_get_source_wordpress_paths_json() {
 
 function project_get_deploy_wordpress_paths_json() {
     echo "$(try "Get deploy's WordPress paths" \
-            "$(project_get_deploy_json | jqr ".frameworks.wordpress")" 1)"
+            "$(project_get_deploy_frameworks_json | jqr ".wordpress")" 1)"
     return $(catch)
 }
 
@@ -124,6 +124,38 @@ function project_get_deploy_keep_files() {
 function project_get_deploy_wordpress_path_names() {
     local paths="$(project_get_deploy_wordpress_paths_json | jqr "keys[]")"
     echo -e "${paths}"
+}
+
+function project_get_deploy_frameworks_json() {
+    echo "$(try "Get deploy's frameworks" \
+        "$(project_get_deploy_json | jqr ".frameworks")" 1)"
+    return $(catch)
+}
+
+function project_get_deploy_wp_devops_json() {
+    echo "$(try "Get deploy's WP Devops JSON" \
+        "$(project_get_deploy_json | jqr ".wp-devops")" 1)"
+    return $(catch)
+}
+function project_get_deploy_wp_devops_ref_type() {
+    echo "$(try "Get deploy's WP Devops ref_type (`branch`, `hash` or `tag`)" \
+            "$(project_get_deploy_wp_devops_json | jqr ".ref_type")" 1)"
+    return $(catch)
+}
+function project_get_deploy_wp_devops_branch() {
+    echo "$(try "Get deploy's WP Devops branch" \
+            "$(project_get_deploy_wp_devops_json | jqr ".branch")" 1)"
+    return $(catch)
+}
+function project_get_deploy_wp_devops_tag() {
+    echo "$(try "Get deploy's WP Devops tag" \
+            "$(project_get_deploy_wp_devops_json | jqr ".tag")" 1)"
+    return $(catch)
+}
+function project_get_deploy_wp_devops_hash() {
+    echo "$(try "Get deploy's WP Devops hash" \
+            "$(project_get_deploy_wp_devops_json | jqr ".hash")" 1)"
+    return $(catch)
 }
 
 
