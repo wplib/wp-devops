@@ -22,7 +22,7 @@ declare="${CI_DEPLOY_REPO_DIR:=}"
 declare="${CI_BRANCH:=}"
 
 function deploy_tag() {
-    local repo_dir="${CI_DEPLOY_REPO_DIR}"
+    local repo_dir="$1"
     local deploy_tag="$(deploy_get_current_tag)"
     git_tag "${repo_dir}" "${deploy_tag}" "Deploy #$(deploy_get_current_num)"
     git_push_tags "${repo_dir}"
