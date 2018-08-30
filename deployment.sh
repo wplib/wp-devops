@@ -13,8 +13,11 @@
 declare=${DOCUMENT_ROOT:=}
 
 declare=${TEST_ROOT:=}
+declare=${SOURCE_INDEX:=}
+declare=${TARGET_SITE:=}
 declare=${TARGET_GIT_URL:=}
 declare=${CIRCLE_BUILD_NUM:=}
+declare=${CIRCLE_PREVIOUS_BUILD_NUM:=}
 declare=${CIRCLE_PROJECT_REPONAME:=}
 declare=${CIRCLE_ARTIFACTS:=}
 declare=${CIRCLE_BRANCH:=}

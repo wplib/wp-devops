@@ -23,6 +23,7 @@ declare=${TEST_ROOT:=}
 declare=${TEST_CORE:=}
 declare=${TEST_CONTENT:=}
 declare=${TARGET_GIT_URL:=}
+declare=${TARGET_SITE:=}
 declare=${HOSTS_ROOT:=}
 declare=${CIRCLE_BRANCH:=}
 declare=${CIRCLE_BUILD_NUM:=}
