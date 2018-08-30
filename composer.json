@@ -2,8 +2,8 @@
     "name": "wplib/wp-devops",
     "description": "Collection of scripts and continuous integration configuration files for building, testing and deploying WordPress websites.",
     "type": "wordpress-devops-core",
-    "version": "0.1.0",
-    "license": "GPLv3",
+    "version": "0.2.0",
+    "license": "Apache-2.0",
     "authors": [
         {
             "name": "The WPLib Team",
