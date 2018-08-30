@@ -174,13 +174,13 @@ function push_dir {
     #
     pushd "${dir}" > $filename 2>&1
     result=$?
-    trace "Directory pushed: : ${dir}"
+    trace "Directory pushed: : ${dir}" 1
     return $result
 }
 
 function pop_dir {
     local filename="${CI_PUSHD_FILE}-${CI_PUSHD_COUNTER}.txt"
-    trace "Directory popped: $(cat "${filename}"|awk '{print $1}')"
+    trace "Directory popped: $(cat "${filename}"|awk '{print $1}')" 1
     CI_PUSHD_COUNTER=$(( CI_PUSHD_COUNTER - 1 ))
     #
     # CANNOT USE try-catch here because doing
