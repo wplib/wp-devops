@@ -42,10 +42,6 @@ function minify_json() {
     set -e
 }
 
-function try_silent() {
-    local bit_bucket=$(try "$2" "$3" "$4" "$?")
-}
-
 function try() {
     CI_ERR_RESULT="$?"
     local descr="$1"
@@ -57,6 +53,9 @@ function try() {
     fi
     if [ "" == "${offset}" ] ; then
         offset=1
+    fi
+    if [ "1" != "${offset}" ] ; then
+        trace "Try offset is not numberic: ${offset}" 1
     fi
     if [ "" != "${error}" ] ; then
         CI_ERR_RESULT=$error
