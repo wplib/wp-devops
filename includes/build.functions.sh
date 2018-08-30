@@ -185,13 +185,15 @@ function build_get_rsync_exclude_from_files() {
 
 }
 
+#
+# NOTE: THIS DOES NOT WORK WITH FILES WITH SPACES
+#
 function build_keep_files() {
     local source_dir="$1"
     local deploy_dir="$2"
     local keep_files="$(project_get_deploy_keep_files)"
     local saveIFS="${IFS}"
     local _
-    IFS=$'\n'
     for file in $keep_files ; do
         deploy_file="${deploy_dir}${file}"
         source_paths_json="$(project_get_source_wordpress_paths_json)"
@@ -222,9 +224,11 @@ function build_keep_files() {
         _=$(try "Copying ${file} to ${deploy_dir}"
             "$(cp -R "${source_file}" "${deploy_dir}/${file}")")
     done
-    IFS="${saveIFS}"
 }
 
+#
+# NOTE: THIS DOES NOT WORK WITH FILES WITH SPACES
+#
 function build_delete_files() {
     local deploy_dir="$1"
     local delete_files=$(project_get_deploy_delete_files)
@@ -232,7 +236,6 @@ function build_delete_files() {
     local _
     echo "Files to delete:" > $CI_LOG
     echo -e "${delete_files}" > $CI_LOG
-    IFS=$'\n'
     for file in ${delete_files} ; do
         file="${deploy_dir}${file}"
         echo "[${file}]"
@@ -242,7 +245,6 @@ function build_delete_files() {
         fi
         _=$(try "Deleting ${file}" "$(rm -rf "${file}" 2>&1)")
     done
-    IFS="${saveIFS}"
 }
 
 
