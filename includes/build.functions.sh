@@ -237,7 +237,7 @@ function build_delete_files() {
     for file in ${delete_files} ; do
         file="${deploy_dir}${file}"
         if ! [ -f "${file}" ] ; then
-            announce "Skipping deletion of ${file} [File not found.]"
+            trace "Skipping deletion of ${file} [File not found.]"
             continue
         fi
         _=$(try "Deleting ${file}" "$(rm -rf "${file}" 2>&1)")
