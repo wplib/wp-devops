@@ -23,10 +23,16 @@ function project_get_json() {
     return $?
 }
 
+function project_get_deploy_json() {
+    echo "$(try "Get deploy JSON" \
+        "$(project_get_json | jqr ".deploy")")"
+    return $(catch)
+}
+
 function project_get_deploy_host() {
     local repo_dir="$1"
-    local query="[.deploy.hosts|to_entries[]|select(.value.branch==\""$(git_get_current_branch "${repo_dir}")"\")]|first|.key"
-    echo "$(try "Get deploy hostname" "$(project_get_json | jqr "${query}")" 1)"
+    local query="[.hosts|to_entries[]|select(.value.branch==\""$(git_get_current_branch "${repo_dir}")"\")]|first|.key"
+    echo "$(try "Get deploy hostname" "$(project_get_deploy_json | jqr "${query}")" 1)"
     return $(catch)
 }
 
@@ -93,32 +99,31 @@ function project_get_source_wordpress_paths_json() {
 
 function project_get_deploy_wordpress_paths_json() {
     echo "$(try "Get deploy's WordPress paths" \
-            "$(project_get_json | jqr ".deploy.frameworks.wordpress")" 1)"
+            "$(project_get_deploy_json | jqr ".frameworks.wordpress")" 1)"
     return $(catch)
 }
 
 function project_get_deploy_exclude_files() {
-    echo "$(try "Get deploy files to EXCLUDE"\
-        "$(project_get_deploy_json | jqr ".files.exclude[]")")"
+    echo -e $(try "Get deploy files to EXCLUDE" \
+        $(project_get_deploy_json | jqr ".files.exclude[]"))
     return $(catch)
 }
 
 function project_get_deploy_delete_files() {
-    echo "$(try "Get deploy files to DELETE"\
-        "$(project_get_deploy_json | jqr ".files.delete[]")")"
+    echo -e $(try "Get deploy files to DELETE" \
+        $(project_get_deploy_json | jqr ".files.delete[]"))
     return $(catch)
 }
 
 function project_get_deploy_keep_files() {
-    echo "$(try "Get deploy files to KEEP"\
-        "$(project_get_deploy_json | jqr ".files.keep[]")")"
+    echo -e $(try "Get deploy files to KEEP" \
+        $(project_get_deploy_json | jqr ".files.keep[]"))
     return $(catch)
 }
 
-function project_get_deploy_json() {
-    echo "$(try "Get deploy JSON"\
-        "$(project_get_json | jqr ".deploy")")"
-    return $(catch)
+function project_get_deploy_wordpress_path_names() {
+    local paths="$(project_get_deploy_wordpress_paths_json | jqr "keys[]")"
+    echo -e "${paths}"
 }
 
 

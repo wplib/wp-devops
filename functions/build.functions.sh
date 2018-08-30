@@ -40,28 +40,6 @@ function build_clone_repo() {
 
 }
 
-function build_delete_files() {
-   local deploy_dir="$1"
-
-echo "TO BE FINISHED"
-exit
-
-    local exclude_files="$(get_raw_deploy_delete_files)"
-    local saveIFS="${IFS}"
-    IFS=$'\n'
-    for file in $exclude_files ; do
-        file="${deploy_dir}${file}"
-        if [ "" == "$(ls -A ${file} 2>/dev/null)" ] ; then
-            echo "Skipping deletion of ${file} [File not found.]"
-            continue
-        fi
-        echo "Deleting ${file}"
-        rm -rf "${file}"
-    done
-    IFS="${saveIFS}"
-
-}
-
 function build_copy_files() {
     local source_dir="${CI_PROJECT_DIR}"
     local deploy_dir="${CI_DEPLOY_REPO_DIR}"
@@ -123,47 +101,6 @@ function build_copy_files() {
     catch
 
 }
-
-function build_keep_files() {
-    local source_dir="$1"
-    local deploy_dir="$2"
-
-echo "TO BE FINISHED"
-exit
-
-    local keep_files="$(get_raw_deploy_keep_files)"
-    for file in $keep_files ; do
-        deploy_file="${deploy_dir}${file}"
-        source_paths="$(get_raw_source_wordpress_paths)"
-        deploy_paths="$(get_raw_deploy_wordpress_paths)"
-        path_len="0"
-        for path_name in $(get_raw_deploy_wordpress_path_names); do
-            deploy_path="$(echo $deploy_paths|jqr ".${path_name}")"
-            if ! [[ ${file} =~ ^${deploy_path}/(.+)$ ]] ; then
-                continue
-            fi
-            if [ "${path_len}" -lt "${#deploy_path}" ] ; then
-                path_len="${#deploy_path}"
-                source_path="$(echo $source_paths|jqr ".${path_name}")"
-                source_file="${source_dir}${source_path}/${BASH_REMATCH[1]}"
-            fi
-        done
-        if [ "" == "${source_file}" ]; then
-            source_file=""${source_dir}${file}""
-        fi
-        if [ "" == "$(ls -A ${source_file} 2>/dev/null)" ] ; then
-            if [ "" != "$(ls -A ${deploy_file} 2>/dev/null)" ] ; then
-                # We have it. All is good
-                continue
-            fi
-            echo "A 'keep' file  could not be found. Cannot deploy."
-            exit 1
-        fi
-        echo "Copying ${file} to ${deploy_dir}"
-        cp -R "${source_file}" "${deploy_dir}/${file}"
-    done
-}
-
 
 #
 # For `tr -s '/'` see https://unix.stackexchange.com/a/187055/144192
@@ -242,4 +179,62 @@ function build_get_rsync_exclude_from_files() {
     return $(catch)
 
 }
+
+function build_keep_files() {
+    local source_dir="$1"
+    local deploy_dir="$2"
+    local keep_files="$(project_get_deploy_keep_files)"
+    local saveIFS="${IFS}"
+    local _
+    IFS=$'\n'
+    for file in $keep_files ; do
+        deploy_file="${deploy_dir}${file}"
+        source_paths_json="$(project_get_source_wordpress_paths_json)"
+        deploy_paths_json="$(project_get_deploy_wordpress_paths_json)"
+        path_len="0"
+        for path_name in $(project_get_deploy_wordpress_path_names); do
+            deploy_path="$(echo $deploy_paths_json|jqr ".${path_name}")"
+            if ! [[ ${file} =~ ^${deploy_path}/(.+)$ ]] ; then
+                continue
+            fi
+            if [ "${path_len}" -lt "${#deploy_path}" ] ; then
+                path_len="${#deploy_path}"
+                source_path="$(echo $source_paths_json|jqr ".${path_name}")"
+                source_file="${source_dir}${source_path}/${BASH_REMATCH[1]}"
+            fi
+        done
+        if [ "" == "${source_file}" ]; then
+            source_file=""${source_dir}${file}""
+        fi
+        if ! [ -f "${source_file}" ] ; then
+            if [ -f "${deploy_file}" ] ; then
+                # We have it. All is good
+                continue
+            fi
+            announce "The 'keep' file [${source_file}] could not be found. Cannot deploy."
+            exit 1
+        fi
+        _=$(try "Copying ${file} to ${deploy_dir}"
+            "$(cp -R "${source_file}" "${deploy_dir}/${file}")")
+    done
+    IFS="${saveIFS}"
+}
+
+function build_delete_files() {
+    local deploy_dir="$1"
+    local delete_files=$(project_get_deploy_delete_files)
+    local saveIFS="${IFS}"
+    local _
+    IFS=$'\n'
+    for file in $delete_files ; do
+        file="${deploy_dir}${file}"
+        if ! [ -f "${file}" ] ; then
+            announce "Skipping deletion of ${file} [File not found.]"
+            continue
+        fi
+        _=$(try "Deleting ${file}" "$(rm -rf "${file}" 2>&1)")
+    done
+    IFS="${saveIFS}"
+}
+
 
