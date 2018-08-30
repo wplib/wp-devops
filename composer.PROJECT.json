@@ -1,0 +1,29 @@
+{
+	"name": "your/project",
+	"type": "project",
+	"repositories": [
+		{
+			"type": "git",
+			"url": "https://github.com/wplib/wp-devops"
+		}
+	],
+	"require-dev": {
+		"wplib/wp-composer-installers": "1.2"
+	},
+	"extra": {
+		"installer-paths": {
+			".circleci/wp-devops": [
+				"type:wordpress-devops",
+				"wplib/wp-devops"
+			]
+		}
+	},
+	"scripts": {
+		"post-install-cmd": [
+			"php -f '.circleci/wp-devops/init.php'"
+		],
+		"post-update-cmd": [
+			"php -f '.circleci/wp-devops/init.php'"
+		]
+	}
+}
