@@ -26,7 +26,12 @@ function build_clone_repo() {
     local clone_dir="${CI_DEPLOY_REPO_DIR}"
     local branch="${CI_BRANCH}"
     if [ "no" == "$(git_is_repo "${clone_dir}")" ]; then
-        trace "Clone does not yet exist: ${clone_dir}"
+        if ! [ -d "${clone_dir}" ]; then
+            trace "Clone does not yet exist: ${clone_dir}"
+        else
+            trace "Deleting non-Git directory to allow cloning: ${clone_dir}"
+            rm -rf  "${clone_dir}"
+        fi
         git_clone_repo "${repo_url}" "${clone_dir}"
     fi
     push_dir "${clone_dir}"
