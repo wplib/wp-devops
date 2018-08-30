@@ -234,11 +234,8 @@ function build_delete_files() {
     local delete_files=$(project_get_deploy_delete_files)
     local saveIFS="${IFS}"
     local _
-    echo "Files to delete:" > $CI_LOG
-    echo -e "${delete_files}" > $CI_LOG
     for file in ${delete_files} ; do
         file="${deploy_dir}${file}"
-        echo "[${file}]"
         if ! [ -f "${file}" ] ; then
             announce "Skipping deletion of ${file} [File not found.]"
             continue
