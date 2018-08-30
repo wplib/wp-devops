@@ -1,0 +1,94 @@
+#
+#    Copyright 2018 NewClarity Consulting, LLC
+#
+#    Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+#
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+#
+
+version: 2
+
+jobs:
+    build:
+        docker:
+            - image: circleci/php:7.1.21-cli-node-browsers
+
+        working_directory: ~/source
+
+        environment:
+            CI_INCLUDES_FILE: /home/circleci/source/.circleci/includes.sh
+
+        steps:
+            - restore_cache:
+                  name: "Restoring source code cache"
+                  keys:
+                      - source-repo
+
+            - restore_cache:
+                  name: "Restoring deploy code cache"
+                  keys:
+                      - deploy-repo
+
+            - checkout
+
+            - store_artifacts:
+                  path: .circleci/
+                  destination: scripts
+
+            - store_artifacts:
+                  path: ./project.json
+                  destination: project.json
+
+            - store_artifacts:
+                  path: ./composer.json
+                  destination: composer.json
+
+            - run: .circleci/scripts/setup-environment.sh
+            - store_artifacts:
+                path: ~/log.txt
+                destination: setup-environment.log
+
+            - run: .circleci/scripts/deploy.sh
+            - store_artifacts:
+                  path: ~/log.txt
+                  destination: deploy.log
+
+            - run: .circleci/scripts/build.sh
+            - store_artifacts:
+                  path: ~/log.txt
+                  destination: build.log
+
+            - run:
+                  name: Generate Error Report
+                  when: on_fail
+                  command: cat ~/log.txt
+
+            - run:
+                name: Unlock Deploy
+                when: always
+                command: .circleci/scripts/unlock-deploy.sh
+            - store_artifacts:
+                  path: ~/log.txt
+                  destination: unlock-deploy.log
+
+            - save_cache:
+                name: "Caching source code ~/repo directory"
+                key: source-repo
+                paths:
+                    - ~/source
+
+            - save_cache:
+                  name: "Caching deployment code ~/deploy directory"
+                  key: deploy-repo
+                  paths:
+                      - ~/deploy
+
+
