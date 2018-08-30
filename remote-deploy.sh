@@ -15,7 +15,9 @@
 #    limitations under the License.
 #
 
-CIRCLE_TOKEN="$(cat ../circleci.token)"
+echo "Triggering remote build at CircleCI."
+pushd ../.. > /dev/null
+CIRCLE_TOKEN="$(cat .circleci/circleci.token)"
 LATEST_COMMIT="$(git log -1 --pretty=format:"%H")"
 REPO_REF="$(git remote -v | grep push | awk '{print $2}' | sed 's/git\@//' | sed 's/:/\//' | sed 's/\.git//' | sed 's/\.com//')"
 BRANCH_NAME="$(git branch | grep '*' | awk '{print $2}')"
@@ -25,12 +27,14 @@ curl \
     --user "${CIRCLE_TOKEN}": \
     --request POST \
     --form revision="${LATEST_COMMIT}" \
-    --form config=@config.yml \
+    --form config=../config.yml \
     --remote-name \
     --form notify=false \
         "https://circleci.com/api/v1.1/project/${REPO_REF}/tree/${BRANCH_NAME}"
 
-rm -rf ../logs/LAST_BUILD.json
-mv "${BRANCH_NAME}" ../logs/LAST_BUILD.json
-echo
-cat ../logs/LAST_BUILD.json | jq -r '.messages[].message' | sed -e 's/<[a-zA-Z\/][^>]*>//g'
+mkdir -p .circleci/logs
+rm -rf .circleci/logs/LAST_BUILD.json
+mv "${BRANCH_NAME}" .circleci/logs/LAST_BUILD.json
+cat .circleci/logs/LAST_BUILD.json | jq -r '.messages[].message' | sed -e 's/<[a-zA-Z\/][^>]*>//g'
+popd > /dev/null
+echo "Done."
