@@ -282,7 +282,9 @@ function git_push_tags() {
 function git_is_repo() {
     local repo_dir="$1"
     push_dir "${repo_dir}"
-    $output="$(set +e; git branch 2>&1; set -e)"
+    set +e
+    $output="$(git branch 2>&1)"
+    set -e
     if [ "fatal:" == "$(echo $output|awk '{print $1}')" ] ; then
         echo "yes"
     else
