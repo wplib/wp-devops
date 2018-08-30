@@ -273,6 +273,7 @@ function git_tag() {
     pop_dir
     return $(last_error)
 }
+
 function git_push_tags() {
     local repo_dir="$1"
     push_dir "${repo_dir}"
@@ -281,4 +282,16 @@ function git_push_tags() {
     pop_dir
     return $(last_error)
 }
+
+function git_is_repo() {
+    local repo_dir="$1"
+    push_dir "${repo_dir}"
+    set +e
+    git branch > /dev/null 2>&1
+    result=$?
+    set -e
+    pop_dir
+    return $result
+}
+
 
