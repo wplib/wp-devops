@@ -87,37 +87,37 @@ function project_get_source_content_path() {
 
 function project_get_deploy_content_path() {
     echo "/$(trim_slashes "$(try "Get deploy's WordPress content path" \
-            "$(project_get_deploy_wordpress_paths_json | jqr ".content_path")" 1)")"
+        "$(project_get_deploy_wordpress_paths_json | jqr ".content_path")" 1)")"
     return $(catch)
 }
 
 function project_get_source_wordpress_paths_json() {
     echo "$(try "Get source's WordPress paths" \
-            "$(project_get_json | jqr ".source.frameworks.wordpress")" 1)"
+        "$(project_get_json | jqr ".source.frameworks.wordpress")" 1)"
     return $(catch)
 }
 
 function project_get_deploy_wordpress_paths_json() {
     echo "$(try "Get deploy's WordPress paths" \
-            "$(project_get_deploy_frameworks_json | jqr ".wordpress")" 1)"
+        "$(project_get_deploy_frameworks_json | jqr ".wordpress")" 1)"
     return $(catch)
 }
 
 function project_get_deploy_exclude_files() {
     echo -e $(try "Get deploy files to EXCLUDE" \
-        $(project_get_deploy_json | jqr ".files.exclude[]"))
+        "$(project_get_deploy_json | jqr ".files.exclude[]")")
     return $(catch)
 }
 
 function project_get_deploy_delete_files() {
     echo -e $(try "Get deploy files to DELETE" \
-        $(project_get_deploy_json | jqr ".files.delete[]"))
+        "$(project_get_deploy_json | jqr ".files.delete[]")")
     return $(catch)
 }
 
 function project_get_deploy_keep_files() {
     echo -e $(try "Get deploy files to KEEP" \
-        $(project_get_deploy_json | jqr ".files.keep[]"))
+        "$(project_get_deploy_json | jqr ".files.keep[]")")
     return $(catch)
 }
 

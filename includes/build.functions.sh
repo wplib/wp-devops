@@ -227,11 +227,13 @@ function build_keep_files() {
 
 function build_delete_files() {
     local deploy_dir="$1"
-    local delete_files=$(project_get_deploy_delete_files)
+    local delete_files="$(project_get_deploy_delete_files)"
     local saveIFS="${IFS}"
     local _
+    echo "Files to delete:" > $CI_LOG
+    echo -e "${delete_files}" > $CI_LOG
     IFS=$'\n'
-    for file in $delete_files ; do
+    for file in ${delete_files} ; do
         file="${deploy_dir}${file}"
         echo "[${file}]"
         if ! [ -f "${file}" ] ; then
