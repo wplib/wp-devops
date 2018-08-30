@@ -283,7 +283,7 @@ function git_is_repo() {
     local repo_dir="$1"
     push_dir "${repo_dir}"
     set +e
-    $output="$(git branch 2>&1)"
+    output="$(git branch 2>&1)"
     set -e
     if [ "fatal:" == "$(echo $output|awk '{print $1}')" ] ; then
         echo "yes"
