@@ -27,12 +27,13 @@ if [ 0 -eq $CL_LOADED ]; then
         CI_CIRCLECI_DIR="${CIRCLE_WORKING_DIRECTORY/#\~/$HOME}/.circleci"
     fi
     export CI_CIRCLECI_DIR="$(realpath "${CI_CIRCLECI_DIR}")"
-    export SCRIPTS_DIR="${CI_INCLUDES_FILE:="${CI_CIRCLECI_DIR}"}"
+    export CI_WP_DEVOPS_DIR="${CI_CIRCLECI_DIR}/wp-devops"
+    export CI_SOURCED_FILE="${CI_SOURCED_FILE:="${CI_WP_DEVOPS_DIR}/sourced.sh"}"
     export CI_PROJECT_DIR="$(dirname "${CI_CIRCLECI_DIR}")"
     export CI_TMP_DIR="${HOME}/tmp"
     mkdir -p "${CI_TMP_DIR}"
 
-    export CI_FUNCTIONS_DIR="${CI_CIRCLECI_DIR}/includes"
+    export CI_INCLUDES_DIR="${CI_WP_DEVOPS_DIR}/includes"
     export CI_DEPLOY_REPO_DIR="${HOME}/deploy"
     # /tmp/deploy is where .git will go
     # We have to make it's parent directory or clone will fail
@@ -57,12 +58,12 @@ fi
 
 CL_LOADED=1
 
-source "${CI_FUNCTIONS_DIR}/general.functions.sh"
-source "${CI_FUNCTIONS_DIR}/git.functions.sh"
-source "${CI_FUNCTIONS_DIR}/deploy.functions.sh"
-source "${CI_FUNCTIONS_DIR}/project.functions.sh"
-source "${CI_FUNCTIONS_DIR}/composer.functions.sh"
-source "${CI_FUNCTIONS_DIR}/build.functions.sh"
+source "${CI_INCLUDES_DIR}/general.functions.sh"
+source "${CI_INCLUDES_DIR}/git.functions.sh"
+source "${CI_INCLUDES_DIR}/deploy.functions.sh"
+source "${CI_INCLUDES_DIR}/project.functions.sh"
+source "${CI_INCLUDES_DIR}/composer.functions.sh"
+source "${CI_INCLUDES_DIR}/build.functions.sh"
 
 if [ "" == "${CIRCLE_BRANCH:=}" ] ; then
     CI_BRANCH="$(git_get_current_branch "${CI_PROJECT_DIR}")"
