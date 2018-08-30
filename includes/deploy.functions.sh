@@ -26,7 +26,6 @@ function deploy_tag() {
     local deploy_tag="$(deploy_get_current_tag)"
     git_tag "${repo_dir}" "${deploy_tag}" "Deploy #$(deploy_get_current_num)"
     git_push_tags "${repo_dir}"
-    echo "${deploy_tag}"
     return $(last_error)
 }
 
