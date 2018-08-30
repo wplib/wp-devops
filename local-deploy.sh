@@ -37,7 +37,7 @@ function deploy_onexit() {
 trap deploy_onexit INT TERM EXIT
 
 announce "Deploying"
-bash "$(pwd)/deploy.sh
+bash "$(pwd)/deploy.sh"
 if ! [ -f "${CI_LOG}" ] ; then
     touch "${CI_LOGS_DIR}/deploy.log"
 else
