@@ -228,6 +228,7 @@ function build_delete_files() {
     IFS=$'\n'
     for file in $delete_files ; do
         file="${deploy_dir}${file}"
+        echo "[${file}]"
         if ! [ -f "${file}" ] ; then
             announce "Skipping deletion of ${file} [File not found.]"
             continue
