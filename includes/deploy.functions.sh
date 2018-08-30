@@ -170,7 +170,7 @@ function deploy_push() {
     catch
     _=$(try "Pull any recent changes" "$(git_pull "${deploy_dir}")")
     catch
-    _=$(try "Pull any recent changes"\ "$(git_push "${deploy_dir}")")
+    _=$(try "Pull any recent changes" "$(git_push "${deploy_dir}")")
 
     return $(catch)
 }
