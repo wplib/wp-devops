@@ -55,10 +55,10 @@ function deploy_lock() {
     set +e
 
     output="$(try "Request local deploy lock" \
-        "$(git tag -a "${CI_DEPLOY_LOCK_SLUG}" -m "Deploy lock by ${user}" 2>&1|[ 00 -eq $? ] && echo "Acquired" || echo "Failed")")"
+        "$(git tag -a "${CI_DEPLOY_LOCK_SLUG}" -m "Deploy lock by ${user}" 2>&1)")"
     if [ "${output}" == "fatal: tag 'deploy-lock' already exists" ] ; then
         echo
-        echo "Cannot deploy. Deploy currently locked with '${CI_DEPLOY_LOCK_SLUG}' tag."
+        echo "Deploy currently locked with '${CI_DEPLOY_LOCK_SLUG}' tag. Cannot deploy."
         echo
         exit 1
     fi
