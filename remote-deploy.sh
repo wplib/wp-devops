@@ -30,7 +30,7 @@ curl \
     --form notify=false \
         "https://circleci.com/api/v1.1/project/${REPO_REF}/tree/${BRANCH_NAME}"
 
-rm -rf logs/LAST_BUILD.json
-mv "${BRANCH_NAME}" logs/LAST_BUILD.json
+rm -rf ../logs/LAST_BUILD.json
+mv "${BRANCH_NAME}" ../logs/LAST_BUILD.json
 echo
-cat logs/LAST_BUILD.json | jq -r '.messages[].message' | sed -e 's/<[a-zA-Z\/][^>]*>//g'
+cat ../logs/LAST_BUILD.json | jq -r '.messages[].message' | sed -e 's/<[a-zA-Z\/][^>]*>//g'

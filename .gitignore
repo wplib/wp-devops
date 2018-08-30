@@ -14,9 +14,7 @@
 #    limitations under the License.
 #
 
-.idea
 .DS_Store
-/test.sh
-/remote/circleci.token
-/logs/**
-!/logs/...
+/.idea
+
+

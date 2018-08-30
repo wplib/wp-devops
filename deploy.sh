@@ -15,12 +15,13 @@
 #    limitations under the License.
 #
 
-declare="${CI_BRANCH:=}"
-declare="${CI_PROJECT_DIR:=}"
 declare="${CI_LOG:=}"
-declare="${CI_INCLUDES_FILE:=}"
+declare="${CI_BRANCH:=}"
+declare="${CI_DEPLOY_REPO_DIR:=}"
+declare="${CI_PROJECT_DIR:=}"
+declare="${CI_SOURCED_FILE:=}"
 
-source "${CI_INCLUDES_FILE}"
+source "${CI_SOURCED_FILE}"
 
 announce "Locking the deploy"
 deploy_lock
@@ -28,9 +29,6 @@ deploy_lock
 announce "Setting the Git user"
 git_set_user
 
-#
-# See https://stackoverflow.com/a/38474400/102699
-#
 announce "Disabling SSH StrictHostKeyChecking"
 git_disable_strict
 
@@ -48,3 +46,27 @@ git_delete_untracked_files "${CI_PROJECT_DIR}"
 
 announce "Running 'composer install'"
 composer_run "${CI_PROJECT_DIR}"
+
+announce "Cloning deploy repo"
+build_clone_repo
+
+announce "Running file copy"
+build_copy_files
+
+announce "Deleting blacklisted files"
+build_delete_files
+
+announce "Incrementing deploy"
+deploy_increment
+
+announce "Pushing deploy to host"
+deploy_push
+
+announce "Tagging deploy"
+deploy_tag "${CI_PROJECT_DIR}"
+deploy_tag "${CI_DEPLOY_REPO_DIR}"
+
+announce "Deploy tagged as $(deploy_get_current_tag)"
+
+announce "Unlocking the deploy"
+deploy_unlock

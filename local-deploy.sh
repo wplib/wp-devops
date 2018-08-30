@@ -16,32 +16,24 @@
 #
 
 declare="${CI_DEPLOY_LOCKED:=}"
-declare="${CI_INCLUDES_FILE:=}"
+declare="${CI_SOURCED_FILE:=}"
 
-source "includes.sh"
+source "sourced.sh"
 
 function deploy_onexit() {
     if [ 0 -eq ${CI_DEPLOY_LOCKED} ] ; then
         exit 0
     fi
-    bash ./unlock-deploy.sh
-    mv "${CI_LOG}" logs/unlock-deploy.log
+    announce "Unlocking the deploy"
+    deploy_unlock
+    mv "${CI_LOG}" "${CI_LOGS_DIR}/unlock-deploy.log"
 }
 trap deploy_onexit INT TERM EXIT
 
-function run() {
-    what="$1"
-    message="$2"
-    announce "${message}"
-    bash "$(pwd)/${what}".sh
-    if ! [ -f "${CI_LOG}" ] ; then
-        touch "logs/${what}.log"
-    else
-        mv "${CI_LOG}" "$(pwd)/logs/${what}.log"
-    fi
-}
-
-run "setup-environment" "Setting up environment"
-run "build" "Building deploy"
-run "deploy" "Deploying"
-run "unlock-deploy" "Unlocking deploy"
+announce "Deploying"
+bash "$(pwd)/deploy.sh
+if ! [ -f "${CI_LOG}" ] ; then
+    touch "${CI_LOGS_DIR}/deploy.log"
+else
+    mv "${CI_LOG}" "${CI_LOGS_DIR}/deploy.log"
+fi

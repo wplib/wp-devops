@@ -24,7 +24,7 @@ jobs:
         working_directory: ~/source
 
         environment:
-            CI_INCLUDES_FILE: /home/circleci/source/.circleci/includes.sh
+            CI_SOURCED_FILE: /home/circleci/source/.circleci/wp-devops/sourced.sh
 
         steps:
             - restore_cache:
@@ -40,8 +40,8 @@ jobs:
             - checkout
 
             - store_artifacts:
-                    path: .circleci/
-                    destination: scripts
+                    path: .circleci/wp-devops
+                    destination: wp-devops
 
             - store_artifacts:
                     path: ./project.json
@@ -54,37 +54,24 @@ jobs:
             - run:
                     name: Bootstrapping WP DevOps
                     command: |
-                        rm -rf .circleci
-                        git clone git@github.com:wplib/wp-devops.git .circleci
+                        rm -rf wp-devops
+                        git clone git@github.com:wplib/wp-devops.git
                         ref_type=$(cat project.json|jq -r '.deploy.frameworks.wp-devops.ref_type')
                         if [ 'branch' == "${ref_type}" ] ; then
                             branch=$(cat project.json|jq -r '.deploy.frameworks.wp-devops.branch')
-                            cd .circleci
+                            cd wp-devops
                             git checkout -b "${branch}" "origin/${branch}"
                         else
                             tag=$(cat project.json|jq -r '.deploy.frameworks.wp-devops.tag')
-                            cd .circleci
+                            cd wp-devops
                             git checkout "${tag}"
                         fi
 
-            - store_artifacts:
-                    path: ~/log.txt
-                    destination: bootstrap.log
-
-            - run: .circleci/scripts/setup-environment.sh
-            - store_artifacts:
-                    path: ~/log.txt
-                    destination: setup-environment.log
-
             - run: .circleci/scripts/deploy.sh
+
             - store_artifacts:
                     path: ~/log.txt
                     destination: deploy.log
-
-            - run: .circleci/scripts/build.sh
-            - store_artifacts:
-                    path: ~/log.txt
-                    destination: build.log
 
             - run:
                     name: Generate Error Report
@@ -95,6 +82,7 @@ jobs:
                     name: Unlock Deploy
                     when: always
                     command: .circleci/scripts/unlock-deploy.sh
+
             - store_artifacts:
                     path: ~/log.txt
                     destination: unlock-deploy.log
