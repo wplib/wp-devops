@@ -40,10 +40,6 @@ jobs:
             - checkout
 
             - store_artifacts:
-                  path: .circleci/wp-devops
-                  destination: wp-devops
-
-            - store_artifacts:
                   path: ./project.json
                   destination: project.json
 
@@ -67,6 +63,10 @@ jobs:
                           tag=$(echo "${wp_devops}"|jq -r '.tag')
                           git checkout "${tag}"
                       fi
+
+            - store_artifacts:
+                  path: .circleci/wp-devops
+                  destination: wp-devops
 
             - run: .circleci/wp-devops/deploy.sh
 
