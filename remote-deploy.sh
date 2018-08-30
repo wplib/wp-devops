@@ -21,13 +21,12 @@ CIRCLE_TOKEN="$(cat .circleci/circleci.token)"
 LATEST_COMMIT="$(git log -1 --pretty=format:"%H")"
 REPO_REF="$(git remote -v | grep push | awk '{print $2}' | sed 's/git\@//' | sed 's/:/\//' | sed 's/\.git//' | sed 's/\.com//')"
 BRANCH_NAME="$(git branch | grep '*' | awk '{print $2}')"
-
 curl \
-    --silent \
+    --verbose \
     --user "${CIRCLE_TOKEN}": \
     --request POST \
     --form revision="${LATEST_COMMIT}" \
-    --form config=../config.yml \
+    --form config=@.circleci/config.yml \
     --remote-name \
     --form notify=false \
         "https://circleci.com/api/v1.1/project/${REPO_REF}/tree/${BRANCH_NAME}"
