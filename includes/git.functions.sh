@@ -59,6 +59,8 @@ function git_checkout_branch() {
     push_dir "${repo_dir}"
     local exists="$(git branch | grep "${branch}" 2>&1)"
     local output
+    trace "Current Dir: $(pwd)"
+    trace "Git Branches: $(git branch)"
     #set +e
     if [ "" == "${exists}" ] ; then
         output="$(try "Checking out new branch '${branch}'" \
