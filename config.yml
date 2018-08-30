@@ -28,76 +28,77 @@ jobs:
 
         steps:
             - restore_cache:
-                    name: "Restoring source code cache"
-                    keys:
-                        -source-repo
+                  name: "Restoring source code cache"
+                  keys:
+                      -source-repo
 
             - restore_cache:
-                    name: "Restoring deploy code cache"
-                    keys:
-                        -deploy-repo
+                  name: "Restoring deploy code cache"
+                  keys:
+                      -deploy-repo
 
             - checkout
 
             - store_artifacts:
-                    path: .circleci/wp-devops
-                    destination: wp-devops
+                  path: .circleci/wp-devops
+                  destination: wp-devops
 
             - store_artifacts:
-                    path: ./project.json
-                    destination: project.json
+                  path: ./project.json
+                  destination: project.json
 
             - store_artifacts:
-                    path: ./composer.json
-                    destination: composer.json
+                  path: ./composer.json
+                  destination: composer.json
 
             - run:
-                    name: Bootstrapping WP DevOps
-                    command: |
-                        rm -rf wp-devops
-                        git clone git@github.com:wplib/wp-devops.git
-                        project_json="$(cat ../project.json)"
-                        ref_type=$(echo "${project_json}"|jq -r '.deploy.frameworks.wp-devops.ref_type')
-                        if [ 'branch' == "${ref_type}" ] ; then
-                            branch=$(echo "${project_json}"|jq -r '.deploy.frameworks.wp-devops.branch')
-                            cd wp-devops
-                            git checkout -b "${branch}" "origin/${branch}"
-                        else
-                            tag=$(echo "${project_json}"|jq -r '.deploy.frameworks.wp-devops.tag')
-                            cd wp-devops
-                            git checkout "${tag}"
-                        fi
+                  name: Bootstrapping WP DevOps
+                  command: |
+                      rm -rf wp-devops
+                      git clone git@github.com:wplib/wp-devops.git
+                      pwd
+                      project_json="$(cat /home/circleci/source/project.json)"
+                      ref_type=$(echo "${project_json}"|jq -r '.deploy.frameworks.wp-devops.ref_type')
+                      if [ 'branch' == "${ref_type}" ] ; then
+                          branch=$(echo "${project_json}"|jq -r '.deploy.frameworks.wp-devops.branch')
+                          cd wp-devops
+                          git checkout -b "${branch}" "origin/${branch}"
+                      else
+                          tag=$(echo "${project_json}"|jq -r '.deploy.frameworks.wp-devops.tag')
+                          cd wp-devops
+                          git checkout "${tag}"
+                      fi
 
             - run: .circleci/scripts/deploy.sh
 
             - store_artifacts:
-                    path: ~/log.txt
-                    destination: deploy.log
+                  path: ~/log.txt
+                  destination: deploy.log
 
             - run:
-                    name: Generate Error Report
-                    when: on_fail
-                    command: cat ~/log.txt
+                  name: Generate Error Report
+                  when: on_fail
+                  command: cat ~/log.txt
 
             - run:
-                    name: Unlock Deploy
-                    when: always
-                    command: .circleci/scripts/unlock-deploy.sh
+                  name: Unlock Deploy
+                  when: always
+                  command: .circleci/scripts/unlock-deploy.sh
 
             - store_artifacts:
-                    path: ~/log.txt
-                    destination: unlock-deploy.log
+                  path: ~/log.txt
+                  destination: unlock-deploy.log
 
             - save_cache:
-                    name: "Caching source code ~/source directory"
-                    key: source-repo
-                    paths:
-                        - ~/source
+                  name: "Caching source code ~/source directory"
+                  key: source-repo
+                  paths:
+                      - ~/source
 
             - save_cache:
-                    name: "Caching deployment code ~/deploy directory"
-                    key: deploy-repo
-                    paths:
-                        - ~/deploy
+                  name: "Caching deployment code ~/deploy directory"
+                  key: deploy-repo
+                  paths:
+                      - ~/deploy
 
 
