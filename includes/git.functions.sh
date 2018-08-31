@@ -125,7 +125,7 @@ function git_clone_repo() {
     local repo_name="$(basename "${clone_dir}")"
     push_dir "${parent_dir}"
     set +e
-    output=$(try "Cloning ${repo_url} to ${repo_name}" \
+    local output=$(try "Cloning ${repo_url} to ${repo_name}" \
         "$(git clone "${repo_url}" "${repo_name}" 2>&1)")
     catch
     set -e
@@ -159,7 +159,6 @@ function git_commit() {
     push_dir "${repo_dir}"
     local output=$(try "Git commit for: '${message}'" "$(git commit -m "${message}" 2>&1)")
     catch
-    echo "${output}"
     pop_dir
     return $(last_error)
 }
@@ -241,7 +240,7 @@ function git_get_commit_hash() {
     local tag="$1"
     local repo_dir="$2"
     push_dir "${repo_dir}"
-    output=$(try "Get Git commit hash for tag ${tag}" \
+    local output=$(try "Get Git commit hash for tag ${tag}" \
         "$(git show-ref -s "${tag}")")
     catch
     echo "${output}"
@@ -253,7 +252,7 @@ function git_hash_log() {
     local hash="$1"
     local repo_dir="$2"
     push_dir "${repo_dir}"
-    output=$(try "Get Git commit hash for tag ${hash}" \
+    local output=$(try "Get Git commit hash for tag ${hash}" \
         "$(git log "${hash}..HEAD" --oneline | cut -d' ' -f2-999)")
     catch
     echo "${output}"
@@ -285,7 +284,7 @@ function git_is_repo() {
     local repo_dir="$1"
     push_dir "${repo_dir}"
     set +e
-    output="$(git branch 2>&1)"
+    local output="$(git branch 2>&1)"
     set -e
     if [ "fatal:" == "$(echo $output|awk '{print $1}')" ] ; then
         echo "no"

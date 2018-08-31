@@ -56,7 +56,7 @@ function deploy_lock() {
     push_dir "${CI_PROJECT_DIR}"
     set +e
 
-    output="$(try "Request local deploy lock" \
+    local output="$(try "Request local deploy lock" \
         "$(git tag -a "${CI_DEPLOY_LOCK_SLUG}" -m "Deploy lock by ${user}" 2>&1)")"
     if [ "${output}" == "fatal: tag 'deploy-lock' already exists" ] ; then
         echo
@@ -122,7 +122,7 @@ function deploy_unlock() {
     #
     # This generates error 1 if tag does not exist
     #
-    output="$(try "Git delete local 'deploy-lock' tag" \
+    local output="$(try "Git delete local 'deploy-lock' tag" \
         "$(git tag -d ${CI_DEPLOY_LOCK_SLUG} 2>&1)")"
     result=$(catch)
     if ! [[ "${output}" =~ ^Deleted ]]; then
@@ -166,8 +166,8 @@ function deploy_increment() {
     local user_name="$(git_get_user)"
     push_dir "${repo_dir}"
     deploy_num="$(( deploy_num + 1 ))"
-    filename="$(deploy_get_filename)"
-    output=$(try "Writing deploy# ${deploy_num} to: ${filename}" \
+    local filename="$(deploy_get_filename)"
+    local output=$(try "Writing deploy# ${deploy_num} to: ${filename}" \
         "$(echo "${deploy_num}" > $filename)")
     catch
 

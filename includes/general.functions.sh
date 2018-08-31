@@ -33,7 +33,7 @@ function jqr() {
 function minify_json() {
     local input="$1"
     set +e
-    output="$(echo "${input}" | jq -c . 2>&1)"
+    local output="$(echo "${input}" | jq -c . 2>&1)"
     if [[ "${output}" = *"parse error: "* ]] ; then
         echo "${input}"
     else
@@ -97,15 +97,15 @@ function trace() {
     else
         line_no="${BASH_LINENO[$offset]}"
     fi
-    pos=$(( offset + 2 ))
-    print="{print $"
-    command="${print}${pos}}"
+    local pos=$(( offset + 2 ))
+    local print="{print $"
+    local command="${print}${pos}}"
     local cur_file="$(echo ${BASH_SOURCE[@]}|awk "${command}")"
-    cur_file="${cur_file#"${CI_CIRCLECI_DIR}/"}" # See https://stackoverflow.com/a/16623897/102699
+    local cur_file="${cur_file#"${CI_CIRCLECI_DIR}/"}" # See https://stackoverflow.com/a/16623897/102699
     if [ "" != "${info}" ] ; then
         info=" => ${info}"
     fi
-    message="${cur_file}:${line_no}${info}"
+    local message="${cur_file}:${line_no}${info}"
     if [ 120 -lt ${#message} ] ; then
         echo -e "\n" >> $CI_LOG
     fi
