@@ -175,7 +175,7 @@ function git_pull() {
 function git_push() {
     local repo_dir="$1"
     push_dir "${repo_dir}"
-    local _=$(try "Git push" "$(git push 2>&1)")
+    local _=$(try "Git push" "$(git push --set-upstream origin "${CI_BRANCH}" 2>&1)")
     catch
     pop_dir
     return $(last_error)
@@ -259,7 +259,7 @@ function git_hash_log() {
     pop_dir
     return $(last_error)
 }
-
+g
 function git_tag() {
     local repo_dir="$1"
     local tag="$2"
