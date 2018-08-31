@@ -239,7 +239,8 @@ function deploy_push() {
 
     local commit_msg="Deploy #${deploy_num} by ${user_name}"
     if [ "" != "${log}" ]; then
-        commit_msg=$'{commit_msg}\n${log}'
+        local newline=$'\n'
+        commit_msg="${commit_msg}${newline}${log}"
     fi
 
     message="dding all deploy files to Git stage"
