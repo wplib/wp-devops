@@ -231,7 +231,7 @@ function deploy_push() {
 
     local message="enerating deploy log from Git"
     local log="$(try "G${message}" \
-        "$(git_generate_log 'deploy' "${deploy_dir}")")"
+        "$(git_generate_log 'deploy' "${CI_PROJECT_DIR}")")"
     if is_error ; then
         announce "Error g${message}"
         return $(last_error)
