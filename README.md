@@ -50,10 +50,10 @@ To use WP DevOps requires the following:
  
 2. Run `composer install` from your terminal command line in the root directory of your Git repository. 
 
-    This will create a `.circleci` directory containing a `config.yml` and a `wp-devops` subdirectory contain the scripts from this Git repository.  
-
         composer install --ignore-platform-reqs
         
+    This will create a `.circleci` directory containing a `config.yml` and a `wp-devops` subdirectory contain the scripts from this Git repository.  
+
      _**Note:** `--ignore-platform-reqs` is not always needed but Composer fails if your local computer does not have all the required software to actually _host_ your project. In our option ignoring platform requirements should have been the default option and the Composer team should have added a `--require-platform-reqs` switch **instead**. But the Composer folks did not ask our opinion. :-)_
     <hr>      
    
@@ -99,12 +99,14 @@ To use WP DevOps requires the following:
     _**NOTE:** CircleCI needs the private key since it will need to act as a client to Pantheon's SSH server._    
 
     ![CircleCI SSH Permissions](images/circleci-ssh-permissions.png)
+    <hr>      
 
 9. Add the **public** version of your SSH key to the Pantheon dashboard:
 
     ![Pantheon Add SSH Key](images/pantheon-add-ssh-key.png)
+    <hr>      
 
-9. Create a `project.json` or add to an existing one in your repo root and add the following, modifying it for your specific use-case:
+10. Create a `project.json` or add to an existing one in your repo root and add the following, modifying it for your specific use-case:
 
         {
             "source": {
@@ -226,8 +228,9 @@ To use WP DevOps requires the following:
             }
         
         } 
+    <hr>      
 
-10. The last step should be to commit your changes and push, which should trigger a rebuild on CircleCI. You can find status on your builds at `https://circleci.com/gh/ORG/REPO`.
+11. The last step should be to commit your changes and push, which should trigger a rebuild on CircleCI. You can find status on your builds at `https://circleci.com/gh/ORG/REPO`.
 
 ## Support
 Any questions?  Just [**ask on Slack**](http://launchpass.com/wplib).
