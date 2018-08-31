@@ -188,13 +188,16 @@ function deploy_push() {
     local _
     local deploy_num="$(deploy_get_current_num)"
     local user_name="$(git_get_user)"
-    local commit_log="$(try "Generate deploy log from Git"\
+    local log="$(try "Generate deploy log from Git"\
         "$(git_generate_log 'deploy' "${deploy_dir}")")"
     catch
-    commit_log="Deploy #{$deploy_num} by ${user_name}\n${commit_log}"
+    commit_msg="Deploy #${deploy_num} by ${user_name}"
+    if [ "" != "${log}" ]; then
+        commit_msg=$'{commit_msg}\n${log}'
+    fi
     _=$(try "Adding all deploy files to Git stage" "$(git_add "${deploy_dir}" '.')")
     catch
-    _=$(try "Commit staged files" "$(git_commit "${deploy_dir}" "${commit_log}")")
+    _=$(try "Commit staged files" "$(git_commit "${deploy_dir}" "${commit_msg}")")
     catch
     _=$(try "Pull any recent changes" "$(git_pull "${deploy_dir}")")
     catch
