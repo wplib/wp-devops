@@ -172,7 +172,7 @@ function deploy_increment() {
     catch
 
     git_add "${repo_dir}" "${filename}"
-    git_commit "${repo_dir}" "Deploy #${deploy_num} by ${user_name}"
+    git_commit "${repo_dir}" "Deploy #${deploy_num} by ${user_name} [skip ci]"
     git_pull "${CI_BRANCH}" "${repo_dir}"
     git_push "${CI_BRANCH}" "${repo_dir}"
 
