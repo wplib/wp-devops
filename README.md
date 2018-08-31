@@ -90,7 +90,7 @@ To use WP DevOps requires the following:
     _**NOTE:** However, using a unique name may require you to update your `~/.ssh/config` file and provide special configurations for it. Doing that is beyond the scope of these instructions, though._
     <hr>      
 
-8. Add the **private** file of the SSH key you just creating to CircleCI. You can do so at the URL that follows **after** you replace `ORG/REPO` with your own Git URL path: `https://circleci.com/gh/wplib/wp-devops/edit#ssh`.  
+8. Add the **private** file of the SSH key you just created to CircleCI. You can do so at the URL that follows **after** you replace `ORG/REPO` with your own Git URL path: `https://circleci.com/gh/wplib/wp-devops/edit#ssh`.  
 
     _**NOTE:** We use GitHub's `ORG/REPO` structure in our example as most projects use GitHub but other Git servers may use a different structure and so you will need to determine how CircleCI's URLs relate if you do not host your projects on GitHub. Or just use CircleCI's menus to navigate to the right place._
 
