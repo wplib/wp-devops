@@ -158,7 +158,7 @@ function deploy_unlock() {
     #
     message="eleting remote 'deploy-lock' tag"
     _="$(try "D${message}" "$(git push origin ":refs/tags/${CI_DEPLOY_LOCK_SLUG}" 2>&1)")"
-    if [ 0 -ne $(catch) ] ; then
+    if is_error ; then
         announce "Error d${message}"
         return $(last_error)
     fi
@@ -179,42 +179,42 @@ function deploy_increment() {
 
     local message="riting deploy# ${deploy_num} to: ${filename}"
     local _=$(try "W${message}" "$(echo "${deploy_num}" > $filename)")
-    if [ 0 -ne $(catch) ] ; then
+    if is_error ; then
         announce "Error w${message}"
         return $(last_error)
     fi 
 
     message="dding file(s) '${filename}' to ${repo_dir}"
     _=$(try "A${message}" "$(git_add "${repo_dir}" "${filename}")")
-    if [ 0 -ne $(catch) ] ; then
+    if is_error ; then
         announce "Error a${message}"
         return $(last_error)
     fi
 
     message="ommitting DEPLOY file containing #${deploy_num}"
     _=$(try "C${message}" "$(git_commit "${repo_dir}" "C${message} [skip ci]")")
-    if [ 0 -ne $(catch) ] ; then
+    if is_error ; then
         announce "Error c${message}"
         return $(last_error)
     fi
 
     message="ulling branch ${CI_BRANCH} from ${repo_dir}"
     _=$(try "P${message}" "$(git_pull "${CI_BRANCH}" "${repo_dir}")")
-    if [ 0 -ne $(catch) ] ; then
+    if is_error ; then
         announce "Error p${message}"
         return $(last_error)
     fi
 
     message="ushing branch ${CI_BRANCH} to ${repo_dir}"
     _=$(try "P${message}" "$(git_push "${CI_BRANCH}" "${repo_dir}")")
-    if [ 0 -ne $(catch) ] ; then
+    if is_error ; then
         announce "Error p${message}"
         return $(last_error)
     fi
 
     message="opying DEPLOY file to: ${deploy_dir}"
     _=$(try "C${message}" "$(cp "${filename}" "${deploy_dir}")")
-    if [ 0 -ne $(catch) ] ; then 
+    if is_error ; then
         announce "Error c${message}"
         return $(last_error)
     fi 
@@ -232,7 +232,7 @@ function deploy_push() {
     local message="enerating deploy log from Git"
     local log="$(try "G${message}" \
         "$(git_generate_log 'deploy' "${deploy_dir}")")"
-    if [ 0 -ne $(catch) ] ; then
+    if is_error ; then
         announce "Error g${message}"
         return $(last_error)
     fi 
@@ -244,28 +244,28 @@ function deploy_push() {
 
     message="dding all deploy files to Git stage"
     _=$(try "A${message}" "$(git_add "${deploy_dir}" '.')")
-    if [ 0 -ne $(catch) ] ; then 
+    if is_error ; then
         announce "Error a${message}"
         return $(last_error)
     fi
 
     message="ommitting staged files in ${deploy_dir}"
     _=$(try "C${message}" "$(git_commit "${deploy_dir}" "${commit_msg}")")
-    if [ 0 -ne $(catch) ] ; then 
+    if is_error ; then
         announce "Error c${message}"
         return $(last_error)
     fi
 
     message="ulling recent changes for branch ${CI_BRANCH} to ${deploy_dir}"
     _=$(try "P${message}" "$(git_pull "${CI_BRANCH}" "${deploy_dir}")")
-    if [ 0 -ne $(catch) ] ; then 
+    if is_error ; then
         announce "Error p${message}"
         return $(last_error)
     fi
 
     message="ushing commits for branch ${CI_BRANCH} to ${deploy_dir}"
     _=$(try "P${message}" "$(git_push "${CI_BRANCH}" "${deploy_dir}")")
-    if [ 0 -ne $(catch) ] ; then 
+    if is_error ; then
         announce "Error p${message}"
         return $(last_error)
     fi

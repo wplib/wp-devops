@@ -75,6 +75,13 @@ function if_was_error() {
     fi
 }
 
+function is_error() {
+    if $(catch) ; then
+        return 1
+    fi
+    return 0
+}
+
 function catch() {
     local err_no="$1"
     if [ "" == "${err_no}" ] ; then
