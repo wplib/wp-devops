@@ -259,7 +259,7 @@ function git_hash_log() {
     pop_dir
     return $(last_error)
 }
-g
+
 function git_tag() {
     local repo_dir="$1"
     local tag="$2"
