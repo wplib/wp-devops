@@ -173,8 +173,8 @@ function deploy_increment() {
 
     git_add "${repo_dir}" "${filename}"
     git_commit "${repo_dir}" "Deploy #${deploy_num} by ${user_name}"
-    git_pull "${repo_dir}"
-    git_push "${repo_dir}"
+    git_pull "${CI_BRANCH}" "${repo_dir}"
+    git_push "${CI_BRANCH}" "${repo_dir}"
 
     output=$(try "Copying DEPLOY file to: ${deploy_dir}" \
         "$(cp "${filename}" "${deploy_dir}")")

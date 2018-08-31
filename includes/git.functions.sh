@@ -164,18 +164,20 @@ function git_commit() {
 }
 
 function git_pull() {
+    local branch="$1"
     local repo_dir="$1"
     push_dir "${repo_dir}"
-    local _=$(try "Git pull" "$(git pull 2>&1)")
+    local _=$(try "Git pull branch ${branch}" "$(git pull origin "${branch}" 2>&1)")
     catch
     pop_dir
     return $(last_error)
 }
 
 function git_push() {
+    local branch="$1"
     local repo_dir="$1"
     push_dir "${repo_dir}"
-    local _=$(try "Git push" "$(git push --set-upstream origin "${CI_BRANCH}" 2>&1)")
+    local _=$(try "Git push" "$(git push --set-upstream origin "${branch}" 2>&1)")
     catch
     pop_dir
     return $(last_error)
