@@ -74,8 +74,7 @@ function git_pull_branch() {
     local branch="$1"
     local repo_dir="$2"
     push_dir "${repo_dir}"
-    local output=$(try "Pull ${branch} from origin" \
-            "$(git pull origin "${branch}" 2>&1)")
+    local output=$(try "Pull ${branch} from origin" "$(git pull origin "${branch}" 2>&1)")
     catch
     exit_if_contains "${output}" "fatal"
     pop_dir
