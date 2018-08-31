@@ -212,6 +212,13 @@ function deploy_increment() {
         return $(last_error)
     fi
 
+    message="ulling branch ${CI_BRANCH} from ${repo_dir}"
+    _=$(try "P${message}" "$(git_pull "${CI_BRANCH}" "${repo_dir}")")
+    if is_error ; then
+        announce "Error p${message}"
+        return $(last_error)
+    fi
+
     message="opying DEPLOY file to: ${deploy_dir}"
     _=$(try "C${message}" "$(cp "${filename}" "${deploy_dir}")")
     if is_error ; then
