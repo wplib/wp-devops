@@ -14,11 +14,19 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
+source "sourced.sh"
 
-declare="${CI_SOURCED_FILE:=}"
+if [ "--force" == "$1" ] ; then
+    deploy_unlock_locally
+fi
 
-source "${CI_SOURCED_FILE}"
+if [ "yes" == "$(deploy_is_locally_locked)" ] ; then
+    announce
+    announce "Deploy is locked locally. Cannot unlock. Use --force to override."
+    announce
+else
+    announce "Unlocking the deploy"
+    deploy_unlock
+fi
 
-announce "Unlocking the deploy"
-deploy_unlock
 

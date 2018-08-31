@@ -21,12 +21,13 @@ export CL_LOADED=${CL_LOADED:-0}
 if [ 0 -eq $CL_LOADED ]; then
 
     if [ "" == "${CIRCLE_WORKING_DIRECTORY:=}" ] ; then
-        CI_CIRCLECI_DIR="$(pwd)/$(dirname "$(dirname "$0")")"
+        CI_CIRCLECI_DIR="$(pwd)/../$(dirname "$(dirname "$0")")"
     else
         # See https://stackoverflow.com/a/27485157/102699
         CI_CIRCLECI_DIR="${CIRCLE_WORKING_DIRECTORY/#\~/$HOME}/.circleci"
     fi
     export CI_CIRCLECI_DIR="$(realpath "${CI_CIRCLECI_DIR}")"
+
     export CI_WP_DEVOPS_DIR="${CI_CIRCLECI_DIR}/wp-devops"
     export CI_SOURCED_FILE="${CI_SOURCED_FILE:="${CI_WP_DEVOPS_DIR}/sourced.sh"}"
     export CI_PROJECT_DIR="$(dirname "${CI_CIRCLECI_DIR}")"
@@ -43,6 +44,7 @@ if [ 0 -eq $CL_LOADED ]; then
 
     export CI_DEPLOY_LOCK_SLUG="deploy-lock"
     export CI_DEPLOY_LOCKED=0
+    export CI_LOCAL_DEPLOY_LOCK_FILE="/tmp/deploy-lock"
 
     export CI_LOG="/tmp/log.txt"
     rm -f $CI_LOG

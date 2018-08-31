@@ -155,9 +155,11 @@ function git_add() {
 function git_commit() {
     local repo_dir="$1"
     local message="$2"
+    trace "Committing to ${repo_dir}: ${message}"
     push_dir "${repo_dir}"
-    local _=$(try "Git commit for: '${message}'" "$(git commit -m "${message}" 2>&1)")
+    local output=$(try "Git commit for: '${message}'" "$(git commit -m "${message}" 2>&1)")
     catch
+    echo "${output}"
     pop_dir
     return $(last_error)
 }

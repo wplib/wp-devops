@@ -18,6 +18,8 @@
 declare="${CI_PROJECT_DIR:=}"
 declare="${CI_LOG:=}"
 declare="${CI_DEPLOY_LOCK_SLUG:=}"
+declare="${CI_LOCAL_DEPLOY_LOCK_FILE:=}"
+declare="${CI_DEPLOY_LOCKED:=}"
 declare="${CI_DEPLOY_REPO_DIR:=}"
 declare="${CI_BRANCH:=}"
 
@@ -79,15 +81,33 @@ function deploy_lock() {
     set -e
     pop_dir
 
-    CI_DEPLOY_LOCKED=1
+    deploy_lock_locally
+
     return $(last_error)
 }
 
+function deploy_unlock_locally() {
+    export CI_DEPLOY_LOCKED=0
+    sudo rm -rf $CI_LOCAL_DEPLOY_LOCK_FILE
+}
+
+function deploy_lock_locally() {
+    export CI_DEPLOY_LOCKED=1
+    sudo touch $CI_LOCAL_DEPLOY_LOCK_FILE
+}
+
+function deploy_is_locally_locked() {
+    if [ 1 -eq $CI_DEPLOY_LOCKED ] ; then
+        echo "yes"
+    elif [ -f $CI_LOCAL_DEPLOY_LOCK_FILE ] ; then
+        echo "yes"
+    else
+        echo "no"
+    fi
+}
+
 function deploy_unlock() {
-    if [ 0 -eq $CI_DEPLOY_LOCKED ] ; then
-        #
-        # Don't unlock if we didn't lock it.
-        #
+    if [ "yes" == "$(deploy_is_locally_locked)" ] ; then
         return 0
     fi
     trace "Unlock deploy. Repo dir: ${CI_PROJECT_DIR}"
@@ -135,7 +155,7 @@ function deploy_unlock() {
     fi
 
     pop_dir
-    CI_DEPLOY_LOCKED=0
+    deploy_unlock_locally
     return 0
 }
 
@@ -166,8 +186,8 @@ function deploy_increment() {
 function deploy_push() {
     local deploy_dir="${CI_DEPLOY_REPO_DIR}"
     local _
-    local commit_log=$(try "Generate deploy log from Git"\
-        "$(git_generate_log 'deploy' "${deploy_dir}")")
+    local commit_log="$(try "Generate deploy log from Git"\
+        "$(git_generate_log 'deploy' "${deploy_dir}")")"
     catch
     _=$(try "Adding all deploy files to Git stage" "$(git_add "${deploy_dir}" '.')")
     catch

@@ -68,3 +68,6 @@ deploy_tag "${CI_DEPLOY_REPO_DIR}"
 
 announce "Deploy tagged as $(deploy_get_current_tag)"
 
+announce "Unlocking the deploy"
+deploy_unlock
+

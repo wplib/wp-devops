@@ -22,11 +22,17 @@ declare="${CI_TMP_DIR:=}"
 function composer_run() {
     local repo_dir="$1"
     push_dir "${repo_dir}"
-    announce "Running Composer"
-    composer install --no-dev --no-ansi --no-interaction --prefer-dist >> $CI_LOG 2>&1
+    set e+
+    output=$(try "Running composer in ${repo_dir}" \
+        "$(composer install --no-dev --no-ansi --no-interaction --prefer-dist 2>&1)")
     catch $?
+    set -e
     pop_dir
-    return $(last_error)
+    if [ 0 -ne $(last_error) ] ;then
+        announce "Composer had errors: $output"
+        return  $(last_error)
+    fi
+    return 0
 }
 
 function composer_setup() {

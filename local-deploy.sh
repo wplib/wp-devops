@@ -27,12 +27,11 @@ export CI_LOGS_DIR="${CI_CIRCLECI_DIR}/logs"
 mkdir -p "${CI_LOGS_DIR}"
 
 function deploy_onexit() {
-    if [ 0 -eq ${CI_DEPLOY_LOCKED} ] ; then
+    if [ "yes" == "$(deploy_is_locally_locked)" ] ; then
         exit 0
     fi
-    announce "Unlocking the deploy"
-    deploy_unlock
-    mv "${CI_LOG}" "${CI_LOGS_DIR}/unlock-deploy.log"
+    bash "$(pwd)/unlock-deploy.sh"
+    local _=$(mv "${CI_LOG}" "${CI_LOGS_DIR}/unlock-deploy.log")
 }
 trap deploy_onexit INT TERM EXIT
 
