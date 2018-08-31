@@ -191,7 +191,7 @@ function deploy_push() {
     local log="$(try "Generate deploy log from Git"\
         "$(git_generate_log 'deploy' "${deploy_dir}")")"
     catch
-    commit_msg="Deploy #${deploy_num} by ${user_name}"
+    local commit_msg="Deploy #${deploy_num} by ${user_name}"
     if [ "" != "${log}" ]; then
         commit_msg=$'{commit_msg}\n${log}'
     fi
