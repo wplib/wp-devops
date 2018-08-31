@@ -26,9 +26,23 @@ declare="${CI_BRANCH:=}"
 function deploy_tag() {
     local repo_dir="$1"
     local deploy_tag="$(deploy_get_current_tag)"
-    git_tag "${repo_dir}" "${deploy_tag}" "Deploy #$(deploy_get_current_num)"
-    git_push_tags "${repo_dir}"
-    return $(last_error)
+
+    local message="dding local '${CI_DEPLOY_LOCK_SLUG}' tag"
+    local output=$(try "A${message}" "$(git_tag "${repo_dir}" "${deploy_tag}" "Deploy #$(deploy_get_current_num)")")
+    catch
+    if [[ "${output}" =~ ^fatal ]]; then
+        announce "Error a${message}"
+        return $(last_error)
+    fi
+
+    local message="ushing '${CI_DEPLOY_LOCK_SLUG}' tag to remote"
+    local output=$(try "P${message}" "$(git_push_tags "${repo_dir}")")
+    catch
+    if [[ "${output}" =~ ^fatal ]]; then
+        announce "Error p${message}"
+        return $(last_error)
+    fi
+    return 0
 }
 
 function deploy_get_current_tag() {
@@ -59,22 +73,22 @@ function deploy_lock() {
     local output="$(try "Request local deploy lock" \
         "$(git tag -a "${CI_DEPLOY_LOCK_SLUG}" -m "Deploy lock by ${user}" 2>&1)")"
     if [ "${output}" == "fatal: tag 'deploy-lock' already exists" ] ; then
-        echo
-        echo "Deploy currently locked with '${CI_DEPLOY_LOCK_SLUG}' tag. Cannot deploy."
-        echo
+        announce
+        announce "Deploy currently locked with '${CI_DEPLOY_LOCK_SLUG}' tag. Cannot deploy."
+        announce
         exit 1
     fi
 
     output="$(try "Push deploy lock to remote" "$(git push --tags 2>&1)")"
     if [[ "${output}" == *"Permission denied"* ]] ; then
-        echo
-        echo "Permission denied to remote repository. Cannot deploy."
-        echo
+        announce
+        announce "Permission denied to remote repository. Cannot deploy."
+        announce
         exit 2
     elif [[ "${output}" == *"ERROR"* ]] ; then
-        echo
-        echo "${output} Cannot deploy."
-        echo
+        announce
+        announce "${output} Cannot deploy."
+        announce
         exit 3
     fi
 
@@ -110,6 +124,8 @@ function deploy_unlock() {
     if [ "yes" == "$(deploy_is_locally_locked)" ] ; then
         return 0
     fi
+    local _
+
     trace "Unlock deploy. Repo dir: ${CI_PROJECT_DIR}"
     push_dir "${CI_PROJECT_DIR}"
 
@@ -122,15 +138,12 @@ function deploy_unlock() {
     #
     # This generates error 1 if tag does not exist
     #
-    local output="$(try "Git delete local 'deploy-lock' tag" \
-        "$(git tag -d ${CI_DEPLOY_LOCK_SLUG} 2>&1)")"
-    result=$(catch)
-    if ! [[ "${output}" =~ ^Deleted ]]; then
-        trace "Result: $result, Output does not contain the word 'deleted'"
-        if [ "${output}" != "error: tag '${CI_DEPLOY_LOCK_SLUG}' not found." ]; then
-            trace "Output does not contain '${CI_DEPLOY_LOCK_SLUG}'"
-            exit 1
-        fi
+    message="eleting local 'deploy-lock' tag"
+    local output=$(try "D${message}" "$(git tag -d ${CI_DEPLOY_LOCK_SLUG} 2>&1)")
+    catch
+    if [[ "${output}" =~ ^fatal ]]; then
+        announce "Error d${message}"
+        return $(last_error)
     fi
 
     #
@@ -143,15 +156,11 @@ function deploy_unlock() {
     #
     # This does not generate error on non-existent ref
     #
-    output="$(try "Git delete remote 'deploy-lock' tag" \
-        "$(git push origin ":refs/tags/${CI_DEPLOY_LOCK_SLUG}" 2>&1)")"
-    catch
-    result=$?
-    if [ "0" != "${result}" ]; then
-        echo
-        trace "Result: $result"
-        trace "Could not delete remote tag ${CI_DEPLOY_LOCK_SLUG}"
-        exit $result
+    message="eleting remote 'deploy-lock' tag"
+    _="$(try "D${message}" "$(git push origin ":refs/tags/${CI_DEPLOY_LOCK_SLUG}" 2>&1)")"
+    if [ 0 -ne $(catch) ] ; then
+        announce "Error d${message}"
+        return $(last_error)
     fi
 
     pop_dir
@@ -167,20 +176,51 @@ function deploy_increment() {
     push_dir "${repo_dir}"
     deploy_num="$(( deploy_num + 1 ))"
     local filename="$(deploy_get_filename)"
-    local output=$(try "Writing deploy# ${deploy_num} to: ${filename}" \
-        "$(echo "${deploy_num}" > $filename)")
-    catch
 
-    git_add "${repo_dir}" "${filename}"
-    git_commit "${repo_dir}" "Committing DEPLOY file containing #${deploy_num} [skip ci]"
-    git_pull "${CI_BRANCH}" "${repo_dir}"
-    git_push "${CI_BRANCH}" "${repo_dir}"
+    local message="riting deploy# ${deploy_num} to: ${filename}"
+    local _=$(try "W${message}" "$(echo "${deploy_num}" > $filename)")
+    if [ 0 -ne $(catch) ] ; then
+        announce "Error w${message}"
+        return $(last_error)
+    fi 
 
-    output=$(try "Copying DEPLOY file to: ${deploy_dir}" \
-        "$(cp "${filename}" "${deploy_dir}")")
-    catch
+    message="dding file(s) '${filename}' to ${repo_dir}"
+    _=$(try "A${message}" "$(git_add "${repo_dir}" "${filename}")")
+    if [ 0 -ne $(catch) ] ; then
+        announce "Error a${message}"
+        return $(last_error)
+    fi
+
+    message="ommitting DEPLOY file containing #${deploy_num}"
+    _=$(try "C${message}" "$(git_commit "${repo_dir}" "C${message} [skip ci]")")
+    if [ 0 -ne $(catch) ] ; then
+        announce "Error c${message}"
+        return $(last_error)
+    fi
+
+    message="ulling branch ${CI_BRANCH} from ${repo_dir}"
+    _=$(try "P${message}" "$(git_pull "${CI_BRANCH}" "${repo_dir}")")
+    if [ 0 -ne $(catch) ] ; then
+        announce "Error p${message}"
+        return $(last_error)
+    fi
+
+    message="ushing branch ${CI_BRANCH} to ${repo_dir}"
+    _=$(try "P${message}" "$(git_push "${CI_BRANCH}" "${repo_dir}")")
+    if [ 0 -ne $(catch) ] ; then
+        announce "Error p${message}"
+        return $(last_error)
+    fi
+
+    message="opying DEPLOY file to: ${deploy_dir}"
+    _=$(try "C${message}" "$(cp "${filename}" "${deploy_dir}")")
+    if [ 0 -ne $(catch) ] ; then 
+        announce "Error c${message}"
+        return $(last_error)
+    fi 
+
     pop_dir
-    return $(last_error)
+    return 0
 }
 
 function deploy_push() {
@@ -188,21 +228,47 @@ function deploy_push() {
     local _
     local deploy_num="$(deploy_get_current_num)"
     local user_name="$(git_get_user)"
-    local log="$(try "Generate deploy log from Git"\
+
+    local message="enerating deploy log from Git"
+    local log="$(try "G${message}" \
         "$(git_generate_log 'deploy' "${deploy_dir}")")"
-    catch
+    if [ 0 -ne $(catch) ] ; then
+        announce "Error g${message}"
+        return $(last_error)
+    fi 
+
     local commit_msg="Deploy #${deploy_num} by ${user_name}"
     if [ "" != "${log}" ]; then
         commit_msg=$'{commit_msg}\n${log}'
     fi
-    _=$(try "Adding all deploy files to Git stage" "$(git_add "${deploy_dir}" '.')")
-    catch
-    _=$(try "Commit staged files" "$(git_commit "${deploy_dir}" "${commit_msg}")")
-    catch
-    _=$(try "Pull any recent changes" "$(git_pull "${CI_BRANCH}" "${deploy_dir}")")
-    catch
-    _=$(try "Pull any recent changes" "$(git_push "${CI_BRANCH}" "${deploy_dir}")")
 
-    return $(catch)
+    message="dding all deploy files to Git stage"
+    _=$(try "A${message}" "$(git_add "${deploy_dir}" '.')")
+    if [ 0 -ne $(catch) ] ; then 
+        announce "Error a${message}"
+        return $(last_error)
+    fi
+
+    message="ommitting staged files in ${deploy_dir}"
+    _=$(try "C${message}" "$(git_commit "${deploy_dir}" "${commit_msg}")")
+    if [ 0 -ne $(catch) ] ; then 
+        announce "Error c${message}"
+        return $(last_error)
+    fi
+
+    message="ulling recent changes for branch ${CI_BRANCH} to ${deploy_dir}"
+    _=$(try "P${message}" "$(git_pull "${CI_BRANCH}" "${deploy_dir}")")
+    if [ 0 -ne $(catch) ] ; then 
+        announce "Error p${message}"
+        return $(last_error)
+    fi
+
+    message="ushing commits for branch ${CI_BRANCH} to ${deploy_dir}"
+    _=$(try "P${message}" "$(git_push "${CI_BRANCH}" "${deploy_dir}")")
+    if [ 0 -ne $(catch) ] ; then 
+        announce "Error p${message}"
+        return $(last_error)
+    fi
+    return 0
 }
 
