@@ -132,7 +132,7 @@ To use WP DevOps requires the following:
                 "frameworks": {
                     "wp_devops": {
                         "ref_type": "tag",
-                        "branch": "0.2.0"
+                        "tag": "0.2.0"
                     },
                     "wordpress": {
                         "root_path": "/",
