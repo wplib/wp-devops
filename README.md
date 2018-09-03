@@ -142,30 +142,34 @@ To use WP DevOps requires the following:
                 },
                 "files": {
                     "exclude": [
-                        "{root}index.php",
-                        "{root}wp-config.php",
-                        "{root}wp-config-wplib.box.php",
+                        "{root}/index.php",
+                        "{root}/wp-config.php",
+                        "{root}/wp-config-atlpba.local.php",
                         "composer.json"
                     ],
                     "delete": [
-                        "{root}readme.html",
-                        "{root}license.txt",
-                        "{root}wp-config-sample.php",
+                        "{root}/readme.html",
+                        "{root}/README.md",
+                        "{root}/xmlrpc.php",
+                        "{root}/wp-trackback.php",
+                        "{root}/wp-signup.php",
+                        "{root}/license.txt",
+                        "{root}/wp-config-sample.php",
                         "{content}/plugins/hello.php",
                         "{content}/themes/twentyseventeen/*",
                         "{content}/themes/twentyseventeen"
                     ],
                     "keep": [
-                        "{content}mu-plugins/pantheon.php",
-                        "{content}mu-plugins/pantheon",
-                        "{content}mu-plugins/index.php",
-                        "{content}plugins/index.php",
-                        "{content}themes/index.php",
-                        "{content}index.php",
-                        "{root}wp-config-deploy.php"
+                        "{content}/mu-plugins/pantheon.php",
+                        "{content}/mu-plugins/pantheon",
+                        "{content}/mu-plugins/index.php",
+                        "{content}/plugins/index.php",
+                        "{content}/themes/index.php",
+                        "{content}/index.php",
+                        "{root}/wp-config-deploy.php"
                     ],
                     "copy": [
-                        "{root}pantheon.yml"
+                        "{root}/pantheon.yml"
                     ]
                 },
                 "hosts": {
