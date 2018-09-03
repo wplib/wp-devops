@@ -1,6 +1,6 @@
 # WP DevOps
 
-WP DevOps is a Git-to-WebHost deployment solution for WordPress.  
+WP DevOps `2.0.0` is a Git-to-WebHost deployment solution for WordPress.  
 
 It allows for building, testing and deploying WordPress using [CircleCI 2.0](https://circleci.com/docs/2.0/) for continuous integration from a Git provider like [GitHub](https://github.com/) to [Pantheon](https://pantheon.io/) _(and soon [WPEngine](https://wpengine.com/))_ as web host(s).  
 
