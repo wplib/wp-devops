@@ -56,17 +56,43 @@ function git_get_user() {
 function git_checkout_branch() {
     local branch="$1"
     local repo_dir="$2"
+    local repo_url="$3"
     push_dir "${repo_dir}"
     local output
     if ! git_branch_exists "${branch}" "${repo_dir}" ; then
         trace "Branch ${branch} does not exist. Pulling down from origin and checking out."
         output="$(try "Checking out new branch '${branch}'" \
-            "$(git checkout -b "${branch}" "origin/${branch}" 2>&1)")"
+            "$(git checkout -b "${branch}" 2>&1)")"
+        if is_error; then
+            announce "Could not checkout branch ${branch} of ${repo_dir}"
+            exit 1
+        fi
+        output="$(try "Setting upstream for branch '${branch}' of ${repo_dir}" \
+            "$(git_set_upstream "${branch}" 2>&1)")"
+        if is_error; then
+            announce "Could not set upstream for branch ${branch} of ${repo_dir}"
+            exit 2
+        fi
     elif [ "${branch}" != "$(git_get_current_branch)" ]; then
         trace "Branch ${branch} exists. Checking out."
         output="$(try "Checking out existing branch '${branch}'" \
             "$(git checkout "${branch}" 2>&1)")"
+        if is_error; then
+            announce "Could not checkout branch ${branch} of ${repo_dir}"
+            exit 2
+        fi
     fi
+    catch
+    exit_if_begins "${output}" "fatal"
+    pop_dir
+}
+
+function git_set_upstream() {
+    local branch="$1"
+    local repo_dir="$2"
+    push_dir "${repo_dir}"
+    local output=$(try "Set git upstream for  branch ${branch} of ${repo_dir}" \
+            "$(git push --set-upstream origin ${branch} 2>&1)")
     catch
     exit_if_begins "${output}" "fatal"
     pop_dir
