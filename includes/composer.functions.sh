@@ -80,6 +80,8 @@ function composer_autoloader_fixup() {
     local deploy_autoloader_dir="${repo_dir}$(composer_get_deploy_autoloader_path)"
     local source_json="$(project_get_source_wordpress_paths_json)"
     local deploy_json="$(project_get_deploy_wordpress_paths_json)"
+    local deploy_host="$(project_get_deploy_host "${repo_dir}")"
+    local host_root_path="$(project_get_host_root_path "${deploy_host}")"
     local path_names="vendor_path content_path"
     local output
     local filepath
@@ -97,16 +99,18 @@ function composer_autoloader_fixup() {
 
         trace "Fixing up path name: ${path_name}"
 
-        for filepath in ${deploy_autoloader_dir}/autoloader_*.php; do
+        for filepath in ${deploy_autoloader_dir}/autoload_*.php; do
 
             trace "Fixing up ${filepath}; from ${source_path} to ${deploy_path}"
 
+            local no_left_slash="$(ltrim_slashes "${host_root_path}")"
+
             find="'${source_path}"
-            replace="'code${deploy_path}"
+            replace="'${no_left_slash}${deploy_path}"
             sed -i "s#${find}#${replace}#g" "${filepath}"
 
             find="'/${source_path}"
-            replace="'/code${deploy_path}"
+            replace="'${host_root_path}${deploy_path}"
             sed -i "s#${find}#${replace}#g" "${filepath}"
 
         done

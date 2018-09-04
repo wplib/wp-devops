@@ -163,5 +163,18 @@ function project_get_deploy_wp_devops_hash() {
             "$(project_get_deploy_wp_devops_json | jqr ".hash")" 1)"
     return $(catch)
 }
+function project_get_hosts_json() {
+    trace "Get hosts json: { ... }"
+    echo "$(project_get_json | jqr ".hosts")"
+    return $(catch)
+}
+function project_get_host_root_path() {
+    local host_id="$1"
+    echo "/$(trim_slashes "$(try "Get host's root path" \
+            "$(project_get_hosts_json | jqr ".${host_id}.core_path")" 1)")"
+    return $(catch)
+}
+
+
 
 
