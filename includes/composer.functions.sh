@@ -103,14 +103,14 @@ function composer_autoloader_fixup() {
 
             trace "Fixing up ${filepath}; from ${source_path} to ${deploy_path}"
 
+            find="'/${source_path}"
+            replace="'${host_root_path}${deploy_path}"
+            sed -i "s#${find}#${replace}#g" "${filepath}"
+
             local no_left_slash="$(ltrim_slashes "${host_root_path}")"
 
             find="'${source_path}"
             replace="'${no_left_slash}${deploy_path}"
-            sed -i "s#${find}#${replace}#g" "${filepath}"
-
-            find="'/${source_path}"
-            replace="'${host_root_path}${deploy_path}"
             sed -i "s#${find}#${replace}#g" "${filepath}"
 
         done
