@@ -58,9 +58,11 @@ jobs:
                       cd wp-devops
                       if [ 'branch' == "${ref_type}" ] ; then
                           branch=$(echo "${wp_devops}"|jq -r '.branch')
+                          echo "Checkout out branch ${branch} of WP DevOps."
                           git checkout -b "${branch}" "origin/${branch}"
                       else
                           tag=$(echo "${wp_devops}"|jq -r '.tag')
+                          echo "Checkout out tag ${tag} of WP DevOps."
                           git checkout "${tag}"
                       fi
 
