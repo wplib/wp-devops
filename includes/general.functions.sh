@@ -207,11 +207,11 @@ function announce() {
     trace "${message}" $offset
 }
 
-function exit_if_contains() {
+function exit_if_begins() {
     local output="$1"
     local contains="$2"
     local code="$3"
-    if [[ "${output}" == *"${contains}"* ]]; then
+    if [[ "${output}" =~ ^${contains} ]]; then
         if [ "" == "${code}" ] ; then
             code=1
         fi

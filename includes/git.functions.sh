@@ -66,7 +66,7 @@ function git_checkout_branch() {
             "$(git checkout "${branch}" 2>&1)")"
     fi
     catch
-    exit_if_contains "${output}" "fatal"
+    exit_if_begins "${output}" "fatal"
     pop_dir
 }
 
@@ -76,7 +76,7 @@ function git_pull_branch() {
     push_dir "${repo_dir}"
     local output=$(try "Pull ${branch} from origin" "$(git pull origin "${branch}" 2>&1)")
     catch
-    exit_if_contains "${output}" "fatal"
+    exit_if_begins "${output}" "fatal"
     pop_dir
 }
 
@@ -86,7 +86,7 @@ function git_fetch_all() {
     local output=$(try "Fetching all" \
             "$(git fetch --all 2>&1)")
     catch
-    exit_if_contains "${output}" "fatal"
+    exit_if_begins "${output}" "fatal"
     pop_dir
 }
 
@@ -103,7 +103,7 @@ function git_reset_branch_hard() {
     local output=$(try "Resetting ${branch} to state of origin" \
             "$(git reset --hard "origin/${branch}" 2>&1)")
     catch
-    exit_if_contains "${output}" "fatal"
+    exit_if_begins "${output}" "fatal"
     pop_dir
 }
 
@@ -113,7 +113,7 @@ function git_delete_untracked_files() {
     local output=$(try "Delete all untracked files and directories" \
             "$(git clean -d --force 2>&1)")
     catch
-    exit_if_contains "${output}" "fatal"
+    exit_if_begins "${output}" "fatal"
     pop_dir
 }
 
@@ -129,7 +129,7 @@ function git_clone_repo() {
     catch
     set -e
     pop_dir
-    exit_if_contains "${output}" "fatal"
+    exit_if_begins "${output}" "fatal"
 }
 
 function git_disable_strict() {
