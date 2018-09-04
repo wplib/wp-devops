@@ -199,8 +199,12 @@ function pop_dir {
 
 function announce() {
     local message="$1"
+    local offset="$2"
+    if [ "" == "${offset}" ] ; then
+        offset=$(( offset + 1 ))
+    fi
     echo -e "${message}"
-    trace "${message}" 1
+    trace "${message}" $offset
 }
 
 function exit_if_contains() {
@@ -211,7 +215,7 @@ function exit_if_contains() {
         if [ "" == "${code}" ] ; then
             code=1
         fi
-        announce "${output} Cannot deploy."
+        announce "${output} Cannot deploy." 1
         exit $code
     fi
 }
