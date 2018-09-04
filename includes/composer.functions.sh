@@ -77,35 +77,39 @@ function composer_get_deploy_autoloader_path() {
 
 function composer_autoloader_fixup() {
     local repo_dir="$1"
-    local source_vendor_path="$(project_get_source_vendor_path)"
-    local deploy_vendor_path="$(project_get_deploy_vendor_path)"
-    local deploy_autoloader_dir="${repo_dir}/$(composer_get_deploy_autoloader_path)"
+    local deploy_autoloader_dir="${repo_dir}$(composer_get_deploy_autoloader_path)"
+    local source_json="$(project_get_source_wordpress_paths_json)"
+    local deploy_json="$(project_get_deploy_wordpress_paths_json)"
+    local path_names="vendor_path content_path"
     local output
     local filepath
 
     push_dir "${repo_dir}"
 
-    if [ "${source_vendor_path}" == "${deploy_vendor_path}" ] ; then
-        return
-    fi
-    for filepath in ${deploy_autoloader_dir}/*.php; do
-        trace "Fixing up ${filepath}; from ${source_vendor_path} to ${deploy_vendor_path}"
+    for path_name in ${path_names}; do
 
-        find="'${source_vendor_path}"
-        replace="'${deploy_vendor_path}"
-        sed -i  "s#${find}#${replace}#g" "${filepath}"
+        local source_path="$(echo "${source_json}" | jqr ".${path_name}")"
+        local deploy_path="$(echo "${deploy_json}" | jqr ".${path_name}")"
 
-        find="'/${source_vendor_path}"
-        replace="'/${deploy_vendor_path}"
-        sed -i "s#${find}#${replace}#g" "${filepath}"
+        if [ "${source_path}" == "${deploy_path}" ] ; then
+            continue
+        fi
 
-        find="'${source_vendor_path}"
-        replace="'${deploy_vendor_path}"
-        sed -i  "s#${find}#${replace}#g" "${filepath}"
+        trace "Fixing up path name: ${path_names}"
 
-        find="'/${source_vendor_path}"
-        replace="'/${deploy_vendor_path}"
-        sed -i "s#${find}#${replace}#g" "${filepath}"
+        for filepath in ${deploy_autoloader_dir}/*.php; do
+
+            trace "Fixing up ${filepath}; from ${source_path} to ${deploy_path}"
+
+            find="'${source_path}"
+            replace="'${deploy_path}"
+            sed -i "s#${find}#${replace}#g" "${filepath}"
+
+            find="'/${source_path}"
+            replace="'/${deploy_path}"
+            sed -i "s#${find}#${replace}#g" "${filepath}"
+
+        done
 
     done
 
