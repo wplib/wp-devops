@@ -92,7 +92,7 @@ function git_set_upstream() {
     local repo_dir="$2"
     push_dir "${repo_dir}"
     local output=$(try "Set git upstream for  branch ${branch} of ${repo_dir}" \
-            "$(git push --set-upstream origin ${branch} 2>&1)")
+            "$(git branch --set-upstream-to=origin/${branch} ${branch} 2>&1)")
     catch
     exit_if_begins "${output}" "fatal"
     pop_dir
