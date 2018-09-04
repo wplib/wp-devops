@@ -108,42 +108,50 @@ function build_process_files() {
         return 3
     fi
 
-    output=$(try "Copy vendor files" \
-        "$(build_sync_files deep vendor \
-            "${source_dir}" "$(project_get_source_vendor_path)" \
-            "${deploy_dir}" "$(project_get_deploy_vendor_path)" 2>&1
-          )"
-      )
-    if is_error ; then
-        announce "${output}"
-        return 4
-    fi
-
     output=$(try "Copy wp-content files" \
         "$(build_sync_files deep content \
             "${source_dir}" "$(project_get_source_content_path)" \
             "${deploy_dir}" "$(project_get_deploy_content_path)" 2>&1
           )"
-      )
+    )
+    if is_error ; then
+        announce "${output}"
+        return 4
+    fi
+
+    output=$(try "Copy vendor files" \
+        "$(build_sync_files deep vendor \
+            "${source_dir}" "$(project_get_source_vendor_path)" \
+            "${deploy_dir}" "$(project_get_deploy_vendor_path)" 2>&1
+          )"
+    )
     if is_error ; then
         announce "${output}"
         return 5
     fi
 
-    output=$(try "Copy whitelisted files" \
-        "$(build_keep_files "${source_dir}" "${deploy_dir}" 2>&1)"
-      )
+    output=$(try "Fixup Composer Autoloader files" \
+        "$(composer_autoloader_fixup "${deploy_dir}")")
+
     if is_error ; then
         announce "${output}"
         return 6
     fi
 
-    output=$(try "Copy 'copy' files" \
-        "$(build_copy_files "${source_dir}" "${deploy_dir}" 2>&1)"
-      )
+    output=$(try "Copy whitelisted files" \
+        "$(build_keep_files "${source_dir}" "${deploy_dir}" 2>&1)"
+    )
     if is_error ; then
         announce "${output}"
         return 7
+    fi
+
+    output=$(try "Copy 'copy' files" \
+        "$(build_copy_files "${source_dir}" "${deploy_dir}" 2>&1)"
+    )
+    if is_error ; then
+        announce "${output}"
+        return 8
     fi
     return 0
 

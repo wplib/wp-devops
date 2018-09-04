@@ -70,3 +70,45 @@ function composer_setup() {
     return $(last_error)
 }
 
+function composer_get_deploy_autoloader_path() {
+    local deploy_vendor_path="$(project_get_deploy_vendor_path)"
+    echo "${deploy_vendor_path}/composer"
+}
+
+function composer_autoloader_fixup() {
+    local repo_dir="$1"
+    local source_content_path="$(project_get_source_content_path)"
+    local deploy_content_path="$(project_get_deploy_content_path)"
+    local deploy_autoloader_path="$(composer_get_deploy_autoloader_path)"
+    local output
+    local filepath
+
+    push_dir "${repo_dir}"
+
+    if [ "${source_content_path}" == "${deploy_content_path}" ] ; then
+        return
+    fi
+    for filepath in ${deploy_autoloader_path}/*.php; do
+        trace "Fixing up ${filepath}; from ${source_content_path} to ${deploy_content_path}"
+
+        find="'${source_content_path}"
+        replace="'${deploy_content_path}"
+        sed -i  "s#${find}#${replace}#g" "${filepath}"
+
+        find="'/${source_content_path}"
+        replace="'/${deploy_content_path}"
+        sed -i "s#${find}#${replace}#g" "${filepath}"
+
+        find="'${source_content_path}"
+        replace="'${deploy_content_path}"
+        sed -i  "s#${find}#${replace}#g" "${filepath}"
+
+        find="'/${source_content_path}"
+        replace="'/${deploy_content_path}"
+        sed -i "s#${find}#${replace}#g" "${filepath}"
+
+    done
+
+    pop_dir
+
+}
