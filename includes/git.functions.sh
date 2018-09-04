@@ -59,9 +59,11 @@ function git_checkout_branch() {
     push_dir "${repo_dir}"
     local output
     if ! git_branch_exists "${branch}" "${repo_dir}" ; then
+        trace "Branch ${branch} does not exist. Pulling down from origin and checking out."
         output="$(try "Checking out new branch '${branch}'" \
             "$(git checkout -b "${branch}" "origin/${branch}" 2>&1)")"
     elif [ "${branch}" != "$(git_get_current_branch)" ]; then
+        trace "Branch ${branch} exists. Checking out."
         output="$(try "Checking out existing branch '${branch}'" \
             "$(git checkout "${branch}" 2>&1)")"
     fi
