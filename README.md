@@ -38,6 +38,12 @@ To use WP DevOps requires the following:
                 }
             },
             "scripts": {
+        		"pre-install-cmd": [
+                    "php -r \"if ( ! is_dir('.circleci') ) { mkdir('.circleci'); }\""
+                ],
+                "pre-update-cmd": [
+                    "php -r \"if ( ! is_dir('.circleci') ) { mkdir('.circleci'); }\""
+                ],
                 "post-install-cmd": [
                     "php -f '.circleci/wp-devops/init.php'"
                 ],
@@ -239,16 +245,9 @@ To use WP DevOps requires the following:
 10. The last step should be to commit your changes and push, which should trigger a rebuild on CircleCI. You can find status on your builds at `https://circleci.com/gh/ORG/REPO`.
 
 ## Support
-Any questions?  Just [**ask on Slack**](http://launchpass.com/wplib).
+Any questions?  Just [**ask on Slack**](https://wplib.slack.com/).  
 
-
-## Our Vision
-Our vision is to make the best practices of setting up and running continuous integration, testing and deployment _**brain-dead easy**_. More to come on how we will make this happen in the near future...
-
-## Our Plans
-We plan to expand WP DevOps to support as many Continuous Integration Providers as possible and to support as many Web Hosts as possible. Along those lines we'll be adding documentation as we evolve this solution. 
-If you have an interest in helping us or contributing financially to have us add specific support sooner, please contact us [**via our Slack**](https://launchpass.com/wplib).
-
+If you don't yet have access to our Slack account, you can [**join here**](http://launchpass.com/wplib).
 
 
 ## License
