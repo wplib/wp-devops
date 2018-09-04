@@ -93,7 +93,7 @@ if is_error ; then
     exit 10
 fi
 
-announce "Deleting blacklisted files"
+announce "Removing 'delete' files"
 build_delete_files "${CI_DEPLOY_REPO_DIR}"
 if is_error ; then
     announce "$(last_output)"
