@@ -95,18 +95,18 @@ function composer_autoloader_fixup() {
             continue
         fi
 
-        trace "Fixing up path name: ${path_names}"
+        trace "Fixing up path name: ${path_name}"
 
-        for filepath in ${deploy_autoloader_dir}/*.php; do
+        for filepath in ${deploy_autoloader_dir}/autoloader_*.php; do
 
             trace "Fixing up ${filepath}; from ${source_path} to ${deploy_path}"
 
             find="'${source_path}"
-            replace="'${deploy_path}"
+            replace="'code${deploy_path}"
             sed -i "s#${find}#${replace}#g" "${filepath}"
 
             find="'/${source_path}"
-            replace="'/${deploy_path}"
+            replace="'/code${deploy_path}"
             sed -i "s#${find}#${replace}#g" "${filepath}"
 
         done
