@@ -24,7 +24,7 @@ function composer_run() {
     push_dir "${repo_dir}"
     set e+
     local output=$(try "Running composer in ${repo_dir}" \
-        "$(composer install --no-dev --no-ansi --no-interaction --prefer-dist 2>&1)")
+        "$(composer install --no-dev --no-ansi --no-interaction --prefer-dist --ignore-platform-reqs 2>&1)")
     catch $?
     set -e
     pop_dir
