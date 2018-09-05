@@ -134,12 +134,12 @@ if is_error ; then
     exit 15
 fi
 
-announce "Deploy tagged as $(deploy_get_current_tag)"
+announce "Build tagged as $(build_get_current_tag)"
 
-announce "Unlocking the deploy"
-deploy_unlock
-if is_error ; then
-    announce "$(last_output)"
-    exit 16
-fi
+#announce "Unlocking the deploy"
+#deploy_unlock
+#if is_error ; then
+#    announce "$(last_output)"
+#    exit 16
+#fi
 
