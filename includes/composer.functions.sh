@@ -71,17 +71,21 @@ function composer_setup() {
 }
 
 function composer_get_deploy_autoloader_path() {
-    local deploy_vendor_path="$(project_get_deploy_vendor_path)"
-    echo "${deploy_vendor_path}/composer"
+    local branch="$1"
+    local deploy_root="$(ltrim_slashes "$(project_get_deploy_web_root "${branch}")")"
+    local deploy_vendor_path="$(project_get_deploy_wordpress_vendor_path)"
+    echo "${deploy_root}${deploy_vendor_path}/composer"
 }
 
 function composer_autoloader_fixup() {
-    local repo_dir="$1"
-    local deploy_autoloader_dir="${repo_dir}$(composer_get_deploy_autoloader_path)"
+    local branch="$1"
+    local repo_dir="$2"
+    local deploy_autoloader_dir="${repo_dir}$(composer_get_deploy_autoloader_path "${branch}")"
     local source_json="$(project_get_source_wordpress_paths_json)"
     local deploy_json="$(project_get_deploy_wordpress_paths_json)"
-    local deploy_host="$(project_get_deploy_host "${repo_dir}")"
-    local host_root_path="$(project_get_host_root_path "${deploy_host}")"
+    local deploy_host="$(project_get_deploy_host_by dir "${repo_dir}")"
+    local source_root="$(ltrim_slashes "$(project_get_source_web_root)")"
+    local deploy_root="$(ltrim_slashes "$(project_get_deploy_web_root "${branch}")")"
     local path_names="vendor_path content_path"
     local output
     local filepath
@@ -103,14 +107,12 @@ function composer_autoloader_fixup() {
 
             trace "Fixing up ${filepath}; from ${source_path} to ${deploy_path}"
 
-            find="'/${source_path}"
-            replace="'${host_root_path}${deploy_path}"
+            find="'/${source_root}${source_path}"
+            replace="'$/{deploy_root}${deploy_path}"
             sed -i "s#${find}#${replace}#g" "${filepath}"
 
-            local no_left_slash="$(ltrim_slashes "${host_root_path}")"
-
-            find="'${source_path}"
-            replace="'${no_left_slash}${deploy_path}"
+            find="'${source_root}${source_path}"
+            replace="'${deploy_root}${deploy_path}"
             sed -i "s#${find}#${replace}#g" "${filepath}"
 
         done

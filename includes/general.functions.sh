@@ -316,15 +316,16 @@ function dump_stack () {
 function apply_path_templates() {
     local mode="$(default "$1" absolute)"
     local path_names="$2"
-    local paths_json="$3"
-    local tmp_filenames="$4"
-    local path_name
+    local web_root="$3"
+    local paths_json="$4"
+    local tmp_filenames="$5"
+    local path_name var value
     for path_name in $path_names; do
-        local value="$(echo $paths_json|jqr ".${path_name}")"
-        local var="{$(echo $path_name | sed 's/_path$//')}"
+        var="{$(echo $path_name | sed 's/_path$//')}"
         if [ "relative" == "${mode}" ] ; then
             tmp_filenames="$(echo $tmp_filenames | sed "s|${var}||g" | sed "s#//#/#g")"
         else
+            value="${web_root}$(echo $paths_json|jqr ".${path_name}")"
             tmp_filenames="$(echo $tmp_filenames | sed "s|${var}|${value}|g" | sed "s#//#/#g")"
         fi
     done

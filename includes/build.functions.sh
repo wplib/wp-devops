@@ -63,8 +63,10 @@ function build_clone_repo() {
 function build_process_files() {
     local source_dir="${CI_PROJECT_DIR}"
     local deploy_dir="${CI_DEPLOY_REPO_DIR}"
-    local source_core_path="$(project_get_source_core_path)"
-    local deploy_core_path="$(project_get_deploy_core_path)"
+    local source_web_root="$(project_get_source_wordpress_core_path)"
+    local deploy_web_root="$(project_get_deploy_wordpress_core_path)"
+    local source_core_path="${source_web_root}$(project_get_source_wordpress_core_path)"
+    local deploy_core_path="${deploy_web_root}$(project_get_deploy_wordpress_core_path)"
     local output
 
     trace "Copy files from ${source_dir} to ${deploy_dir}"
@@ -110,8 +112,8 @@ function build_process_files() {
 
     output=$(try "Copy wp-content files" \
         "$(build_sync_files deep content \
-            "${source_dir}" "$(project_get_source_content_path)" \
-            "${deploy_dir}" "$(project_get_deploy_content_path)" 2>&1
+            "${source_dir}" "${source_web_root}$(project_get_source_wordpress_content_path)" \
+            "${deploy_dir}" "${deploy_web_root}$(project_get_deploy_wordpress_content_path)" 2>&1
           )"
     )
     if is_error ; then
@@ -121,8 +123,8 @@ function build_process_files() {
 
     output=$(try "Copy vendor files" \
         "$(build_sync_files deep vendor \
-            "${source_dir}" "$(project_get_source_vendor_path)" \
-            "${deploy_dir}" "$(project_get_deploy_vendor_path)" 2>&1
+            "${source_dir}" "${source_web_root}$(project_get_source_wordpress_vendor_path)" \
+            "${deploy_dir}" "${deploy_web_root}$(project_get_deploy_wordpress_vendor_path)" 2>&1
           )"
     )
     if is_error ; then
@@ -131,7 +133,7 @@ function build_process_files() {
     fi
 
     output=$(try "Fixup Composer Autoloader files" \
-        "$(composer_autoloader_fixup "${deploy_dir}")")
+        "$(composer_autoloader_fixup "${CI_BRANCH}" "${deploy_dir}")")
 
     if is_error ; then
         announce "${output}"
@@ -198,6 +200,7 @@ function build_exclude_files_file() {
     touch "${CI_EXCLUDE_FILES_FILE}"
     local exclude_files="$(apply_path_templates relative \
         "${path_type}" \
+        "$(project_get_deploy_web_root "${CI_BRANCH}")"
         "$(project_get_deploy_wordpress_paths_json)" \
         "$(project_get_deploy_exclude_files) $(project_get_deploy_delete_files) $(project_get_deploy_keep_files)")"
     trace "Generating list of files for 'rsync --exclude-from' from ${exclude_files}"
@@ -235,6 +238,7 @@ function build_delete_files() {
     local deploy_dir="$1"
     local delete_files="$(apply_path_templates absolute \
         "$(project_get_wordpress_path_names)" \
+        "$(project_get_deploy_web_root "${CI_BRANCH}")" \
         "$(project_get_deploy_wordpress_paths_json)" \
         "$(project_get_deploy_delete_files)")"
     local _
@@ -262,21 +266,27 @@ function _build_files() {
     local path_names="$(project_get_wordpress_path_names)"
     local source_paths_json="$(project_get_source_wordpress_paths_json)"
     local deploy_paths_json="$(project_get_deploy_wordpress_paths_json)"
+    local source_web_root="$(project_get_source_web_root)"
+    local deploy_web_root="$(project_get_deploy_web_root "${CI_BRANCH}")"
     trace "Preparing to ${mode} files using these path names ${path_names}: ${files}"
     for file in $files ; do
-        relative_deploy_file="$(apply_path_templates absolute "${path_names}" "${deploy_paths_json}" "${file}")"
-        trace "Relative deploy file: $relative_deploy_file"
+        relative_deploy_file="$(apply_path_templates absolute \
+            "${path_names}" "${deploy_web_root}" "${deploy_paths_json}" "${file}")"
         deploy_file="${deploy_dir}${relative_deploy_file}"
+        trace "Relative deploy file: $relative_deploy_file"
         trace "Deploy file: $deploy_file"
-        trace "Preparing to ${mode} file: ${deploy_file}"
+        trace "Preparing to ${mode} deploy file: ${deploy_file}"
         if [ "keep" == "${mode}" ] ; then
             if [ -e "${deploy_file}" ] ; then
                 # We have it. All is good
                 continue
             fi
         fi
-        relative_source_file="$(apply_path_templates absolute "${path_names}" "${source_paths_json}" "${file}")"
+        relative_source_file="$(apply_path_templates absolute \
+            "${path_names}" "${source_web_root}" "${source_paths_json}" "${file}")"
         source_file="${source_dir}${relative_source_file}"
+        trace "Relative source file: $relative_source_file"
+        trace "Preparing to ${mode} source file: ${source_file}"
         if ! [ -e "${source_file}" ] ; then
             if [ "keep" == "${mode}" ] ; then
                 announce "The file '${file}' not found in source as '${relative_source_file} or in deploy as '${relative_deploy_file}'. Cannot deploy."
