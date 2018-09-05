@@ -154,42 +154,50 @@ function project_get_deploy_wp_devops_json() {
         "$(project_get_deploy_json | jqr ".wp-devops")" 1)"
     return $(catch)
 }
+
 function project_get_deploy_wp_devops_ref_type() {
     echo "$(try "Get deploy's WP Devops ref_type (`branch`, `hash` or `tag`)" \
             "$(project_get_deploy_wp_devops_json | jqr ".ref_type")" 1)"
     return $(catch)
 }
+
 function project_get_deploy_wp_devops_branch() {
     echo "$(try "Get deploy's WP Devops branch" \
             "$(project_get_deploy_wp_devops_json | jqr ".branch")" 1)"
     return $(catch)
 }
+
 function project_get_deploy_wp_devops_tag() {
     echo "$(try "Get deploy's WP Devops tag" \
             "$(project_get_deploy_wp_devops_json | jqr ".tag")" 1)"
     return $(catch)
 }
+
 function project_get_deploy_wp_devops_hash() {
     echo "$(try "Get deploy's WP Devops hash" \
             "$(project_get_deploy_wp_devops_json | jqr ".hash")" 1)"
     return $(catch)
 }
+
 function project_get_hosts_json() {
     trace "Get hosts json: { ... }"
     echo "$(project_get_json | jqr ".hosts")"
     return $(catch)
 }
+
 function project_get_host_web_root() {
     local host="$1"
     echo "/$(trim_slashes "$(try "Get host's root path" \
             "$(project_get_hosts_json | jqr ".${host}.web_root")" 1)")"
     return $(catch)
 }
+
 function project_get_deploy_web_root() {
     echo "/$(trim_slashes "$(try "Get deploy's root path" \
             "$(project_get_json | jqr ".deploy.web_root")" 1)")"
     return $(catch)
 }
+
 function project_get_source_web_root() {
     echo "/$(trim_slashes "$(try "Get source's root path" \
             "$(project_get_json | jqr ".source.web_root")" 1)")"

@@ -323,10 +323,10 @@ function apply_path_templates() {
     for path_name in $path_names; do
         var="{$(echo $path_name | sed 's/_path$//')}"
         if [ "relative" == "${mode}" ] ; then
-            tmp_filenames="$(echo $tmp_filenames | sed "s|${var}||g" | sed "s#//#/#g")"
+            tmp_filenames="$(echo $tmp_filenames | stdin_find_replace "${var}" | stdin_dedup_slashes)"
         else
             value="${web_root}$(echo $paths_json|jqr ".${path_name}")"
-            tmp_filenames="$(echo $tmp_filenames | sed "s|${var}|${value}|g" | sed "s#//#/#g")"
+            tmp_filenames="$(echo $tmp_filenames | stdin_find_replace "${var}" "${value}" | stdin_dedup_slashes)"
         fi
     done
     filenames=""
@@ -342,4 +342,18 @@ function apply_path_templates() {
         filenames="${filenames} ${file}"
     done
     echo -e $filenames
+}
+
+#
+# For `tr -s '/'` see https://unix.stackexchange.com/a/187055/144192
+#
+function stdin_dedup_slashes() {
+    #sed 's#//#/#g'
+    tr -s '/'
+}
+
+function stdin_find_replace() {
+    local find="$1"
+    local replace="$2"
+    sed "s|${find}|${replace}|g"
 }

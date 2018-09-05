@@ -159,16 +159,13 @@ function build_process_files() {
 
 }
 
-#
-# For `tr -s '/'` see https://unix.stackexchange.com/a/187055/144192
-#
 function build_sync_files() {
     local depth="$(default "$1" shallow)"
     local path_type="$2"
     local source_dir="$3"
-    local source_path="$(echo "$4" | tr -s '/' | sed "s#//#/#g")"
+    local source_path="$(echo "$4" | stdin_dedup_slashes)"
     local deploy_dir="$5"
-    local deploy_path="$(echo "$6" | tr -s '/' | sed "s#//#/#g")"
+    local deploy_path="$(echo "$6" | stdin_dedup_slashes)"
 
     trace "Rsyncing source path '${source_path}/' to deploy path '${deploy_path}'."
 
