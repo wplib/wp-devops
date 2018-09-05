@@ -72,9 +72,8 @@ function composer_setup() {
 
 function composer_get_deploy_autoloader_path() {
     local branch="$1"
-    local deploy_root="$(project_get_deploy_web_root "${branch}")"
     local deploy_vendor_path="$(project_get_deploy_wordpress_vendor_path)"
-    echo "${deploy_root}${deploy_vendor_path}/composer"
+    echo "${deploy_vendor_path}/composer"
 }
 
 function composer_autoloader_fixup() {
