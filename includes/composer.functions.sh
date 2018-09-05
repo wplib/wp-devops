@@ -83,8 +83,8 @@ function composer_autoloader_fixup() {
     local source_json="$(project_get_source_wordpress_paths_json)"
     local deploy_json="$(project_get_deploy_wordpress_paths_json)"
     local deploy_host="$(project_get_deploy_host_by dir "${repo_dir}")"
-    local source_root="$(ltrim_slashes "$(project_get_source_web_root)")"
-    local deploy_root="$(ltrim_slashes "$(project_get_deploy_web_root "${branch}")")"
+    local source_root="$(project_get_source_web_root)"
+    local deploy_root="$(project_get_deploy_web_root "${branch}")"
     local path_names="vendor_path content_path"
     local output
     local filepath
@@ -106,8 +106,11 @@ function composer_autoloader_fixup() {
 
             trace "Fixing up ${filepath}; from ${source_root}${source_path} to ${deploy_root}${deploy_path}"
 
-            find="'/${source_root}${source_path}"
-            replace="'/${deploy_root}${deploy_path}"
+            find="'${source_root}${source_path}"
+            replace="'${deploy_root}${deploy_path}"
+
+            trace "Fixing up with FIND=[${find}], REPLACE=[${replace}]"
+
             sed -i "s#${find}#${replace}#g" "${filepath}"
 
 #            find="'${source_root}${source_path}"
