@@ -63,8 +63,8 @@ function build_clone_repo() {
 function build_process_files() {
     local source_dir="${CI_PROJECT_DIR}"
     local deploy_dir="${CI_DEPLOY_REPO_DIR}"
-    local source_web_root="$(project_get_source_wordpress_core_path)"
-    local deploy_web_root="$(project_get_deploy_wordpress_core_path)"
+    local source_web_root="$(project_get_source_web_root)"
+    local deploy_web_root="$(project_get_deploy_web_root "${CI_BRANCH}")"
     local source_core_path="${source_web_root}$(project_get_source_wordpress_core_path)"
     local deploy_core_path="${deploy_web_root}$(project_get_deploy_wordpress_core_path)"
     local output
