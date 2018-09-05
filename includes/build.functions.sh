@@ -132,6 +132,9 @@ function build_process_files() {
         return 5
     fi
 
+deploy_unlock
+exit 1
+
     output=$(try "Fixup Composer Autoloader files" \
         "$(composer_autoloader_fixup "${CI_BRANCH}" "${deploy_dir}")")
 
