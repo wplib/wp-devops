@@ -48,9 +48,9 @@ function build_clone_repo() {
     trace "Fetch all for ${clone_dir}"
     git_fetch_all "${clone_dir}"
 
-    trace "Pull for branch ${branch} into ${clone_dir}"
-    git_pull_branch "${branch}" "${clone_dir}"
-
+#    trace "Pull for branch ${branch} into ${clone_dir}"
+#    git_pull_branch "${branch}" "${clone_dir}"
+#
     trace "Resetting Git branch ${branch} HARD: ${clone_dir}"
     git_reset_branch_hard "${branch}" "${clone_dir}"
 
