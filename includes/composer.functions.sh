@@ -113,10 +113,6 @@ function composer_autoloader_fixup() {
 
             sed -i "s#${find}#${replace}#g" "${filepath}"
 
-#            find="'${source_root}${source_path}"
-#            replace="'${deploy_root}${deploy_path}"
-#            sed -i "s#${find}#${replace}#g" "${filepath}"
-
         done
 
     done
