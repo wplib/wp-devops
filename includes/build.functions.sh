@@ -64,9 +64,9 @@ function build_process_files() {
     local source_dir="${CI_PROJECT_DIR}"
     local deploy_dir="${CI_DEPLOY_REPO_DIR}"
     local source_web_root="$(project_get_source_web_root)"
-    local deploy_web_root="$(project_get_deploy_web_root "${CI_BRANCH}")"
+    local deploy_web_root="$(project_get_deploy_web_root)"
     local source_core_path="${source_web_root}$(project_get_source_wordpress_core_path)"
-    local deploy_core_path="$(project_get_deploy_wordpress_core_path)"
+    local deploy_core_path="${deploy_web_root}$(project_get_deploy_wordpress_core_path)"
     local output
 
     trace "Copy files from ${source_dir} to ${deploy_dir}"
@@ -166,9 +166,9 @@ function build_sync_files() {
     local depth="$(default "$1" shallow)"
     local path_type="$2"
     local source_dir="$3"
-    local source_path="$(echo "$4" | tr -s '/')"
+    local source_path="$(echo "$4" | tr -s '/' | sed "s#//#/#g")"
     local deploy_dir="$5"
-    local deploy_path="$(echo "$6" | tr -s '/')"
+    local deploy_path="$(echo "$6" | tr -s '/' | sed "s#//#/#g")"
 
     trace "Rsyncing source path '${source_path}/' to deploy path '${deploy_path}'."
 
