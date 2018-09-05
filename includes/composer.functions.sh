@@ -104,7 +104,7 @@ function composer_autoloader_fixup() {
 
         for filepath in ${deploy_autoloader_dir}/autoload_*.php; do
 
-            trace "Fixing up ${filepath}; from ${source_path} to ${deploy_path}"
+            trace "Fixing up ${filepath}; from ${source_root}${source_path} to ${deploy_root}${deploy_path}"
 
             find="'/${source_root}${source_path}"
             replace="'$/{deploy_root}${deploy_path}"
