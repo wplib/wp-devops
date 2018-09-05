@@ -179,7 +179,7 @@ function project_get_hosts_json() {
     echo "$(project_get_json | jqr ".hosts")"
     return $(catch)
 }
-function project_get_hosts_web_root() {
+function project_get_host_web_root() {
     local host="$1"
     echo "/$(trim_slashes "$(try "Get host's root path" \
             "$(project_get_hosts_json | jqr ".${host}.web_root")" 1)")"
