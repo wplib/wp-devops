@@ -107,7 +107,7 @@ function composer_autoloader_fixup() {
             trace "Fixing up ${filepath}; from ${source_root}${source_path} to ${deploy_root}${deploy_path}"
 
             find="'/${source_root}${source_path}"
-            replace="'$/{deploy_root}${deploy_path}"
+            replace="'/${deploy_root}${deploy_path}"
             sed -i "s#${find}#${replace}#g" "${filepath}"
 
             find="'${source_root}${source_path}"
