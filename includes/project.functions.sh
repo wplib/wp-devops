@@ -179,11 +179,15 @@ function project_get_hosts_json() {
     echo "$(project_get_json | jqr ".hosts")"
     return $(catch)
 }
-function project_get_deploy_web_root() {
-    local branch="$1"
-    local host="$(project_get_deploy_host_by branch "${branch}")"
+function project_get_hosts_web_root() {
+    local host="$1"
     echo "/$(trim_slashes "$(try "Get host's root path" \
             "$(project_get_hosts_json | jqr ".${host}.web_root")" 1)")"
+    return $(catch)
+}
+function project_get_deploy_web_root() {
+    echo "/$(trim_slashes "$(try "Get deploy's root path" \
+            "$(project_get_json | jqr ".deploy.web_root")" 1)")"
     return $(catch)
 }
 function project_get_source_web_root() {

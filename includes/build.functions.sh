@@ -66,7 +66,7 @@ function build_process_files() {
     local source_web_root="$(project_get_source_web_root)"
     local deploy_web_root="$(project_get_deploy_web_root "${CI_BRANCH}")"
     local source_core_path="${source_web_root}$(project_get_source_wordpress_core_path)"
-    local deploy_core_path="${deploy_web_root}$(project_get_deploy_wordpress_core_path)"
+    local deploy_core_path="$(project_get_deploy_wordpress_core_path)"
     local output
 
     trace "Copy files from ${source_dir} to ${deploy_dir}"
@@ -200,7 +200,7 @@ function build_exclude_files_file() {
     touch "${CI_EXCLUDE_FILES_FILE}"
     local exclude_files="$(apply_path_templates relative \
         "${path_type}" \
-        "$(project_get_deploy_web_root "${CI_BRANCH}")"
+        "$(project_get_deploy_web_root)"
         "$(project_get_deploy_wordpress_paths_json)" \
         "$(project_get_deploy_exclude_files) $(project_get_deploy_delete_files) $(project_get_deploy_keep_files)")"
     trace "Generating list of files for 'rsync --exclude-from' from ${exclude_files}"
@@ -238,7 +238,7 @@ function build_delete_files() {
     local deploy_dir="$1"
     local delete_files="$(apply_path_templates absolute \
         "$(project_get_wordpress_path_names)" \
-        "$(project_get_deploy_web_root "${CI_BRANCH}")" \
+        "$(project_get_deploy_web_root)" \
         "$(project_get_deploy_wordpress_paths_json)" \
         "$(project_get_deploy_delete_files)")"
     local _
@@ -267,7 +267,7 @@ function _build_files() {
     local source_paths_json="$(project_get_source_wordpress_paths_json)"
     local deploy_paths_json="$(project_get_deploy_wordpress_paths_json)"
     local source_web_root="$(project_get_source_web_root)"
-    local deploy_web_root="$(project_get_deploy_web_root "${CI_BRANCH}")"
+    local deploy_web_root="$(project_get_deploy_web_root)"
     trace "Preparing to ${mode} files using these path names ${path_names}: ${files}"
     for file in $files ; do
         relative_deploy_file="$(apply_path_templates absolute \

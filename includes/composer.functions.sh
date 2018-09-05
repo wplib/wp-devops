@@ -82,9 +82,9 @@ function composer_autoloader_fixup() {
     local deploy_autoloader_dir="${repo_dir}$(composer_get_deploy_autoloader_path "${branch}")"
     local source_json="$(project_get_source_wordpress_paths_json)"
     local deploy_json="$(project_get_deploy_wordpress_paths_json)"
-    local deploy_host="$(project_get_deploy_host_by dir "${repo_dir}")"
     local source_root="$(project_get_source_web_root)"
-    local deploy_root="$(project_get_deploy_web_root "${branch}")"
+    local deploy_host="$(project_get_deploy_host_by dir "${repo_dir}")"
+    local host_root="$(project_get_host_web_root "${deploy_host}")"
     local path_names="vendor_path content_path"
     local output
     local filepath
@@ -104,10 +104,10 @@ function composer_autoloader_fixup() {
 
         for filepath in ${deploy_autoloader_dir}/autoload_*.php; do
 
-            trace "Fixing up ${filepath}; from ${source_root}${source_path} to ${deploy_root}${deploy_path}"
+            trace "Fixing up ${filepath}; from ${source_root}${source_path} to ${host_root}${deploy_path}"
 
             find="'${source_root}${source_path}"
-            replace="'${deploy_root}${deploy_path}"
+            replace="'${host_root}${deploy_path}"
 
             trace "Fixing up with FIND=[${find}], REPLACE=[${replace}]"
 
