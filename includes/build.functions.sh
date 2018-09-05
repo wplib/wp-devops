@@ -20,9 +20,11 @@ declare="${CI_PROJECT_DIR:=}"
 declare="${CI_DEPLOY_REPO_DIR:=}"
 declare="${CI_EXCLUDE_FILES_FILE:=}"
 declare="${CI_BACKUP_DIR:=}"
+declare="${CI_BUILD_NUM:=}"
 declare="${CI_TMP_DIR:=}"
 declare="${CI_NEWLINE:=}"
 declare="${CI_BRANCH:=}"
+
 
 function build_clone_repo() {
     local repo_url="$(project_get_deploy_repo_url "${CI_PROJECT_DIR}")"
@@ -298,4 +300,63 @@ function _build_files() {
             return 2
         fi
     done
+}
+
+function build_get_filename() {
+    local dir="$1"
+    if [ "" == "${dir}" ] ; then
+        dir="${CI_DEPLOY_REPO_DIR}"
+    fi
+    echo "${dir}/BUILD"
+}
+
+function build_get_current_tag() {
+    echo "build-$(build_get_current_num)"
+}
+
+function build_get_current_num() {
+    push_dir "${CI_PROJECT_DIR}"
+    cat "$(build_get_filename)"
+    pop_dir
+}
+
+function build_generate_file() {
+    local deploy_dir="${CI_DEPLOY_REPO_DIR}"
+    local build_num="${CI_BUILD_NUM}"
+    local user_name="$(git_get_user)"
+
+    push_dir "${deploy_dir}"
+    local filename="$(build_get_filename)"
+
+    local message="riting build# ${build_num} to: ${filename}"
+    local _=$(try "W${message}" "$(echo "${build_num}" > $filename)")
+    catch
+    pop_dir
+    if [ 0 -ne $(last_error) ] ; then
+        announce "Error w${message}"
+        return $(last_error)
+    fi
+    return 0
+}
+
+function build_tag_remote() {
+    local repo_dir="$1"
+    local build_tag="$(build_get_current_tag)"
+
+    local message="dding local '${build_tag}' tag"
+    local output=$(try "A${message}" "$(git_tag "${repo_dir}" "${build_tag}" "Build #$(build_get_current_num)")")
+    catch
+    if [[ "${output}" =~ ^fatal ]]; then
+        announce "Error a${message}"
+        return $(last_error)
+    fi
+
+    local message="ushing '${build_tag}' tag to remote"
+    local output=$(try "P${message}" "$(git_push_tags "${repo_dir}")")
+    catch
+    if [[ "${output}" =~ ^fatal ]]; then
+        announce "Error p${message}"
+        return $(last_error)
+    fi
+    return 0
 }

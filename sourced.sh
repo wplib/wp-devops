@@ -15,6 +15,8 @@
 #    limitations under the License.
 #
 
+declare="${CIRCLE_BUILD_NUM:=}"
+
 set -eo pipefail
 
 export CL_LOADED=${CL_LOADED:-0}
@@ -22,9 +24,11 @@ if [ 0 -eq $CL_LOADED ]; then
 
     if [ "" == "${CIRCLE_WORKING_DIRECTORY:=}" ] ; then
         CI_CIRCLECI_DIR="$(pwd)/../$(dirname "$(dirname "$0")")"
+        CI_BUILD_NUM="${CIRCLE_BUILD_NUM}"
     else
         # See https://stackoverflow.com/a/27485157/102699
         CI_CIRCLECI_DIR="${CIRCLE_WORKING_DIRECTORY/#\~/$HOME}/.circleci"
+        CI_BUILD_NUM="${CIRCLE_BUILD_NUM}"
     fi
     export CI_CIRCLECI_DIR="$(realpath "${CI_CIRCLECI_DIR}")"
 
@@ -57,6 +61,8 @@ if [ 0 -eq $CL_LOADED ]; then
     export CI_BACKUP_DIR="/tmp/rsync-backup"
     export CI_EXCLUDE_FILES_FILE="/tmp/exclude-files.txt"
     export CI_NEWLINE=$'\n'
+
+
 fi
 
 CL_LOADED=1
@@ -74,3 +80,8 @@ else
     CI_BRANCH="${CIRCLE_BRANCH}"
 fi
 
+if [ "" == "${CIRCLE_BUILD_NUM:=}" ] ; then
+    CI_BUILD_NUM="$(git_get_max_tag_prefix_num deploy "${CI_PROJECT_DIR}")"
+else
+    CI_BUILD_NUM="${CIRCLE_BUILD_NUM}"
+fi
