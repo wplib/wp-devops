@@ -141,13 +141,13 @@ function build_sync_files() {
     trace "Exclude files from ${CI_EXCLUDE_FILES_FILE}: $(cat "${CI_EXCLUDE_FILES_FILE}")"
 
     if [ "deep" == "${depth}" ] ; then
-        rsync --archive --delete-after \
+        rsync --archive --verbose --delete-after \
               --exclude ".git" --exclude ".git*" \
               --exclude-from="${CI_EXCLUDE_FILES_FILE}" \
             "${source_dir}${source_path}/" \
             "${deploy_dir}${deploy_path}" >> $CI_LOG 2>&1
     else
-        rsync --archive \
+        rsync --archive --verbose \
               --filter="- */" --filter="+ *" \
               --exclude-from="${CI_EXCLUDE_FILES_FILE}" \
             "${source_dir}${source_path}/" \
