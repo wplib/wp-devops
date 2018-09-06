@@ -114,8 +114,6 @@ if is_error ; then
     exit 12
 fi
 
-exit 1
-
 announce "Pushing deploy to host"
 deploy_push
 if is_error ; then
