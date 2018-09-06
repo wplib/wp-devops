@@ -15,7 +15,8 @@
 #    limitations under the License.
 #
 
-declare=${CI_PROJECT_DIR:=}
+declare="${CI_PROJECT_DIR:=}"
+declare="${CI_BRANCH:=}"
 
 function project_get_json() {
     trace "Get project json: { ... }"
@@ -29,9 +30,19 @@ function project_get_deploy_json() {
     return $(catch)
 }
 
-function project_get_deploy_host() {
-    local repo_dir="$1"
-    local query="[.hosts|to_entries[]|select(.value.branch==\""$(git_get_current_branch "${repo_dir}")"\")]|first|.key"
+#
+# $by: 'dir' or 'branch'
+#
+function project_get_deploy_host_by() {
+    local by="$1"
+    local value="$2"
+    local branch
+    if [ "branch" == "${by}" ] ; then
+        branch="${value}"
+    else
+        branch="$(git_get_current_branch "${value}")"
+    fi
+    local query="[.hosts|to_entries[]|select(.value.branch==\""${branch}"\")]|first|.key"
     echo "$(try "Get deploy hostname" "$(project_get_deploy_json | jqr "${query}")" 1)"
     return $(catch)
 }
@@ -39,53 +50,53 @@ function project_get_deploy_host() {
 function project_get_deploy_repo_url() {
     local repo_dir="$1"
     echo "$(try "Get deploy host repository URL" \
-         "$(project_get_json | jqr ".hosts.$(project_get_deploy_host "${repo_dir}").repository.url")" 1)"
+         "$(project_get_json | jqr ".hosts.$(project_get_deploy_host_by dir "${repo_dir}").repository.url")" 1)"
     return $(catch)
 }
 
-function project_get_source_core_path() {
+function project_get_source_wordpress_core_path() {
     echo "/$(trim_slashes "$(try "Get source's WordPress core path" \
             "$(project_get_source_wordpress_paths_json | jqr ".core_path")" 1)")"
     return $(catch)
 }
 
-function project_get_deploy_core_path() {
+function project_get_deploy_wordpress_core_path() {
     echo "/$(trim_slashes "$(try "Get deploy's WordPress core path" \
             "$(project_get_deploy_wordpress_paths_json | jqr ".core_path")" 1)")"
     return $(catch)
 }
 
-function project_get_source_vendor_path() {
+function project_get_source_wordpress_vendor_path() {
     echo "/$(trim_slashes "$(try "Get source's WordPress vendor path" \
             "$(project_get_source_wordpress_paths_json | jqr ".vendor_path")" 1)")"
     return $(catch)
 }
 
-function project_get_deploy_vendor_path() {
+function project_get_deploy_wordpress_vendor_path() {
     echo "/$(trim_slashes "$(try "Get deploy's WordPress vendor path" \
             "$(project_get_deploy_wordpress_paths_json | jqr ".vendor_path")" 1)")"
     return $(catch)
 }
 
-function project_get_source_root_path() {
+function project_get_source_wordpress_root_path() {
     echo "/$(trim_slashes "$(try "Get source's WordPress root path" \
             "$(project_get_source_wordpress_paths_json | jqr ".root_path")" 1)")"
     return $(catch)
 }
 
-function project_get_deploy_root_path() {
+function project_get_deploy_wordpress_root_path() {
     echo "/$(trim_slashes "$(try "Get deploy's WordPress root path" \
             "$(project_get_deploy_wordpress_paths_json | jqr ".root_path")" 1)")"
     return $(catch)
 }
 
-function project_get_source_content_path() {
+function project_get_source_wordpress_content_path() {
     echo "/$(trim_slashes "$(try "Get source's WordPress content path" \
             "$(project_get_source_wordpress_paths_json | jqr ".content_path")" 1)")"
     return $(catch)
 }
 
-function project_get_deploy_content_path() {
+function project_get_deploy_wordpress_content_path() {
     echo "/$(trim_slashes "$(try "Get deploy's WordPress content path" \
         "$(project_get_deploy_wordpress_paths_json | jqr ".content_path")" 1)")"
     return $(catch)
@@ -143,25 +154,56 @@ function project_get_deploy_wp_devops_json() {
         "$(project_get_deploy_json | jqr ".wp-devops")" 1)"
     return $(catch)
 }
+
 function project_get_deploy_wp_devops_ref_type() {
     echo "$(try "Get deploy's WP Devops ref_type (`branch`, `hash` or `tag`)" \
             "$(project_get_deploy_wp_devops_json | jqr ".ref_type")" 1)"
     return $(catch)
 }
+
 function project_get_deploy_wp_devops_branch() {
     echo "$(try "Get deploy's WP Devops branch" \
             "$(project_get_deploy_wp_devops_json | jqr ".branch")" 1)"
     return $(catch)
 }
+
 function project_get_deploy_wp_devops_tag() {
     echo "$(try "Get deploy's WP Devops tag" \
             "$(project_get_deploy_wp_devops_json | jqr ".tag")" 1)"
     return $(catch)
 }
+
 function project_get_deploy_wp_devops_hash() {
     echo "$(try "Get deploy's WP Devops hash" \
             "$(project_get_deploy_wp_devops_json | jqr ".hash")" 1)"
     return $(catch)
 }
+
+function project_get_hosts_json() {
+    trace "Get hosts json: { ... }"
+    echo "$(project_get_json | jqr ".hosts")"
+    return $(catch)
+}
+
+function project_get_host_web_root() {
+    local host="$1"
+    echo "/$(trim_slashes "$(try "Get host's root path" \
+            "$(project_get_hosts_json | jqr ".${host}.web_root")" 1)")"
+    return $(catch)
+}
+
+function project_get_deploy_web_root() {
+    echo "/$(trim_slashes "$(try "Get deploy's root path" \
+            "$(project_get_json | jqr ".deploy.web_root")" 1)")"
+    return $(catch)
+}
+
+function project_get_source_web_root() {
+    echo "/$(trim_slashes "$(try "Get source's root path" \
+            "$(project_get_json | jqr ".source.web_root")" 1)")"
+    return $(catch)
+}
+
+
 
 

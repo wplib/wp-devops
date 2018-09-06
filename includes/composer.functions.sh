@@ -24,7 +24,7 @@ function composer_run() {
     push_dir "${repo_dir}"
     set e+
     local output=$(try "Running composer in ${repo_dir}" \
-        "$(composer install --no-dev --no-ansi --no-interaction --prefer-dist 2>&1)")
+        "$(composer install --no-dev --no-ansi --no-interaction --prefer-dist --ignore-platform-reqs 2>&1)")
     catch $?
     set -e
     pop_dir
@@ -70,3 +70,53 @@ function composer_setup() {
     return $(last_error)
 }
 
+function composer_get_deploy_autoloader_path() {
+    local branch="$1"
+    local deploy_vendor_path="$(project_get_deploy_wordpress_vendor_path)"
+    echo "${deploy_vendor_path}/composer"
+}
+
+function composer_autoloader_fixup() {
+    local branch="$1"
+    local repo_dir="$2"
+    local deploy_autoloader_dir="${repo_dir}$(composer_get_deploy_autoloader_path "${branch}")"
+    local source_json="$(project_get_source_wordpress_paths_json)"
+    local deploy_json="$(project_get_deploy_wordpress_paths_json)"
+    local source_root="$(project_get_source_web_root)"
+    local deploy_host="$(project_get_deploy_host_by dir "${repo_dir}")"
+    local host_root="$(project_get_host_web_root "${deploy_host}")"
+    local path_names="vendor_path content_path"
+    local output
+    local filepath
+
+    push_dir "${repo_dir}"
+
+    for path_name in ${path_names}; do
+
+        local source_path="$(echo "${source_json}" | jqr ".${path_name}")"
+        local deploy_path="$(echo "${deploy_json}" | jqr ".${path_name}")"
+
+        if [ "${source_path}" == "${deploy_path}" ] ; then
+            continue
+        fi
+
+        trace "Fixing up path name: ${path_name}"
+
+        for filepath in ${deploy_autoloader_dir}/autoload_*.php; do
+
+            trace "Fixing up ${filepath}; from ${source_root}${source_path} to ${host_root}${deploy_path}"
+
+            find="'${source_root}${source_path}"
+            replace="'${host_root}${deploy_path}"
+
+            trace "Fixing up with FIND=[${find}], REPLACE=[${replace}]"
+
+            sed -i "s#${find}#${replace}#g" "${filepath}"
+
+        done
+
+    done
+
+    pop_dir
+
+}

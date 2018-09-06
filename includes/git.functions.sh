@@ -56,17 +56,45 @@ function git_get_user() {
 function git_checkout_branch() {
     local branch="$1"
     local repo_dir="$2"
+    local repo_url="$3"
     push_dir "${repo_dir}"
     local output
     if ! git_branch_exists "${branch}" "${repo_dir}" ; then
+        trace "Branch ${branch} does not exist. Pulling down from origin and checking out."
         output="$(try "Checking out new branch '${branch}'" \
-            "$(git checkout -b "${branch}" "origin/${branch}" 2>&1)")"
+            "$(git checkout -b "${branch}" 2>&1)")"
+        if is_error; then
+            announce "Could not checkout branch ${branch} of ${repo_dir}"
+            exit 1
+        fi
+        output="$(try "Setting upstream for branch '${branch}' of ${repo_dir}" \
+            "$(git_set_upstream "${branch}" 2>&1)")"
+        if is_error; then
+            announce "Could not set upstream for branch ${branch} of ${repo_dir}"
+            exit 2
+        fi
     elif [ "${branch}" != "$(git_get_current_branch)" ]; then
+        trace "Branch ${branch} exists. Checking out."
         output="$(try "Checking out existing branch '${branch}'" \
             "$(git checkout "${branch}" 2>&1)")"
+        if is_error; then
+            announce "Could not checkout branch ${branch} of ${repo_dir}"
+            exit 2
+        fi
     fi
     catch
-    exit_if_contains "${output}" "fatal"
+    exit_if_begins "${output}" "fatal"
+    pop_dir
+}
+
+function git_set_upstream() {
+    local branch="$1"
+    local repo_dir="$2"
+    push_dir "${repo_dir}"
+    local output=$(try "Set git upstream for  branch ${branch} of ${repo_dir}" \
+            "$(git branch --set-upstream-to=origin/${branch} ${branch} 2>&1)")
+    catch
+    exit_if_begins "${output}" "fatal"
     pop_dir
 }
 
@@ -76,7 +104,7 @@ function git_pull_branch() {
     push_dir "${repo_dir}"
     local output=$(try "Pull ${branch} from origin" "$(git pull origin "${branch}" 2>&1)")
     catch
-    exit_if_contains "${output}" "fatal"
+    exit_if_begins "${output}" "fatal"
     pop_dir
 }
 
@@ -86,7 +114,7 @@ function git_fetch_all() {
     local output=$(try "Fetching all" \
             "$(git fetch --all 2>&1)")
     catch
-    exit_if_contains "${output}" "fatal"
+    exit_if_begins "${output}" "fatal"
     pop_dir
 }
 
@@ -103,7 +131,7 @@ function git_reset_branch_hard() {
     local output=$(try "Resetting ${branch} to state of origin" \
             "$(git reset --hard "origin/${branch}" 2>&1)")
     catch
-    exit_if_contains "${output}" "fatal"
+    exit_if_begins "${output}" "fatal"
     pop_dir
 }
 
@@ -113,7 +141,7 @@ function git_delete_untracked_files() {
     local output=$(try "Delete all untracked files and directories" \
             "$(git clean -d --force 2>&1)")
     catch
-    exit_if_contains "${output}" "fatal"
+    exit_if_begins "${output}" "fatal"
     pop_dir
 }
 
@@ -129,7 +157,7 @@ function git_clone_repo() {
     catch
     set -e
     pop_dir
-    exit_if_contains "${output}" "fatal"
+    exit_if_begins "${output}" "fatal"
 }
 
 function git_disable_strict() {
@@ -186,8 +214,8 @@ function git_generate_log() {
     local prefix="$1"
     local repo_dir="$2"
     local offset="$3"
-    local deploy_num="$(git_get_max_tag_prefix_num "${prefix}" "${repo_dir}")"
-    local tag="${prefix}-${deploy_num}"
+    local build_num="$(build_get_current_num)"
+    local tag="${prefix}-${build_num}"
     local hash="$(git_get_commit_hash "${tag}" "${repo_dir}")"
     local log="$(git_hash_log "${hash}" "${repo_dir}" "${offset}")"
     catch

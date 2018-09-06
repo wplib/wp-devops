@@ -24,11 +24,11 @@ declare="${CI_DEPLOY_REPO_DIR:=}"
 declare="${CI_NEWLINE:=}"
 declare="${CI_BRANCH:=}"
 
-function deploy_tag() {
+function deploy_tag_remote() {
     local repo_dir="$1"
     local deploy_tag="$(deploy_get_current_tag)"
 
-    local message="dding local '${CI_DEPLOY_LOCK_SLUG}' tag"
+    local message="dding local '${deploy_tag}' tag"
     local output=$(try "A${message}" "$(git_tag "${repo_dir}" "${deploy_tag}" "Deploy #$(deploy_get_current_num)")")
     catch
     if [[ "${output}" =~ ^fatal ]]; then
@@ -36,7 +36,7 @@ function deploy_tag() {
         return $(last_error)
     fi
 
-    local message="ushing '${CI_DEPLOY_LOCK_SLUG}' tag to remote"
+    local message="ushing '${deploy_tag}' tag to remote"
     local output=$(try "P${message}" "$(git_push_tags "${repo_dir}")")
     catch
     if [[ "${output}" =~ ^fatal ]]; then
@@ -171,11 +171,11 @@ function deploy_unlock() {
 }
 
 function deploy_increment() {
-    local repo_dir="${CI_PROJECT_DIR}"
+    local source_dir="${CI_PROJECT_DIR}"
     local deploy_dir="${CI_DEPLOY_REPO_DIR}"
-    local deploy_num="$(git_get_max_tag_prefix_num 'deploy' "${repo_dir}")"
+    local deploy_num="$(git_get_max_tag_prefix_num 'deploy' "${source_dir}")"
     local user_name="$(git_get_user)"
-    push_dir "${repo_dir}"
+    push_dir "${source_dir}"
     deploy_num="$(( deploy_num + 1 ))"
     local filename="$(deploy_get_filename)"
 
@@ -186,29 +186,29 @@ function deploy_increment() {
         return $(last_error)
     fi 
 
-    message="dding file(s) '${filename}' to ${repo_dir}"
-    _=$(try "A${message}" "$(git_add "${repo_dir}" "${filename}")")
+    message="dding file(s) '${filename}' to ${source_dir}"
+    _=$(try "A${message}" "$(git_add "${source_dir}" "${filename}")")
     if is_error ; then
         announce "Error a${message}"
         return $(last_error)
     fi
 
     message="ommitting DEPLOY file containing #${deploy_num}"
-    _=$(try "C${message}" "$(git_commit "${repo_dir}" "C${message} [skip ci]")")
+    _=$(try "C${message}" "$(git_commit "${source_dir}" "C${message} [skip ci]")")
     if is_error ; then
         announce "Error c${message}"
         return $(last_error)
     fi
 
-    message="ulling branch ${CI_BRANCH} from ${repo_dir}"
-    _=$(try "P${message}" "$(git_pull "${CI_BRANCH}" "${repo_dir}")")
+    message="ulling branch ${CI_BRANCH} from ${source_dir}"
+    _=$(try "P${message}" "$(git_pull "${CI_BRANCH}" "${source_dir}")")
     if is_error ; then
         announce "Error p${message}"
         return $(last_error)
     fi
 
-    message="ushing branch ${CI_BRANCH} to ${repo_dir}"
-    _=$(try "P${message}" "$(git_push "${CI_BRANCH}" "${repo_dir}")")
+    message="ushing branch ${CI_BRANCH} to ${source_dir}"
+    _=$(try "P${message}" "$(git_push "${CI_BRANCH}" "${source_dir}")")
     if is_error ; then
         announce "Error p${message}"
         return $(last_error)
@@ -235,22 +235,21 @@ function deploy_increment() {
 
 function deploy_push() {
     local deploy_dir="${CI_DEPLOY_REPO_DIR}"
-    local _
-    local deploy_num="$(deploy_get_current_num)"
+    local build_num="$(build_get_current_num)"
     local user_name="$(git_get_user)"
+    local _
 
     local message="enerating deploy log from Git"
-    local log="$(try "G${message}" \
-        "$(git_generate_log 'deploy' "${CI_PROJECT_DIR}" 1)")"
+    local commit_msg="$(try "G${message}" \
+        "$(git_generate_log build "${CI_PROJECT_DIR}")")"
     if is_error ; then
         announce "Error g${message}"
         return $(last_error)
     fi
-    trace "Commit log generated: ${log}"
+    trace "Commit log generated: ${commit_msg}"
 
-    local commit_msg="Deploy #${deploy_num} by ${user_name}"
-    if [ "" != "${log}" ]; then
-        commit_msg="${commit_msg}${CI_NEWLINE}${log}"
+    if [ "" != "${commit_msg}" ]; then
+        commit_msg="Build #${build_num} by ${user_name}"
     fi
 
     message="dding all deploy files to Git stage"

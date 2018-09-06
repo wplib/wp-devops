@@ -27,15 +27,15 @@ announce "Setting the Git user"
 git_set_user
 if is_error ; then
     announce "$(last_output)"
-    exit 2
-fi
-
-announce "Locking the deploy"
-deploy_lock
-if is_error ; then
-    announce "$(last_output)"
     exit 1
 fi
+
+#announce "Locking the deploy"
+#deploy_lock
+#if is_error ; then
+#    announce "$(last_output)"
+#    exit 2
+#fi
 
 announce "Disabling SSH StrictHostKeyChecking"
 git_disable_strict
@@ -93,15 +93,22 @@ if is_error ; then
     exit 10
 fi
 
-announce "Deleting blacklisted files"
+announce "Removing 'delete' files"
 build_delete_files "${CI_DEPLOY_REPO_DIR}"
 if is_error ; then
     announce "$(last_output)"
     exit 11
 fi
 
-announce "Incrementing deploy"
-deploy_increment
+#announce "Incrementing deploy"
+#deploy_increment
+#if is_error ; then
+#    announce "$(last_output)"
+#    exit 12
+#fi
+
+announce "Generating BUILD file"
+build_generate_file
 if is_error ; then
     announce "$(last_output)"
     exit 12
@@ -114,25 +121,25 @@ if is_error ; then
     exit 13
 fi
 
-announce "Tagging deploy"
-deploy_tag "${CI_PROJECT_DIR}"
+announce "Tagging build"
+build_tag_remote "${CI_PROJECT_DIR}"
 if is_error ; then
     announce "$(last_output)"
     exit 14
 fi
 
-deploy_tag "${CI_DEPLOY_REPO_DIR}"
+build_tag_remote "${CI_DEPLOY_REPO_DIR}"
 if is_error ; then
     announce "$(last_output)"
     exit 15
 fi
 
-announce "Deploy tagged as $(deploy_get_current_tag)"
+announce "Build tagged as $(build_get_current_tag)"
 
-announce "Unlocking the deploy"
-deploy_unlock
-if is_error ; then
-    announce "$(last_output)"
-    exit 16
-fi
+#announce "Unlocking the deploy"
+#deploy_unlock
+#if is_error ; then
+#    announce "$(last_output)"
+#    exit 16
+#fi
 
