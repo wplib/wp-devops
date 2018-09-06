@@ -246,7 +246,7 @@ function deploy_push() {
         announce "Error g${message}"
         return $(last_error)
     fi
-    "Commit log generated: ${commit_msg}"
+    trace "Commit log generated: ${commit_msg}"
 
     if [ "" != "${commit_msg}" ]; then
         commit_msg="Build #${build_num} by ${user_name}"
