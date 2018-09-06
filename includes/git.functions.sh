@@ -214,8 +214,8 @@ function git_generate_log() {
     local prefix="$1"
     local repo_dir="$2"
     local offset="$3"
-    local deploy_num="$(git_get_max_tag_prefix_num "${prefix}" "${repo_dir}")"
-    local tag="${prefix}-${deploy_num}"
+    local build_num="$(build_get_current_num)"
+    local tag="${prefix}-${build_num}"
     local hash="$(git_get_commit_hash "${tag}" "${repo_dir}")"
     local log="$(git_hash_log "${hash}" "${repo_dir}" "${offset}")"
     catch

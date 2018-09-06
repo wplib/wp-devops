@@ -235,22 +235,21 @@ function deploy_increment() {
 
 function deploy_push() {
     local deploy_dir="${CI_DEPLOY_REPO_DIR}"
-    local _
-    local deploy_num="$(deploy_get_current_num)"
+    local build_num="$(build_get_current_num)"
     local user_name="$(git_get_user)"
+    local _
 
     local message="enerating deploy log from Git"
-    local log="$(try "G${message}" \
-        "$(git_generate_log 'deploy' "${CI_PROJECT_DIR}" 1)")"
+    local commit_msg="$(try "G${message}" \
+        "$(git_generate_log build "${CI_PROJECT_DIR}")")"
     if is_error ; then
         announce "Error g${message}"
         return $(last_error)
     fi
-    trace "Commit log generated: ${log}"
+    "Commit log generated: ${commit_msg}"
 
-    local commit_msg="Deploy #${deploy_num} by ${user_name}"
-    if [ "" != "${log}" ]; then
-        commit_msg="${commit_msg}${CI_NEWLINE}${log}"
+    if [ "" != "${commit_msg}" ]; then
+        commit_msg="Build #${build_num} by ${user_name}"
     fi
 
     message="dding all deploy files to Git stage"
