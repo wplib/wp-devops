@@ -26,42 +26,6 @@ declare="${CI_NEWLINE:=}"
 declare="${CI_BRANCH:=}"
 
 
-function build_clone_repo() {
-    local repo_url="$(project_get_deploy_repo_url "${CI_PROJECT_DIR}")"
-    local clone_dir="${CI_DEPLOY_REPO_DIR}"
-    local branch="${CI_BRANCH}"
-    if [ "yes" == "$(git_is_repo "${clone_dir}")" ]; then
-        trace "Working with ${repo_url}"
-    else
-        if ! [ -d "${clone_dir}" ]; then
-            trace "Clone does not yet exist: ${clone_dir}"
-        else
-            trace "Deleting non-Git directory to allow cloning: ${clone_dir}"
-            rm -rf  "${clone_dir}"
-        fi
-        trace "Cloning ${repo_url}"
-        git_clone_repo "${repo_url}" "${clone_dir}"
-    fi
-    push_dir "${clone_dir}"
-
-    trace "Checking out branch ${branch} to ${clone_dir}"
-    git_checkout_branch "${branch}" "${clone_dir}"
-
-    trace "Fetch all for ${clone_dir}"
-    git_fetch_all "${clone_dir}"
-
-#    trace "Pull for branch ${branch} into ${clone_dir}"
-#    git_pull_branch "${branch}" "${clone_dir}"
-#
-    trace "Resetting Git branch ${branch} HARD: ${clone_dir}"
-    git_reset_branch_hard "${branch}" "${clone_dir}"
-
-    trace "Deleting untracked files for ${clone_dir}"
-    git_delete_untracked_files "${clone_dir}"
-    pop_dir
-
-}
-
 function build_process_files() {
     local source_dir="${CI_PROJECT_DIR}"
     local deploy_dir="${CI_DEPLOY_REPO_DIR}"
@@ -112,7 +76,6 @@ function build_process_files() {
         return 3
     fi
 
-    ls -al "${source_dir}${source_web_root}$(project_get_source_wordpress_content_path)/mu-plugins"
     ls -al "${deploy_dir}${deploy_web_root}$(project_get_deploy_wordpress_content_path)/mu-plugins"
     output=$(try "Copy wp-content files" \
         "$(build_sync_files deep content \
@@ -124,8 +87,10 @@ function build_process_files() {
         announce "${output}"
         return 4
     fi
-    ls -al "${source_dir}${source_web_root}$(project_get_source_wordpress_content_path)/mu-plugins"
+
     ls -al "${deploy_dir}${deploy_web_root}$(project_get_deploy_wordpress_content_path)/mu-plugins"
+    cat "${CI_EXCLUDE_FILES_FILE}"
+
 
     output=$(try "Copy vendor files" \
         "$(build_sync_files deep vendor \
@@ -214,6 +179,41 @@ function build_exclude_files_file() {
     cat $CI_EXCLUDE_FILES_FILE >> $CI_LOG 2>&1
 }
 
+function build_clone_repo() {
+    local repo_url="$(project_get_deploy_repo_url "${CI_PROJECT_DIR}")"
+    local clone_dir="${CI_DEPLOY_REPO_DIR}"
+    local branch="${CI_BRANCH}"
+    if [ "yes" == "$(git_is_repo "${clone_dir}")" ]; then
+        trace "Working with ${repo_url}"
+    else
+        if ! [ -d "${clone_dir}" ]; then
+            trace "Clone does not yet exist: ${clone_dir}"
+        else
+            trace "Deleting non-Git directory to allow cloning: ${clone_dir}"
+            rm -rf  "${clone_dir}"
+        fi
+        trace "Cloning ${repo_url}"
+        git_clone_repo "${repo_url}" "${clone_dir}"
+    fi
+    push_dir "${clone_dir}"
+
+    trace "Checking out branch ${branch} to ${clone_dir}"
+    git_checkout_branch "${branch}" "${clone_dir}"
+
+    trace "Fetch all for ${clone_dir}"
+    git_fetch_all "${clone_dir}"
+
+#    trace "Pull for branch ${branch} into ${clone_dir}"
+#    git_pull_branch "${branch}" "${clone_dir}"
+#
+    trace "Resetting Git branch ${branch} HARD: ${clone_dir}"
+    git_reset_branch_hard "${branch}" "${clone_dir}"
+
+    trace "Deleting untracked files for ${clone_dir}"
+    git_delete_untracked_files "${clone_dir}"
+    pop_dir
+
+}
 
 #
 # NOTE: THIS DOES NOT WORK WITH FILES WITH SPACES
