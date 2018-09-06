@@ -174,6 +174,7 @@ function git_add() {
     local filename="$2"
     push_dir "${repo_dir}"
     local output=$(try "Git add for file(s): '${filename}'" "$(git add "${filename}" 2>&1)")
+    trace "Git Add ${filename} for ${repo_dir}: $output"
     catch
     pop_dir
     exit_if_begins "${output}" "fatal"
@@ -187,6 +188,7 @@ function git_commit() {
     push_dir "${repo_dir}"
     local output=$(try "Git commit for: '${message}'" "$(git commit -m "${message}" 2>&1)")
     catch
+    trace "Git Commit ${message} for ${repo_dir}: $output"
     pop_dir
     exit_if_begins "${output}" "fatal"
     return $(last_error)
@@ -198,6 +200,7 @@ function git_pull() {
     push_dir "${repo_dir}"
     local output=$(try "Git pull branch ${branch}" "$(git pull origin "${branch}" 2>&1)")
     catch
+    trace "Git Pull branch ${branch} for ${repo_dir}: $output"
     pop_dir
     exit_if_begins "${output}" "fatal"
     return $(last_error)
@@ -209,6 +212,7 @@ function git_push() {
     push_dir "${repo_dir}"
     local output=$(try "Git push" "$(git push --set-upstream origin "${branch}" 2>&1)")
     catch
+    trace "Git Push branch ${branch} for ${repo_dir}: $output"
     pop_dir
     exit_if_begins "${output}" "fatal"
     return $(last_error)
