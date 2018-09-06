@@ -383,7 +383,7 @@ function build_generate_log() {
     local log="$(git_hash_log "${hash}" "${repo_dir}")"
     catch
     if [ "" == "${log}" ]; then
-        local build_num="$(build_current_num)"
+        local build_num="$(build_num)"
         local user_name="$(git_get_user)"
         log="Build #${build_num} by ${user_name}"
     fi
