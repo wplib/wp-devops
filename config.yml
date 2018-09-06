@@ -27,16 +27,6 @@ jobs:
             CI_SOURCED_FILE: /home/circleci/source/.circleci/wp-devops/sourced.sh
 
         steps:
-            - restore_cache:
-                  name: "Restoring source code cache"
-                  keys:
-                      - source-cache
-
-            - restore_cache:
-                  name: "Restoring deploy code cache"
-                  keys:
-                      - deploy-cache
-
             - checkout
 
             - store_artifacts:
@@ -80,17 +70,4 @@ jobs:
                   name: Generate Error Report
                   when: on_fail
                   command: cat /tmp/log.txt
-
-            - save_cache:
-                  name: "Caching source code ~/source directory"
-                  key: source-cache
-                  paths:
-                      - ~/source
-
-            - save_cache:
-                  name: "Caching deployment code ~/deploy directory"
-                  key: deploy-cache
-                  paths:
-                      - ~/deploy
-
 
