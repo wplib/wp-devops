@@ -298,7 +298,7 @@ function _build_files() {
             fi
             return 1
         fi
-        local output=$(try "Copying ${file} to ${deploy_dir}" "$(rsync -a "${source_file}" "${deploy_file}")")
+        local output=$(try "Copying ${file} to ${deploy_dir}" "$(rsync -a "${source_file}/" "${deploy_file}")")
         if is_error ; then
             announce "Failed copying ${file} to ${deploy_dir}: $output"
             return 2
