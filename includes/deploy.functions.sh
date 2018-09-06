@@ -237,7 +237,7 @@ function deploy_push() {
     local deploy_dir="${CI_DEPLOY_REPO_DIR}"
     local build_num="$(build_get_current_num)"
     local user_name="$(git_get_user)"
-    local _
+    local output
 
     local message="enerating deploy log from Git"
     local commit_msg="$(try "G${message}" \
@@ -253,30 +253,30 @@ function deploy_push() {
     fi
 
     message="dding all deploy files to Git stage"
-    _=$(try "A${message}" "$(git_add "${deploy_dir}" '.')")
+    output=$(try "A${message}" "$(git_add "${deploy_dir}" '.')")
     if is_error ; then
-        announce "Error a${message}"
+        announce "Error a${message}: $output"
         return $(last_error)
     fi
 
     message="ommitting staged files in ${deploy_dir}"
-    _=$(try "C${message}" "$(git_commit "${deploy_dir}" "${commit_msg}")")
+    output=$(try "C${message}" "$(git_commit "${deploy_dir}" "${commit_msg}")")
     if is_error ; then
-        announce "Error c${message}"
+        announce "Error c${message}: $output"
         return $(last_error)
     fi
 
     message="ulling recent changes for branch ${CI_BRANCH} to ${deploy_dir}"
-    _=$(try "P${message}" "$(git_pull "${CI_BRANCH}" "${deploy_dir}")")
+    output=$(try "P${message}" "$(git_pull "${CI_BRANCH}" "${deploy_dir}")")
     if is_error ; then
-        announce "Error p${message}"
+        announce "Error p${message}: $output"
         return $(last_error)
     fi
 
     message="ushing commits for branch ${CI_BRANCH} to ${deploy_dir}"
-    _=$(try "P${message}" "$(git_push "${CI_BRANCH}" "${deploy_dir}")")
+    output=$(try "P${message}" "$(git_push "${CI_BRANCH}" "${deploy_dir}")")
     if is_error ; then
-        announce "Error p${message}"
+        announce "Error p${message}: $output"
         return $(last_error)
     fi
     return 0
