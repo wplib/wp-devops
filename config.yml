@@ -47,8 +47,8 @@ jobs:
                       git clone git@github.com:wplib/wp-devops.git
                       cd wp-devops
                       if [ 'branch' == "${ref_type}" ] ; then
+                          branch=$(echo "${wp_devops}"|jq -r '.branch')
                           if [ "master" != "${branch}" ]; then
-                            branch=$(echo "${wp_devops}"|jq -r '.branch')
                             git checkout -b "${branch}" "origin/${branch}"
                           fi
                       else
