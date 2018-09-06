@@ -266,6 +266,7 @@ function _build_files() {
     local deploy_paths_json="$(project_get_deploy_wordpress_paths_json)"
     local source_web_root="$(project_get_source_web_root)"
     local deploy_web_root="$(project_get_deploy_web_root)"
+    local output
     trace "Preparing to ${mode} files using these path names ${path_names}: ${files}"
     for file in $files ; do
         relative_deploy_file="$(apply_path_templates absolute \
@@ -293,10 +294,17 @@ function _build_files() {
             fi
             return 1
         fi
-        local output=$(try "Copying ${file} to ${deploy_dir}" "$(rsync -a "${source_file}/" "${deploy_file}")")
+        if [ -d "${source_file}" ] ; then
+            output=$(try "Copying ${file}/ to ${deploy_dir}" "$(rsync -a "${source_file}/" "${deploy_file}")")
+        elif [ -f "${source_file}" ] ; then
+            output=$(try "Copying ${file} to ${deploy_dir}" "$(cp "${source_file}" "${deploy_file}")")
+        else
+            announce "It appears ${source_file} is missing. Cannot deploy."
+            return 2
+        fi
         if is_error ; then
             announce "Failed copying ${file} to ${deploy_dir}: $output"
-            return 2
+            return 3
         fi
     done
 }
