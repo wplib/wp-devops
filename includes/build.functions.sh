@@ -76,7 +76,6 @@ function build_process_files() {
         return 3
     fi
 
-    ls -al "${deploy_dir}${deploy_web_root}$(project_get_deploy_wordpress_content_path)/mu-plugins"
     output=$(try "Copy wp-content files" \
         "$(build_sync_files deep content \
             "${source_dir}" "${source_web_root}$(project_get_source_wordpress_content_path)" \
@@ -87,10 +86,6 @@ function build_process_files() {
         announce "${output}"
         return 4
     fi
-
-    ls -al "${deploy_dir}${deploy_web_root}$(project_get_deploy_wordpress_content_path)/mu-plugins"
-    cat "${CI_EXCLUDE_FILES_FILE}"
-
 
     output=$(try "Copy vendor files" \
         "$(build_sync_files deep vendor \
