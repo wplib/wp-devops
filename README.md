@@ -145,8 +145,6 @@ To use WP DevOps requires the following:
                         "{root}index.php",
                         "{root}wp-config.php",
                         "{root}wp-config-wplib.box.php",
-                        "{content}/upgrade",
-                        "{content}/uploads",
                         "composer.json"
                     ],
                     "delete": [
@@ -167,8 +165,7 @@ To use WP DevOps requires the following:
                         "{content}mu-plugins/index.php",
                         "{content}plugins/index.php",
                         "{content}themes/index.php",
-                        "{content}/index.php",
-                        "{content}/uploads"
+                        "{content}/index.php"
                     ],
                     "copy": [
                         "{root}pantheon.yml"
