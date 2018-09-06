@@ -168,7 +168,7 @@ function build_exclude_files_file() {
     touch "${CI_EXCLUDE_FILES_FILE}"
     local exclude_files="$(apply_path_templates relative \
         "${path_type}" \
-        "$(project_get_deploy_web_root)"
+        "$(project_get_deploy_web_root)" \
         "$(project_get_deploy_wordpress_paths_json)" \
         "$(project_get_deploy_exclude_files) $(project_get_deploy_delete_files) $(project_get_deploy_keep_files)")"
     trace "Generating list of files for 'rsync --exclude-from' from ${exclude_files}"
