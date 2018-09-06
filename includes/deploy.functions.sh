@@ -238,21 +238,15 @@ function deploy_push() {
     trace "Deploy dir: ${deploy_dir}"
     local build_num="$(build_get_current_num)"
     trace "Build#: ${build_num}"
-    local user_name="$(git_get_user)"
-    trace "User name: ${user_name}"
     local output
 
     local message="enerating deploy log from Git"
-    local commit_msg="$(try "G${message}" "$(git_generate_log build "${CI_PROJECT_DIR}")")"
+    local commit_msg="$(try "G${message}" "$(build_generate_log "${CI_PROJECT_DIR}")")"
     if is_error ; then
         announce "Error g${message}"
         return $(last_error)
     fi
     trace "Commit log generated: ${commit_msg}"
-
-    if [ "" != "${commit_msg}" ]; then
-        commit_msg="Build #${build_num} by ${user_name}"
-    fi
 
     message="dding all deploy files to Git stage"
     output=$(try "A${message}" "$(git_add "${deploy_dir}" '.')")

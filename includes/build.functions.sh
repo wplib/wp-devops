@@ -19,6 +19,7 @@ declare="${CI_LOG:=}"
 declare="${CI_PROJECT_DIR:=}"
 declare="${CI_DEPLOY_REPO_DIR:=}"
 declare="${CI_EXCLUDE_FILES_FILE:=}"
+declare="${CI_PREVIOUS_BUILD_NUM:=}"
 declare="${CI_BACKUP_DIR:=}"
 declare="${CI_BUILD_NUM:=}"
 declare="${CI_TMP_DIR:=}"
@@ -321,10 +322,12 @@ function build_get_current_tag() {
     echo "build-$(build_get_current_num)"
 }
 
+function build_previous_num() {
+    echo ${CI_PREVIOUS_BUILD_NUM}
+}
+
 function build_get_current_num() {
-    push_dir "${CI_PROJECT_DIR}"
-    cat "$(build_get_filename)"
-    pop_dir
+    echo ${CI_BUILD_NUM}
 }
 
 function build_generate_file() {
@@ -367,3 +370,25 @@ function build_tag_remote() {
     fi
     return 0
 }
+
+function build_generate_log() {
+    local repo_dir="$1"
+    trace "Generate Log: $1"
+    local build_num="$(build_previous_num)"
+    trace "Previous buildnum: ${build_num}"
+    local tag="build-${build_num}"
+    trace "Previous tag: ${tag}"
+    local hash="$(git_get_commit_hash "${tag}" "${repo_dir}")"
+    trace "Previous commit hash: ${hash}"
+    local log="$(git_hash_log "${hash}" "${repo_dir}")"
+    catch
+    if [ "" == "${log}" ]; then
+        local build_num="$(build_current_num)"
+        local user_name="$(git_get_user)"
+        log="Build #${build_num} by ${user_name}"
+    fi
+    trace "Commit log: ${log}"
+    echo "${log}"
+    return $(last_error)
+}
+

@@ -16,6 +16,8 @@
 #
 
 declare="${CIRCLE_BUILD_NUM:=}"
+declare="${CIRCLE_PREVIOUS_BUILD_NUM:=}"
+
 
 set -eo pipefail
 
@@ -81,7 +83,10 @@ else
 fi
 
 if [ "" == "${CIRCLE_BUILD_NUM:=}" ] ; then
-    CI_BUILD_NUM="$(git_get_max_tag_prefix_num deploy "${CI_PROJECT_DIR}")"
+    CI_BUILD_NUM="$(git_get_max_tag_prefix_num deploy "${CI_PROJECT_DIR}" 1)"
+    CI_PREVIOUS_BUILD_NUM="$(git_get_max_tag_prefix_num deploy "${CI_PROJECT_DIR}" 2)"
 else
     CI_BUILD_NUM="${CIRCLE_BUILD_NUM}"
+    CI_PREVIOUS_BUILD_NUM="${CIRCLE_PREVIOUS_BUILD_NUM}"
 fi
+

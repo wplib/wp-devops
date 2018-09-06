@@ -218,24 +218,6 @@ function git_push() {
     return $(last_error)
 }
 
-function git_generate_log() {
-    local prefix="$1"
-    local repo_dir="$2"
-    local offset="$3"
-    trace "Generate Log: $1 $2 $3"
-    local build_num="$(build_get_current_num)"
-    trace "Commit buildnum: ${build_num}"
-    local tag="${prefix}-${build_num}"
-    trace "Commit tag: ${tag}"
-    local hash="$(git_get_commit_hash "${tag}" "${repo_dir}")"
-    trace "Commit hash: ${hash}"
-    local log="$(git_hash_log "${hash}" "${repo_dir}" "${offset}")"
-    catch
-    trace "Commit log: ${log}"
-    echo "${log}"
-    return $(last_error)
-}
-
 #
 # Sorting by length, then by value: https://stackoverflow.com/a/5917762/102699
 #
@@ -280,7 +262,7 @@ function git_get_commit_hash() {
     local tag="$1"
     local repo_dir="$2"
     push_dir "${repo_dir}"
-    local output=$(try "Get Git commit hash for tag ${tag}" \
+    local output=$(try "Get Git commit hash for tag '${tag}'" \
         "$(git show-ref -s "${tag}")")
     catch
     echo "${output}"
