@@ -115,12 +115,13 @@ To use WP DevOps requires the following:
 
         {
             "source": {
+        		"web_root": "/www",
                 "frameworks": {
                     "wordpress": {
-                        "root_path": "/www",
-                        "core_path": "/www/wp",
-                        "content_path": "/www/content",
-                        "vendor_path": "/www/vendor"
+                        "root_path": "/",
+                        "core_path": "/wp",
+                        "content_path": "/content",
+                        "vendor_path": "/vendor"
                     }
                 },
                 "repository": {
@@ -130,6 +131,7 @@ To use WP DevOps requires the following:
             },
             "deploy": {
                 "provider": "pantheon",
+        		"web_root": "/",
                 "site_id": "SITE_ID",
                 "site_id:where_found": "SITE_ID is found in Pantheon dashboard URL for a site: https://dashboard.pantheon.io/sites/SITE_ID#dev/code",
                 "site_name": "SITE_NAME",
@@ -204,6 +206,7 @@ To use WP DevOps requires the following:
                     "provider": "pantheon",
                     "name": "live",
                     "label": "Staging (Pantheon's 'LIVE')",
+            		"web_root": "/code",
                     "repository": {
                         "url": "git clone ssh://codeserver.dev.SITE_ID@codeserver.dev.SITE_ID.drush.in:2222/~/repository.git",
                         "url:where_found": "GIT SSH clone URL from [Connection Info] button at top right in site's dashboard."
@@ -213,6 +216,7 @@ To use WP DevOps requires the following:
                     "provider": "pantheon",
                     "name": "test",
                     "label": "Staging (Pantheon's 'TEST')",
+            		"web_root": "/code",
                     "repository": {
                         "url": "git clone ssh://codeserver.dev.SITE_ID@codeserver.dev.SITE_ID.drush.in:2222/~/repository.git",
                         "url:where_found": "GIT SSH clone URL: For Pantheon, this is the same URL from production above, for all hosts."
@@ -222,6 +226,7 @@ To use WP DevOps requires the following:
                     "provider": "pantheon",
                     "name": "dev",
                     "label": "Testing (Pantheon's 'DEV')",
+            		"web_root": "/code",
                     "repository": {
                         "url": "git clone ssh://codeserver.dev.SITE_ID@codeserver.dev.SITE_ID.drush.in:2222/~/repository.git",
                         "url:where_found": "GIT SSH clone URL: For Pantheon, this is the same URL from staging above, for all hosts."
@@ -231,6 +236,7 @@ To use WP DevOps requires the following:
                     "provider": "pantheon",
                     "name": "develop",
                     "label": "Developer testing - Requires Multidev and is available for agencies and larger accounts",
+            		"web_root": "/code",
                     "repository": {
                         "url": "git clone ssh://codeserver.dev.SITE_ID@codeserver.dev.SITE_ID.drush.in:2222/~/repository.git",
                         "url:where_found": "GIT SSH clone URL: For Pantheon, this is the same URL from testing above, for all hosts."
