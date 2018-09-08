@@ -372,21 +372,30 @@ function build_tag_remote() {
     return 0
 }
 
+function build_get_previous_commit_hash() {
+    local repo_dir="$1"
+    local prev_build_num="$(build_get_previous_num)"
+    local hash
+    trace "Previous buildnum: ${prev_build_num}"
+    until [[ "" != "${hash}" || 0 -eq $prev_build_num ]] ; do
+        local prev_tag="build-${prev_build_num}"
+        trace "Previous tag: ${prev_tag}"
+        hash="$(git_get_commit_hash "${prev_tag}" "${repo_dir}")"
+        prev_build_num=$(( prev_build_num - 1 ))
+    done
+    echo "${hash}"
+}
+
 function build_generate_log() {
     local repo_dir="$1"
     trace "Generate Log: $1"
-    local build_num="$(build_previous_num)"
-    trace "Previous buildnum: ${build_num}"
-    local tag="build-${build_num}"
-    trace "Previous tag: ${tag}"
-    local hash="$(git_get_commit_hash "${tag}" "${repo_dir}")"
+    local build_num="$(build_get_current_num)"
+    local hash="$(build_get_previous_commit_hash "${repo_dir}")"
     trace "Previous commit hash: ${hash}"
     local log="$(git_hash_log "${hash}" "${repo_dir}")"
     catch
     if [ "" == "${log}" ]; then
-        local build_num="$(build_num)"
-        local user_name="$(git_get_user)"
-        log="Build #${build_num} by ${user_name}"
+        log="Build #${build_num} by $(git_get_user)"
     fi
     trace "Commit log: ${log}"
     echo "${log}"
