@@ -394,7 +394,7 @@ function build_generate_log() {
     trace "Previous commit hash: ${hash}"
     local log="$(git_hash_log "${hash}" "${repo_dir}")"
     catch
-    log="Build #${build_num} by $(git_get_user)\n{$log}"
+    log="Build #${build_num} by $(git_get_user)\n${log}"
     trace "Commit log: ${log}"
     echo -e "${log}"
     return $(last_error)
