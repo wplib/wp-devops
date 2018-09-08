@@ -191,6 +191,7 @@ function git_commit() {
     trace "Git Commit ${message} for ${repo_dir}: $output"
     pop_dir
     exit_if_begins "${output}" "fatal"
+    exit_if_begins "${output}" "Aborting"
     return $(last_error)
 }
 

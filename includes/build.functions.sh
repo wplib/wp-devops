@@ -307,6 +307,7 @@ function _build_files() {
             announce "Failed copying ${file} to ${deploy_dir}: $output"
             return 3
         fi
+        announce "Output of copying files: $output"
     done
 }
 

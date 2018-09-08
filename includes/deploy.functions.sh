@@ -241,11 +241,18 @@ function deploy_push() {
     local output
 
     local message="enerating deploy log from Git"
+
     local commit_msg="$(try "G${message}" "$(build_generate_log "${CI_PROJECT_DIR}")")"
     if is_error ; then
         announce "Error g${message}"
         return $(last_error)
     fi
+
+    if [ "" == "${commit_msg}" ] ; then
+        announce "No commit log generated. Cannot deploy."
+        exit 1
+    fi
+
     trace "Commit log generated: ${commit_msg}"
 
     message="dding all deploy files to Git stage"
