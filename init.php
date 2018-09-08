@@ -49,18 +49,25 @@ do {
 	 * Check for needed additions to .gitignore
 	 */
 	$gitignore = is_file( $gitignore_file = PROJECT_DIR . '/.gitignore' )
-		? array_map( 'trim', file( $gitignore_file ) )
+		? array_map( 'trim', file( $gitignore_file, FILE_IGNORE_NEW_LINES ) )
 		: array();
 	$line_count = count( $gitignore );
 	$added = 0 < $line_count;
-	$gitignore = array_unique(array_merge( $gitignore, array(
+	$new_lines = array(
 		'/.circleci/circleci.token',
 		'/.circleci/wp-devops',
-		'/.circleci/logs/*',
-	)));
+	);
+	foreach( $new_lines as $index => $line ) {
+		if ( ! in_array( $line, $gitignore ) ) {
+			continue;
+		}
+		unset( $new_lines[ $index ] );
+	}
+	$gitignore = array_merge( $gitignore, $new_lines );
+
 	$lines_added = count( $gitignore ) - $line_count;
 	if ( $lines_added ) {
-		file_put_contents( $gitignore_file, implode( PHP_EOL, $gitignore ) );
+		//file_put_contents( $gitignore_file, implode( PHP_EOL, $gitignore ) );
 		if ( $added ) {
 			outln( "Added {$lines_added} entries to your '{$gitignore_file}' file for your WP DevOps install." );
 		} else {
