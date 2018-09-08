@@ -323,7 +323,7 @@ function build_get_current_tag() {
     echo "build-$(build_get_current_num)"
 }
 
-function build_previous_num() {
+function build_get_previous_num() {
     echo ${CI_PREVIOUS_BUILD_NUM}
 }
 
