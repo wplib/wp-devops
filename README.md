@@ -11,13 +11,14 @@ To use WP DevOps requires the following:
  
 1. Version controlled in a **Git repository** at GitHub, BitBucket, GitLab or some other Git provider. 
     - This could also mean your own custom Git provider.
-4. A project configured at [**CircleCI**](https://circleci.com) to enable builds whenever you push new commits to your Git repo . 
-2. Dependency management with  [**Composer**](https://getcomposer.org) meaning a `composer.json` file in the Git repo's root directory. 
-3. A **`project.json` file** in repo root containing your source code layout and info about your deployment hosts.   
+2. A project configured at [**CircleCI**](https://circleci.com) to enable builds whenever you push new commits to your Git repo . 
+3. Dependency management with  [**Composer**](https://getcomposer.org) meaning a `composer.json` file in the Git repo's root directory. 
+4. A **`project.json` file** in repo root containing your source code layout and info about your deployment hosts.   
 
 ## How To Use
 
-1. Add the following values in the included sections to your project's `composer.json` file:
+### 1. 
+Add the following values in the included sections to your project's `composer.json` file:
 
         {
             "repositories": [
@@ -54,7 +55,8 @@ To use WP DevOps requires the following:
         }
     <hr>      
  
-2. Run `composer install` from your terminal command line in the root directory of your Git repository. 
+### 2. 
+Run `composer install` from your terminal command line in the root directory of your Git repository. 
 
         composer install --ignore-platform-reqs
         
@@ -69,33 +71,38 @@ To use WP DevOps requires the following:
      _**Note:** `--ignore-platform-reqs` is not always needed but Composer fails if your local computer does not have all the required software to actually _host_ your project. In our option ignoring platform requirements should have been the default option and the Composer team should have added a `--require-platform-reqs` switch **instead**. But the Composer folks did not ask our opinion. :-)_
     <hr>      
    
-3. Add your project at CircleCI. You can do so at the URL that follows **after** you replace `ORG` with your own GitHub org slug: `https://circleci.com/add-projects/gh/ORG`.
+### 3. 
+Add your project at CircleCI. You can do so at the URL that follows **after** you replace `ORG` with your own GitHub org slug: `https://circleci.com/add-projects/gh/ORG`.
 
     _**NOTE:** We use GitHub's `ORG` structure in our example as most projects use GitHub but other Git servers may use a different structure and so you will need to determine how CircleCI's URLs relate if you do not host your projects on GitHub. Or just use CircleCI's menus to navigate to the right place._
 
     ![CircleCI Add Git-versioned project](images/circleci-add-project.png)
     <hr>      
 
-4. Add a user key that has permissions to write to your Git repository. You can do so at the URL that follows **after** you replace `ORG/REPO` with your own Git URL path: `https://circleci.com/gh/ORG/REPO/edit#checkout`.  
+### 4. 
+Add a user key that has permissions to write to your Git repository. You can do so at the URL that follows **after** you replace `ORG/REPO` with your own Git URL path: `https://circleci.com/gh/ORG/REPO/edit#checkout`.  
 
     _**NOTE:** We use GitHub's `ORG/REPO` structure in our example as most projects use GitHub but other Git servers may use a different structure and so you will need to determine how CircleCI's URLs relate if you do not host your projects on GitHub. Or just use CircleCI's menus to navigate to the right place._
 
     ![CircleCI SSH user keys](images/circleci-ssh-user-keys.png)
     <hr>      
 
-5. Update the text file named `circleci.token` in your `.circleci` directory contain your own personal token which you can create at [circleci.com/account/api](https://circleci.com/account/api)  
+### 5. 
+Update the text file named `circleci.token` in your `.circleci` directory contain your own personal token which you can create at [circleci.com/account/api](https://circleci.com/account/api)  
 
     ![CircleCI personal API token](images/circleci-personal-api-token.png)
     <hr>      
 
-6. Create an SSH key.  GitHub has a great [simple guide](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/) for how to create an SSH key.   
+### 6. 
+Create an SSH key.  GitHub has a great [simple guide](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/) for how to create an SSH key.   
 
     _**NOTE:** We generally use something like `circleci-pantheon-PROJECT_NAME-your@email.address` when `ssh-keygen` asks for a name so we can use for this use only and not have to update other all services where we used one SSH key, assuming we ever a security issue with our private key._  
     
     _**NOTE:** However, using a unique name may require you to update your `~/.ssh/config` file and provide special configurations for it. Doing that is beyond the scope of these instructions, though._
     <hr>      
 
-7. Add the **private** file of the SSH key you just created to CircleCI. You can do so at the URL that follows **after** you replace `ORG/REPO` with your own Git URL path: `https://circleci.com/gh/wplib/wp-devops/edit#ssh`.  
+### 7. 
+Add the **private** file of the SSH key you just created to CircleCI. You can do so at the URL that follows **after** you replace `ORG/REPO` with your own Git URL path: `https://circleci.com/gh/wplib/wp-devops/edit#ssh`.  
 
     _**NOTE:** We use GitHub's `ORG/REPO` structure in our example as most projects use GitHub but other Git servers may use a different structure and so you will need to determine how CircleCI's URLs relate if you do not host your projects on GitHub. Or just use CircleCI's menus to navigate to the right place._
 
@@ -106,12 +113,14 @@ To use WP DevOps requires the following:
     ![CircleCI SSH Permissions](images/circleci-ssh-permissions.png)
     <hr>      
 
-8. Add the **public** version of your SSH key to the Pantheon dashboard:
+### 8. 
+Add the **public** version of your SSH key to the Pantheon dashboard:
 
     ![Pantheon Add SSH Key](images/pantheon-add-ssh-key.png)
     <hr>      
 
-9. Create a `project.json` or add to an existing one in your repo root and add the following, modifying it for your specific use-case:
+### 9. 
+Create a `project.json` or add to an existing one in your repo root and add the following, modifying it for your specific use-case:
 
         {
             "source": {
@@ -247,7 +256,8 @@ To use WP DevOps requires the following:
         } 
     <hr>      
 
-10. The last step should be to commit your changes and push, which should trigger a rebuild on CircleCI. You can find status on your builds at `https://circleci.com/gh/ORG/REPO`.
+### 10. 
+The last step should be to commit your changes and push, which should trigger a rebuild on CircleCI. You can find status on your builds at `https://circleci.com/gh/ORG/REPO`.
 
 ## Support
 Any questions?  Just [**ask on Slack**](https://wplib.slack.com/).  
