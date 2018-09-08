@@ -1,5 +1,9 @@
 #WP DevOps Changelog
 
+## 2.1.1
+- Fix it so there are no empty build messages
+- Fix init.php run by Composer to not strip lines in .gitignore.     
+
 ## 2.1.0
 - Support for transforming paths in Composer autoloader
 - Added `.web_root` to `.source`, `.deploy` and `.hosts` in `project.json`
